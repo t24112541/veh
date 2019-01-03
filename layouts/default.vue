@@ -1,23 +1,53 @@
 <template>
-  <v-app dark>
-    <app-navigation-drawer/>
-    <app-toolbar/>
+  <v-app>
+    <v-navigation-drawer v-model="drawer" app right/>
+    <v-toolbar app>
+      <v-toolbar-title>VueApp</v-toolbar-title>
+      <v-spacer/>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"/>
+    </v-toolbar>
     <v-content>
-      <v-container fluid>
-        <router-view/>
-      </v-container>
+      <nuxt/>
     </v-content>
-    <v-footer app/>
   </v-app>
 </template>
-<script>
-import AppNavigationDrawer from '~/components/app-navigation-drawer.vue'
-import AppToolbar from '~/components/app-toolbar.vue'
 
+<script>
 export default {
-  components: {
-    AppNavigationDrawer,
-    AppToolbar,
+  computed: {
+    online: {
+      get() {
+        return this.$store.state.online
+      },
+      set(value) {
+        this.$store.commit('setOnline', value)
+      },
+    },
+    drawer: {
+      get() {
+        return this.$store.state.drawer
+      },
+      set(value) {
+        this.$store.commit('setDrawer', value)
+      },
+    },
+  },
+
+  mounted() {
+    this.$store.commit('setOnline', window.navigator.onLine)
+    window.addEventListener('offline', this.toggleNetworkStatus)
+    window.addEventListener('online', this.toggleNetworkStatus)
+  },
+
+  beforeDestroyed() {
+    window.removeEventListener('offline', this.toggleNetworkStatus)
+    window.removeEventListener('online', this.toggleNetworkStatus)
+  },
+
+  methods: {
+    toggleNetworkStatus({ type }) {
+      this.online = type === 'online'
+    },
   },
 }
 </script>

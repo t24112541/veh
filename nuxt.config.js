@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   // Headers of the page
   head: {
-    title: 'RFID Reader WebConfig - Smart Colleage',
+    title: 'Veh',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -24,14 +24,16 @@ module.exports = {
       { name: 'msapplication-TileColor', content: '#da532c' },
     ],
     link: [
-      { rel: 'apple-touch-icon', sizes: '180x180', href: 'apple-touch-icon.png' },
-      { rel: 'icon', type: 'image/png', sizes: '32x32', href: 'favicon-32x32.png' },
-      { rel: 'icon', type: 'image/png', sizes: '16x16', href: 'favicon-16x16.png' },
-      { rel: 'mask-icon', href: 'safari-pinned-tab.svg', color: '#5bbad5' },
+      { rel: 'shortcut icon', href: '/icon/veh.PNG' },
+      { rel: 'apple-touch-icon', sizes: '180x180', href: '/icon/veh.PNG' },
+      { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/icon/veh.PNG' },
+      { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/icon/veh.PNG' },
+      { rel: 'mask-icon', href: '/icon/veh.PNG', color: '#5bbad5' },
       { name: 'msapplication-TileColor', content: '#da532c' },
       { name: 'theme-color', content: '#ffffff' },
       { rel: 'stylesheet', type: 'text/css', href: 'iconfont/material-icons.css' },
       { rel: 'stylesheet', type: 'text/css', href: 'iconfont/font-awesome.css' },
+      { rel: 'stylesheet', type: 'text/css', href: 'css/cv_style.css?v=1001' },
     ],
   },
 
@@ -76,17 +78,21 @@ module.exports = {
   plugins: [
     // '~/plugins/cordova',
     '~/plugins/vuetify',
+    '~/plugins/axios',
   ],
 
   // generate: {
   //   dir: 'www',
   // },
 
-  modules,
+  modules: [
+    '@nuxtjs/pwa',
+    '@nuxtjs/proxy',
 
+  ],
   proxy: {
-    '/api': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:7005' : 'http://api:7005',
-    '/files': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:7005' : 'http://api:7005',
+    '/api': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:34001' : 'http://api:34001',
+    '/files': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:34001' : 'http://api:34001',
     ws: true,
   },
 }
