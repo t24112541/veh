@@ -1,20 +1,20 @@
 <template>
   <div>
     <v-card>
-    <div class="cv_header padding-top-mn" >กลุ่มการเรียน</div>
-    <div class="cv_header xs12">
+    <div class="cv_header padding-top-mn" >กลุ่มการเรียน
       <v-btn
         color="green lighten-2"
         dark
         small
-        absolute
-        top
-        right
+      
         fab
         @click="group_add()"
       >
         <v-icon>add</v-icon>
       </v-btn>
+    </div>
+    <div class="cv_header xs12">
+      
     </div>
     <v-spacer></v-spacer>
   <v-data-table

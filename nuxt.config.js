@@ -32,8 +32,9 @@ module.exports = {
       { name: 'msapplication-TileColor', content: '#da532c' },
       { name: 'theme-color', content: '#ffffff' },
       { rel: 'stylesheet', type: 'text/css', href: 'iconfont/material-icons.css' },
-      { rel: 'stylesheet', type: 'text/css', href: 'iconfont/font-awesome.css' },
-      { rel: 'stylesheet', type: 'text/css', href: 'css/cv_style.css?v=1001' },
+      // { rel: 'stylesheet', type: 'text/css', href: 'iconfont/font-awesome.css' },
+      { rel: 'stylesheet', type: 'text/css', href: 'css/fontawesome-free/css/all.css' },
+      { rel: 'stylesheet', type: 'text/css', href: 'css/cv_style.css?v=1002' },
     ],
   },
 

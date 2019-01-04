@@ -1,7 +1,21 @@
 <template>
   <div>
     <v-card>
-    <div class="cv_header padding-top-mn" >ข้อมูลยานพาหนะ</div>
+    <div class="cv_header padding-top-mn" >ข้อมูลยานพาหนะ
+      <v-btn
+        color="green lighten-2"
+        dark
+        small
+      
+        fab
+        @click="machine_add()"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
+    </div>
+     <div class="cv_header xs12">
+      
+    </div>
     <div class="cv_header padding-top-mn"> 
       <v-text-field
               label="ค้นหาพาหนะ"
@@ -9,20 +23,7 @@
               v-model="txt_search"
             ></v-text-field>
     </div> 
-    <div class="cv_header xs12">
-      <v-btn
-        color="green lighten-2"
-        dark
-        small
-        absolute
-        top
-        right
-        fab
-        @click="machine_add()"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
-    </div>
+   
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
   <v-data-table

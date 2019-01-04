@@ -1,6 +1,18 @@
 <template>
   <div><v-card>
-    <div class="cv_header padding-top-mn" >ข้อมูลนักเรียน / นักศึกษา</div>
+    <div class="cv_header padding-top-mn" >
+      ข้อมูลนักเรียน / นักศึกษา
+      <v-btn
+        color="green lighten-2"
+        dark
+        small
+        fab
+        @click="student_add()"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
+
+    </div>
     <div class="cv_header padding-top-mn"> 
       <v-text-field
               label="ค้นหาชื่อนักเรียน / นักศึกษา"
@@ -9,18 +21,7 @@
             ></v-text-field>
     </div>
     <div class="cv_header xs12">
-      <v-btn
-        color="green lighten-2"
-        dark
-        small
-        absolute
-        top
-        right
-        fab
-        @click="student_add()"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
+      
     </div>
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
@@ -50,11 +51,11 @@
     </template>
     <template slot="items" slot-scope="props" >
       <tr v-on:click="list_student(props.item.std_id)">
-        <td class="text-xs-left xs10">{{ props.item.std_code }}</td>
+        <td class="text-xs-left ">{{ props.item.std_code }}</td>
         <td class="text-xs-left">{{ props.item.std_pin_id }}</td>
-        <td class="text-xs-left">{{ props.item.std_prename }}{{ props.item.std_name }} {{ props.item.std_lname }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.std_prename }}{{ props.item.std_name }} {{ props.item.std_lname }}</td> -->
         <td class="text-xs-center">{{ props.item.std_gender }}</td>
-        <td class="text-xs-center">{{ props.item.std_birthday }}</td>
+        <!-- <td class="text-xs-center">{{ props.item.std_birthday }}</td> -->
         <td class="text-xs-center">{{ props.item.g_code }}</td>
       </tr>
     </template>
@@ -81,11 +82,11 @@
         part_url:'',
         rows_per_page:[10,20,{"text":"แสดงทั้งหมด","value":-1}],//////////////////////////   teach me pleas!
         headers: [
-          {text: 'รหัสนักศึกษา',align: 'left',sortable: false, value: 'name'},
+          { text: 'รหัสนักศึกษา',align: 'left',sortable: false, value: 'name',},
           { text: 'รหัสประจำตัว', value: 'รหัสประจำตัว',align: 'left', sortable: false,},
-          { text: 'ชื่อ', value: 'ชื่อ',align: 'center',sortable: false,  },
+          // { text: 'ชื่อ', value: 'ชื่อ',align: 'center',sortable: false,  },
           { text: 'เพศ', value: 'เพศ',align: 'center',sortable: false,  },
-          { text: 'วันเกิด', value: 'วันเกิด',align: 'center',sortable: false,  },
+          // { text: 'วันเกิด', value: 'วันเกิด',align: 'center',sortable: false,  },
           { text: 'กลุ่ม', value: 'กลุ่ม',align: 'center',sortable: false,  },
         ],
         std:[]

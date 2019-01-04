@@ -1,13 +1,7 @@
 
 <template>
     <v-card>
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -180,6 +174,13 @@
           <v-spacer></v-spacer>
           <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="accessories_update(ac_id)"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type=type_api
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -232,7 +233,7 @@
             let res=await this.$http.post('/accessories/accessories_del/',{
               ac_description:this.ac_description,
               ac_name:this.ac_name,
-              ac_id:this.ac_id,
+              ac_id:this.$route.query.ac_id,
               ac_u_id:this.ac_u_id,
               ac_u_table:this.ac_u_table,
               u_id:sessionStorage.getItem("username")
@@ -267,7 +268,7 @@
             let res=await this.$http.post("/accessories/accessories_update",{
               ac_description:this.ac_description,
               ac_name:this.ac_name,
-              ac_id:this.ac_id,
+              ac_id:this.$route.query.ac_id,
               ac_u_id:this.ac_u_id,
               ac_u_table:this.ac_u_table,
 

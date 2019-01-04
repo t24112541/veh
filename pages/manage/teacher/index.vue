@@ -1,6 +1,16 @@
 <template>
   <div><v-card>
-    <div class="cv_header padding-top-mn" >ข้อมูลครู / บุคลากร</div>
+    <div class="cv_header padding-top-mn" >ข้อมูลครู / บุคลากร
+      <v-btn
+        color="green lighten-2"
+        dark
+        small
+        fab
+        @click="teacher_add()"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
+    </div>
     <div class="cv_header padding-top-mn"> 
       <v-text-field
               label="ค้นหาข้อมูลครู / บุคลากร"
@@ -8,20 +18,7 @@
               v-model="txt_search"
             ></v-text-field>
     </div>
-    <div class="cv_header xs12">
-      <v-btn
-        color="green lighten-2"
-        dark
-        small
-        absolute
-        top
-        right
-        fab
-        @click="teacher_add()"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
-    </div>
+   
     <v-spacer></v-spacer>
   <v-data-table
       :headers="headers"
@@ -50,7 +47,7 @@
         <td class="text-xs-left">{{ props.item.t_code }}</td>
         <td class="text-xs-left">{{ props.item.t_name }}</td>
         <td class="text-xs-left">{{ props.item.t_dep }}</td>
-        <td class="text-xs-left">{{ props.item.t_tel }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.t_tel }}</td> -->
       </tr>
     </template>
      <template slot="no-data">
@@ -75,10 +72,10 @@
         selected: [],
         rows_per_page:[10,20,{"text":"แสดงทั้งหมด","value":-1}],//////////////////////////   teach me pleas!
         headers: [
-          { text: 'รหัสประจำตัวครู / บุคลากร', value: 'รหัสประจำตัวครู / บุคลากร',align: 'left',sortable: false, },
+          { text: 'รหัสประจำตัว', value: 'รหัสประจำตัวครู / บุคลากร',align: 'left',sortable: false, },
           { text: 'ชื่อ', value: 'ชื่อ',align: 'left',sortable: false,  },
           { text: 'แผนกวิชา', value: 'แผนกวิชา',align: 'left',sortable: false,  },
-          { text: 'เบอร์โทรศัพท์', value: 'เบอร์โทรศัพท์',align: 'left',sortable: false,  },
+          // { text: 'เบอร์โทรศัพท์', value: 'เบอร์โทรศัพท์',align: 'left',sortable: false,  },
         ],
         teacher: []
       }

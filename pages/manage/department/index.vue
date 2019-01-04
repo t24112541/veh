@@ -1,15 +1,12 @@
 <template>
   <div>
     <v-card>
-    <div class="cv_header padding-top-mn" >แผนกวิชา</div>
-    <div class="cv_header xs12">
+    <div class="cv_header padding-top-mn" >แผนกวิชา
       <v-btn
         color="green lighten-2"
         dark
         small
-        absolute
-        top
-        right
+      
         fab
         @click="department_add()"
       >

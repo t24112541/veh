@@ -1,13 +1,7 @@
 
 <template>
     <v-card>
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -168,6 +162,7 @@
            
           </v-layout>
         </v-container>
+        
         <v-card-actions>
           
           <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
@@ -185,6 +180,13 @@
           <v-spacer></v-spacer>
           <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="machine_update(mc_id)"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type=type_api
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -286,9 +288,9 @@
 
               u_id:sessionStorage.getItem("username")
             })
-            console.log(res.data)
-              if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
-             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+      
+            if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
+            else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
           machine(){
             this.$router.push({name:"manage-machines"})

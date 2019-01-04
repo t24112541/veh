@@ -1,16 +1,28 @@
 <template>
   <div>
-
     <v-card >
       <v-toolbar tabs>
+        <v-flex xs12>
         <v-toolbar-title>การแจ้งหาย</v-toolbar-title>
-  
-        <v-spacer></v-spacer>
-  
+        </v-flex>
+
+        <v-flex xs6>
+        <v-radio-group v-model="ms_table" row style="margin-top:25px">
+          <v-radio label="พาหนะ" value="pk_machine"></v-radio>
+          <v-radio label="อุปกรณ์" value="pk_accessories"></v-radio>
+        </v-radio-group>
+        </v-flex>
+
+        <!-- <v-text-field
+          style="margin-top:25px"
+          class="margin-top-md"
+          label="ค้นหา"
+          v-model="txt_search"
+        ></v-text-field>
         <v-btn icon>
           <v-icon>search</v-icon>
-        </v-btn>
-    
+        </v-btn> -->
+
         <v-tabs
           slot="extension"
           v-model="tabs"
@@ -18,17 +30,9 @@
           color="transparent"
         >
           <v-tabs-slider></v-tabs-slider>
-          <v-tab href="#cv-1" class="primary--text">
-            <v-icon>phone</v-icon>
-          </v-tab>
-  
-          <v-tab href="#cv-2" class="primary--text">
-            <v-icon>favorite</v-icon>
-          </v-tab>
-  
-          <v-tab href="#cv-3" class="primary--text">
-            <v-icon>account_box</v-icon>
-          </v-tab>
+          <v-tab href="#cv-1" @click="chang_value(1)" class="primary--text">รอรับเรื่อง | {{this.stp1.count}}</v-tab>
+          <v-tab href="#cv-2" @click="chang_value(2)" class="primary--text">กำลังดำเนินการ | {{this.stp2.count}}</v-tab>
+          <v-tab href="#cv-3" @click="chang_value(3)" class="primary--text">พบแล้ว | {{this.stp3.count}}</v-tab>
         </v-tabs>
       </v-toolbar>
   
@@ -40,7 +44,7 @@
         >
           <v-data-table
               :headers="headers"
-              :items="missing"
+              :items="filter_missing"
               :search="search"
               :pagination.sync="pagination"
               :loading="state"
@@ -98,24 +102,52 @@
           { text: 'สถานะการแจ้ง', value: 'สถานะการแจ้ง',align: 'left',sortable: false,  },
         ],
         missing: [],
-        ms_type:""
+        ms_type:"",
+        mis_status:"ขั้นที่ 1 รอรับเรื่อง",
+        ms_table:"pk_machine",
+
+        stp1:"",
+        stp2:"",
+        stp3:"",
       }
     },
     async created(){
-      this.state=true
-     let res=await this.$http.get('/missing/list')
-    //  console.log(res.data.datas)
-     this.missing=res.data.datas
-     this.ms_type=res.data.type
-     this.state=false
+      this.load_list("pk_machine")
     },
     computed: {
       pages () {
         if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) return 0
         return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+      },
+      filter_missing(){
+        return this.missing.filter(x=>''+x.ms_status===this.mis_status)
+      }
+    },
+    watch:{
+      mis_status(newValue){console.log("ok")
+        if(newValue==1){this.mis_status="ขั้นที่ 1 รอรับเรื่อง"}
+        else if(newValue==2){this.mis_status="ขั้นที่ 2 รับเรื่องแล้ว"}
+        else if(newValue==3){this.mis_status="ขั้นที่ 3 พบเเล้ว"}
+      },
+      ms_table(newValue){
+        this.load_list(newValue)
       }
     },
     methods:{
+      async load_list(cv_filter){
+        this.state=true
+        let res=await this.$http.post('/missing/list',{cv_filter:cv_filter})
+        //  console.log(res.data.datas) 
+        this.missing=res.data.datas
+        this.ms_type=res.data.type
+        this.stp1=res.data.stp1[0]
+        this.stp2=res.data.stp2[0]
+        this.stp3=res.data.stp3[0]
+        this.state=false
+      },
+      chang_value(vl){
+        this.mis_status=vl
+      },
       list_missing(ms_id){
         this.$router.push({path: '../manage/missing/update_missing?ms_id='+ms_id})
       },

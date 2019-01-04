@@ -81,47 +81,16 @@
         <v-toolbar-side-icon><img :src="require('@/static/image/new_logo_white.png')" class="icon_login" style="width:120%"></v-toolbar-side-icon>
         <span class="">CTC Vehicle</span>
       </v-toolbar-title>
-      <!-- <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        v-model="txt_search"
-        prepend-inner-icon="search"
-        label="ค้นหา ..."
-        class="hidden-sm-and-down"
-      ></v-text-field> -->
+
       <v-spacer></v-spacer>
-      <!-- {{username}}
-      {{status}} -->
-      <!-- <v-btn icon>
-      <v-badge right
-        v-model="noti_sh"
-        color="red darken-3"
-      
-      >
-            <span v-if="num_noti" slot="badge">{{num_noti}}</span>
-            <v-icon
-              @click="noti_sh = !noti_sh"
-              color="white"
-            >notifications</v-icon>
-          </v-badge>
-      </v-btn> -->
+
       <v-divider
         class="mx-3"
         inset
         vertical
       ></v-divider>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <!--
-      <v-btn icon large>
-        <v-avatar size="32px" tile>
-          <img
-            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-            alt="Vuetify"
-          >
-        </v-avatar>
-      </v-btn>
-      -->
+
     </v-toolbar>
     <v-content style="background-color:#cccccc">
       <v-container  xs12 >
@@ -130,22 +99,7 @@
  
       </v-container>
     </v-content>
-    <!--
-    <v-btn
-      fab
-      bottom
-      right
-      color="#6c9e37"
-      dark
-      fixed
-      @click="dialog = !dialog"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
-    <v-dialog v-model="dialog" width="800px">
-      
-    </v-dialog>
-    -->
+
   </v-app>
 </template>
 
@@ -157,42 +111,18 @@
       status:sessionStorage.getItem("status"),
       txt_search:"",
       page_search:"",
-      noti_sh:true,
       num_noti:'10',
       dialog: false,
       drawer: null,
       items: [
-      { heading: 'ออนไลน์' },
+      { heading: 'ผู้ใช้งาน' },
       { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: ''},
-      // { divider: true }, ../../manage/profile
-      //   {
-      //     icon: 'keyboard_arrow_up',
-      //     'icon-alt': 'keyboard_arrow_down',
-      //     text: 'รายงาน',
-      //     model: false,
-      //     children: [
-      //     { icon: 'fas fa-book-open', text: 'รายงานการแจ้งหาย' ,link: '../../manage/student'},
-      //     ]
-      //   },
+
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'},
       { icon: 'fas fa-book-open', text: 'การแจ้งหาย' ,link: '../../manage/missing'},
       { divider: true },
        { heading: 'จัดการข้อมูล' },
-        // {
-        //   icon: 'keyboard_arrow_up',
-        //   'icon-alt': 'keyboard_arrow_down',
-        //   text: 'เพิ่มข้อมูล',
-        //   model: false,
-        //   children: [
-        //     { icon:'add' ,text: 'นักเรียน / นักศึกษา' ,link: '../../manage/student/add_student'},
-        //     { icon:'add' ,text: 'ครู / บุคลากร' ,link: '../../manage/teacher/add_teacher'},
-        //     { icon:'add' ,text: 'แผนกวิชา' ,link: '../../manage/department/dep_add'},
-        //     { icon:'add', text: 'กลุ่มการเรียน' ,link: '../../manage/group/add_group'},
-        //     { icon:'add' ,text: 'ยานพาหนะ' ,link: '../../manage/machines/data_add_machine'},
-        //   ]
-        // },
-
         { icon: 'fas fa-user-graduate', text: 'นักเรียน / นักศึกษา' ,link: '../../manage/student'},
         { icon: 'fas fa-chalkboard-teacher', text: 'ครู / บุคลากร' ,link: '../../manage/teacher'},
         { icon: 'fas fa-place-of-worship', text: 'แผนกวิชา' ,link: '../../manage/department'},
