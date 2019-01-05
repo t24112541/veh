@@ -77,7 +77,7 @@
       app
       fixed
     >
-      <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
+      <v-toolbar-title style="width: 300px" class="ml-0 pl-3" @click="home()">
         <v-toolbar-side-icon><img :src="require('@/static/image/new_logo_white.png')" class="icon_login" style="width:120%"></v-toolbar-side-icon>
         <span class="">CTC Vehicle</span>
       </v-toolbar-title>
@@ -116,7 +116,7 @@
       drawer: null,
       items: [
       { heading: 'ผู้ใช้งาน' },
-      { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: ''},
+      { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: '../../manage/profile'},
 
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'},
@@ -147,16 +147,16 @@
           ]
         },
         { divider: true },
-        // { 
-        //  icon: 'keyboard_arrow_up',
-        //   'icon-alt': 'settings',
-        //   text: 'ตั้งค่า', 
-        //  model: false,
-        //   children: [
-        //     { icon:'fas fa-user-shield' ,text: 'ความปลอดภัย' ,link: '../../manage/security/set_password'},
-        //     { icon:'fas fa-sliders-h' ,text: 'ระบบ' },
-        //   ]},
-        // { icon: 'help', text: 'ช่วยเหลือ' },
+        { 
+         icon: 'keyboard_arrow_up',
+          'icon-alt': 'settings',
+          text: 'ตั้งค่า', 
+         model: false,
+          children: [
+            { icon:'fas fa-user-shield' ,text: 'ความปลอดภัย' ,link: '../../manage/security/security'},
+            { icon:'fas fa-sliders-h' ,text: 'ระบบ' },
+          ]},
+        { icon: 'help', text: 'ช่วยเหลือ' },
         { icon: 'fas fa-sign-out-alt', text: 'ออกจากระบบ' ,link:"../../logout"},
         
       ],
@@ -185,13 +185,15 @@
     }
   },
    methods: {
+     home(){
+       this.$router.push({name:"manage-missing"})
+     },
      set_session(){
        this.id=sessionStorage.getItem("id")
        console.log("id="+this.id)
        console.log("status="+sessionStorage.getItem("status"))
      },
      logout() {
-      sessionStorage.removeItem('itemName');
        this.$router.push({path: 'manage'})
     },
       search(){

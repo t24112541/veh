@@ -1,13 +1,7 @@
 
 <template>
-    <v-card>
-       <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+    <v-card @keypress.enter="profile_update()">
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -25,21 +19,8 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-            <v-flex xs12 >
-              <v-layout align-center>
-                <v-text-field
-                  :disabled="!isEditing"
-                  :rules="[rules.required]"
-                  maxlength="10"
-                  counter
-                  prepend-icon="fas fa-id-card-alt fa-2x"
-                  label="รหัสประจำตัวครู / บุคลากร"
-                  name="t_code"
-                  v-model="t_code"
-                ></v-text-field>
-              </v-layout>
-            </v-flex>
-            <v-flex xs12 >
+           
+            <v-flex xs6 >
               <v-layout align-center>
                 <v-text-field 
                   :disabled="!isEditing"
@@ -47,23 +28,21 @@
                   prepend-icon="fas fa-user fa-2x"
                   maxlength="50"
                   counter
-                  label="ชื่อ นามสกุล"
-                  name="t_name"
-                  v-model="t_name"
+                  label="ชื่อ"
+                  v-model="a_name"
                 ></v-text-field>
               </v-layout>
             </v-flex>
-            <v-flex xs12 >
+            <v-flex xs6 >
               <v-layout align-center>
                 <v-text-field 
                   :disabled="!isEditing"
                   :rules="[rules.required]"
-                  prepend-icon="fas fa-archway fa-2x"
-                  maxlength="100"
+                  prepend-icon="fas fa-user fa-2x"
+                  maxlength="50"
                   counter
-                  label="แผนกวิชา"
-                  name="t_dep"
-                  v-model="t_dep"
+                  label="นามสกุล"
+                  v-model="a_lname"
                 ></v-text-field>
               </v-layout>
             </v-flex>
@@ -76,25 +55,11 @@
                   counter
                   prepend-icon="fas fa-phone-square fa-2x"
                   label="เบอร์โทรศัพท์"
-                  name="t_tel"
-                  v-model="t_tel"
+                  v-model="a_tel"
                 ></v-text-field>
               </v-layout>
             </v-flex>
-            <!-- <v-flex xs12 >
-              <v-layout align-center>
-                <v-text-field 
-                  :disabled="!isEditing"
-                  :rules="[rules.required]"
-                  maxlength="10"
-                  counter
-                  prepend-icon="fas fa-id-badge fa-2x"
-                  label="ชื่อผู้ใช้"
-                  name="t_username"
-                  v-model="t_username"
-                ></v-text-field>
-              </v-layout>
-            </v-flex> -->
+          
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -117,10 +82,24 @@
         </v-container>
         <v-card-actions>
           
-          <v-btn flat color="red lighten-2" @click="teacher()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
+          <v-spacer></v-spacer>
+          <v-progress-circular
+            v-if="loading==true"
+            v-model="loading"
+            :size="25"
+            color="primary"
+            indeterminate
+          ></v-progress-circular>
           <v-spacer></v-spacer>
           <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="profile_update()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 <script>
@@ -128,40 +107,21 @@
         layout: 'manage',
         data () {
           return {
-              t_id:sessionStorage.getItem("id"),
-              status:sessionStorage.getItem("status"),
-              // t_name:sessionStorage.getItem("t_name"),
-              // t_dep:sessionStorage.getItem("t_dep"),
-              // t_tel:sessionStorage.getItem("t_tel"),
-              // t_username:sessionStorage.getItem("t_username"),
-              // t_password:sessionStorage.getItem("t_password"),
-
-            t_code:"",
-            t_name:"",
-            t_dep:"",
-            t_tel:"",
-            t_username:"",
-            t_password:"",
-
-            mst_1: '',
-            mst_2: '',
-            mst_3: '',
+            id:sessionStorage.getItem("id"),
+            status:sessionStorage.getItem("status"),
+            a_name:"",
+            a_lname:"",
+            a_tel:"",
 
             type_api:"",
             danger:false,
-            loading: false,
-            conf_del:false,
+            loading:false,
             isEditing:null,
             alt_txt:"",
             stg_password: false,
-
-
-             rules: {
-                required: value => !!value || 'ห้ามว่าง.',
-                // min: v => v.length >= 8 || 'Password ไม่ควรน้อยกว่า 8 ตัวอักษร',
-                // emailMatch: () => ('The email and password you entered don\'t match'),
-
-              },
+            rules: {
+              required: value => !!value || 'ห้ามว่าง.',
+            },
           }
         },
         async created(){
@@ -169,40 +129,32 @@
         },
         methods:{
             async sh_profile(){
-              if(this.status=="pk_admin"){
-                let res=await this.$http.post('/teacher/sh_profile/',{a_id:this.t_id})
-              }
-              else if(this.status=="pk_teacher"){
-                let res=await this.$http.post('/teacher/sh_profile/',{t_id:this.t_id})
-              }
-              else if(this.status=="pk_student"){
-                let res=await this.$http.post('/student/sh_profile/',{std_id:this.t_id})
-              }
-              
-              this.t_id=this.$route.query.t_id
-              this.t_code=res.data.datas.t_code
-              this.t_name=res.data.datas.t_name
-              this.t_dep=res.data.datas.t_dep
-              this.t_tel=res.data.datas.t_tel
-              this.t_username=res.data.datas.t_username
-              this.t_password=res.data.datas.t_password
-            
+              // if(this.status=="pk_admin"){
+                let res=await this.$http.post('/admin/sh_profile/',{id:this.id})
+              // }
+              // else if(this.status=="pk_teacher"){
+              //   let res=await this.$http.post('/teacher/sh_profile/',{t_id:this.t_id})
+              // }
+              // else if(this.status=="pk_student"){
+              //   let res=await this.$http.post('/student/sh_profile/',{std_id:this.t_id})
+              // }
+              console.log(res.data.datas)
+              this.a_name=res.data.datas[0].a_name
+              this.a_lname=res.data.datas[0].a_lname
+              this.a_tel=res.data.datas[0].a_tel
+           
             },
             async profile_update(){
-              // console.log("t_id"+sessionStorage.getItem("id"))
-              let res=await this.$http.post("/teacher/profile_update",{
-                
-        				t_code:this.t_code,
-        				t_name:this.t_name,
-        				t_dep:this.t_dep,
-        				t_tel:this.t_tel,
-        				t_username:this.t_username,
-        				t_password:this.t_password,
-                t_id:sessionStorage.getItem("id"),
+              this.loading=true
+              let res=await this.$http.post("/admin/profile_update",{
+        				a_name:this.a_name,
+        				a_lname:this.a_lname,
+                a_tel:this.a_tel,
+                id:this.id,
               })
-              console.log(res.data)
-                if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
-            	 else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              this.loading=false
+              if(res.data.ok==true){this.sh_profile(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            	else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             },
             teacher(){
               this.$router.push({name:"manage-teacher"})
