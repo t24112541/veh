@@ -79,9 +79,9 @@
                 <v-card height="100%" class="grey lighten-4 paddign"> 
                   <img :src="this.img_font" width="100%" >
                   <v-card-actions style="font-size:100%">
-                    <span>รูปด้านหน้า</span>
-                    <v-spacer></v-spacer>
                     <span><i class="fas fa-image fa-2x"></i></span>
+                    <v-spacer></v-spacer>
+                    <span>รูปด้านหน้า</span>
                   </v-card-actions>
                 </v-card>
               </v-flex>

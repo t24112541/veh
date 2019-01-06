@@ -73,11 +73,12 @@ export default {
           username:this.username,
           password:this.password
         })
-         console.log(res.data)
+        //  console.log(res.data)
         if(res.data){this.loading=false}
         if(res.data.ok==true){
          
           if(res.data.status=="pk_student"){
+            
             sessionStorage.setItem("id",res.data.login.std_id)
             sessionStorage.setItem("username",res.data.login.std_username)
             sessionStorage.setItem("password",(res.data.login.std_password))

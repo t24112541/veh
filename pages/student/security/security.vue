@@ -34,7 +34,7 @@
                 <v-text-field
                   :rules="[rules.required]"
                   label="username"
-                  v-model="a_username"
+                  v-model="std_username"
                   class="input-group--focused"
                 ></v-text-field>
               </v-layout>
@@ -173,7 +173,7 @@
 
 <script>
     export default {
-        layout: 'manage',
+        layout: 'student',
 
         data () {
             return {
@@ -186,7 +186,7 @@
               stg_password: false,
               stg_password2: false,
 
-              a_username:"",
+              std_username:"",
 
               old_password:"",
               password:"",
@@ -210,24 +210,24 @@
         },
         methods:{
             async sh_profile(){
-              let res=await this.$http.post('/admin/sh_profile/',{id:this.id})
+              let res=await this.$http.post('/student/sh_profile/',{id:this.id})
               // console.log(res.data)
-              this.a_username=res.data.datas[0].a_username           
+              this.std_username=res.data.datas[0].std_username           
             },
             async security_update(cv_set){
               this.loading=true
               if(cv_set=="username"){
-                let res=await this.$http.post("/admin/security_update",{
-                  a_username:this.a_username,
+                let res=await this.$http.post("/student/security_update",{
+                  std_username:this.std_username,
                   cv_set:cv_set,
-                  a_id:this.id,
+                  t_id:this.id,
                 })
               }
               else if(cv_set=="password"){
-                let res=await this.$http.post("/admin/security_update",{
-                  a_password:this.password,
+                let res=await this.$http.post("/student/security_update",{
+                  std_password:this.password,
                   cv_set:cv_set,
-                  a_id:this.id,
+                  std_id:this.id,
                 })
               }
               this.loading=false

@@ -29,7 +29,7 @@
                   maxlength="50"
                   counter
                   label="ชื่อ"
-                  v-model="a_name"
+                  v-model="std_name"
                 ></v-text-field>
               </v-layout>
             </v-flex>
@@ -42,7 +42,7 @@
                   maxlength="50"
                   counter
                   label="นามสกุล"
-                  v-model="a_lname"
+                  v-model="std_lname"
                 ></v-text-field>
               </v-layout>
             </v-flex>
@@ -55,11 +55,23 @@
                   counter
                   prepend-icon="fas fa-phone-square fa-2x"
                   label="เบอร์โทรศัพท์"
-                  v-model="a_tel"
+                  v-model="std_tel"
                 ></v-text-field>
               </v-layout>
             </v-flex>
-        
+            <v-flex xs12 >
+              <v-layout align-center>
+                <v-text-field 
+                  :disabled="!isEditing"
+                  :rules="[rules.required]"
+                  maxlength="10"
+                  counter
+                  prepend-icon="fas fa-phone-square fa-2x"
+                  label="เบอร์โทรศัพท์ญาติพี่น้องที่สามารถติดต่อได้"
+                  v-model="std_tel2"
+                ></v-text-field>
+              </v-layout>
+            </v-flex>
           </v-layout>
         </v-container>
         <v-card-actions>
@@ -86,21 +98,21 @@
 </template>
 <script>
     export default {
-        layout: 'manage',
+        layout: 'student',
         data () {
           return {
             id:sessionStorage.getItem("id"),
             status:sessionStorage.getItem("status"),
-            a_name:"",
-            a_lname:"",
-            a_tel:"",
+            std_name:"",
+            std_lname:"",
+            std_tel:"",
+            std_tel2:"",
 
             type_api:"",
             danger:false,
             loading:false,
             isEditing:null,
             alt_txt:"",
-            stg_password: false,
             rules: {
               required: value => !!value || 'ห้ามว่าง.',
             },
@@ -111,36 +123,28 @@
         },
         methods:{
             async sh_profile(){
-              // if(this.status=="pk_admin"){
-                let res=await this.$http.post('/admin/sh_profile/',{id:this.id})
-              // }
-              // else if(this.status=="pk_teacher"){
-              //   let res=await this.$http.post('/teacher/sh_profile/',{t_id:this.t_id})
-              // }
-              // else if(this.status=="pk_student"){
-              //   let res=await this.$http.post('/student/sh_profile/',{std_id:this.t_id})
-              // }
-              console.log(res.data.datas)
-              this.a_name=res.data.datas[0].a_name
-              this.a_lname=res.data.datas[0].a_lname
-              this.a_tel=res.data.datas[0].a_tel
+              let res=await this.$http.post('/student/sh_profile/',{id:this.id})
+              // console.log(res.data)
+              this.std_name=res.data.datas[0].std_name 
+              this.std_lname=res.data.datas[0].std_lname 
+              this.std_tel2=res.data.datas[0].std_tel2 
+              this.std_tel=res.data.datas[0].std_tel
            
             },
             async profile_update(){
               this.loading=true
-              let res=await this.$http.post("/admin/profile_update",{
-        				a_name:this.a_name,
-        				a_lname:this.a_lname,
-                a_tel:this.a_tel,
+              let res=await this.$http.post("/student/profile_update",{
+                std_name:this.std_name,
+                std_lname:this.std_lname,
+                std_tel:this.std_tel,
+                std_tel2:this.std_tel2,
                 id:this.id,
               })
               this.loading=false
               if(res.data.ok==true){this.sh_profile(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             	else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             },
-            teacher(){
-              this.$router.push({name:"manage-teacher"})
-            }
+         
         }
     }
 </script>

@@ -1,7 +1,18 @@
 <template>
   <div>
     <v-card>
-    <div class="cv_header padding-top-mn" >ข้อมูลอุปกรณ์เสริม</div>
+    <div class="cv_header padding-top-mn" >ข้อมูลอุปกรณ์เสริม
+      <v-btn
+        color="green lighten-2"
+        dark
+        small
+       
+        fab
+        @click="accessories_add()"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
+    </div>
     <div class="cv_header padding-top-mn"> 
       <v-text-field
               label="ค้นหาอุปกรณ์"
@@ -10,18 +21,7 @@
             ></v-text-field>
     </div>
     <div class="cv_header xs12">
-      <v-btn
-        color="green lighten-2"
-        dark
-        small
-        absolute
-        top
-        right
-        fab
-        @click="accessories_add()"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
+      
     </div>
     <v-spacer></v-spacer>
   <v-data-table
@@ -85,30 +85,38 @@
     watch:{
       async txt_search(newValue){
         let s=newValue
-        this.state=true
-        let res=await this.$http.post('/accessories/search',{
-          txt_search:s
-        })
+        
+        if(s!=""){
+          this.state=true
+          let res=await this.$http.post('/accessories/search',{
+            txt_search:s
+          })
+          this.state=false
         // console.log(res.data)
         this.datas=res.data.datas
-        this.state=false
+        }else{
+          this.sh_accessories()
+        }
+        
+        
       }
     },
-    async created(){
-      if(this.$route.query.g_code){
-        let res=await this.$http.get('/accessories/list_g/'+this.$route.query.g_code)
-        this.datas=res.data.datas
-        this.state=false
-      }else{
-        let res=await this.$http.get('/accessories/list')
-        this.datas=res.data.datas
-        this.state=false
-        // console.log(res.data.datas)
-      }
-      
-      
+     created(){
+      this.sh_accessories()
     },
     methods:{
+      async sh_accessories(){
+        if(this.$route.query.g_code){
+          let res=await this.$http.get('/accessories/list_g/'+this.$route.query.g_code)
+          this.datas=res.data.datas
+          this.state=false
+        }else{
+          let res=await this.$http.get('/accessories/list')
+          this.datas=res.data.datas
+          this.state=false
+          // console.log(res.data.datas)
+        }
+      },
       list_accessories(ac_id){
         this.$router.push({path: '../teacher/accessories/edit_accessories?ac_id='+ac_id})
       },

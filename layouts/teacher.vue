@@ -77,35 +77,13 @@
       app
       fixed
     >
-      <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
+      <v-toolbar-title style="width: 300px" class="ml-0 pl-3" @click="home()">
         <v-toolbar-side-icon><img :src="require('@/static/image/new_logo_white.png')" class="icon_login" style="width:120%"></v-toolbar-side-icon>
         <span class="">CTC Vehicle</span>
       </v-toolbar-title>
-      <!-- <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        v-model="txt_search"
-        prepend-inner-icon="search"
-        label="ค้นหา ..."
-        class="hidden-sm-and-down"
-      ></v-text-field> -->
+ 
       <v-spacer></v-spacer>
-      <!-- {{username}}
-      {{status}} -->
-      <!-- <v-btn icon>
-      <v-badge right
-        v-model="noti_sh"
-        color="red darken-3"
-      
-      >
-            <span v-if="num_noti" slot="badge">{{num_noti}}</span>
-            <v-icon
-              @click="noti_sh = !noti_sh"
-              color="white"
-            >notifications</v-icon>
-          </v-badge>
-      </v-btn> -->
+   
       <v-divider
         class="mx-3"
         inset
@@ -164,7 +142,7 @@
       items: [
       { heading: 'ออนไลน์' },
       
-      { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: ''},
+      { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: '../../teacher/profile'},
       // { divider: true }, ../../teacher/profile
       //   {
       //     icon: 'keyboard_arrow_up',
@@ -202,16 +180,16 @@
 
         { divider: true },
        
-        // { 
-        //  icon: 'keyboard_arrow_up',
-        //   'icon-alt': 'settings',
-        //   text: 'ตั้งค่า', 
-        //  model: false,
-        //   children: [
-        //     { icon:'fas fa-user-shield' ,text: 'ความปลอดภัย' ,link: '../../teacher/security/set_password'},
-        //     { icon:'fas fa-sliders-h' ,text: 'ระบบ' },
-        //   ]},
-        // { icon: 'help', text: 'ช่วยเหลือ' },
+        { 
+         icon: 'keyboard_arrow_up',
+          'icon-alt': 'settings',
+          text: 'ตั้งค่า', 
+         model: false,
+          children: [
+            { icon:'fas fa-user-shield' ,text: 'ความปลอดภัย' ,link: '../../teacher/security/security'},
+            { icon:'fas fa-sliders-h' ,text: 'ระบบ' },
+          ]},
+        { icon: 'help', text: 'ช่วยเหลือ' },
         { icon: 'fas fa-sign-out-alt', text: 'ออกจากระบบ' ,link:"../../logout"},
         
       ],
@@ -240,6 +218,9 @@
     }
   },
    methods: {
+     home(){
+       this.$router.push({name:"teacher-group"})
+     },
      set_session(){
        this.id=sessionStorage.getItem("id")
        console.log("id="+this.id)

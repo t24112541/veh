@@ -20,7 +20,7 @@
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
            
-            <v-flex xs6 >
+            <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field 
                   :disabled="!isEditing"
@@ -29,23 +29,11 @@
                   maxlength="50"
                   counter
                   label="ชื่อ"
-                  v-model="a_name"
+                  v-model="t_name"
                 ></v-text-field>
               </v-layout>
             </v-flex>
-            <v-flex xs6 >
-              <v-layout align-center>
-                <v-text-field 
-                  :disabled="!isEditing"
-                  :rules="[rules.required]"
-                  prepend-icon="fas fa-user fa-2x"
-                  maxlength="50"
-                  counter
-                  label="นามสกุล"
-                  v-model="a_lname"
-                ></v-text-field>
-              </v-layout>
-            </v-flex>
+       
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field 
@@ -55,7 +43,7 @@
                   counter
                   prepend-icon="fas fa-phone-square fa-2x"
                   label="เบอร์โทรศัพท์"
-                  v-model="a_tel"
+                  v-model="t_tel"
                 ></v-text-field>
               </v-layout>
             </v-flex>
@@ -86,21 +74,19 @@
 </template>
 <script>
     export default {
-        layout: 'manage',
+        layout: 'teacher',
         data () {
           return {
             id:sessionStorage.getItem("id"),
             status:sessionStorage.getItem("status"),
-            a_name:"",
-            a_lname:"",
-            a_tel:"",
+            t_name:"",
+            t_tel:"",
 
             type_api:"",
             danger:false,
             loading:false,
             isEditing:null,
             alt_txt:"",
-            stg_password: false,
             rules: {
               required: value => !!value || 'ห้ามว่าง.',
             },
@@ -111,36 +97,24 @@
         },
         methods:{
             async sh_profile(){
-              // if(this.status=="pk_admin"){
-                let res=await this.$http.post('/admin/sh_profile/',{id:this.id})
-              // }
-              // else if(this.status=="pk_teacher"){
-              //   let res=await this.$http.post('/teacher/sh_profile/',{t_id:this.t_id})
-              // }
-              // else if(this.status=="pk_student"){
-              //   let res=await this.$http.post('/student/sh_profile/',{std_id:this.t_id})
-              // }
-              console.log(res.data.datas)
-              this.a_name=res.data.datas[0].a_name
-              this.a_lname=res.data.datas[0].a_lname
-              this.a_tel=res.data.datas[0].a_tel
+              let res=await this.$http.post('/teacher/sh_profile/',{id:this.id})
+              // console.log(res.data)
+              this.t_name=res.data.datas[0].t_name
+              this.t_tel=res.data.datas[0].t_tel
            
             },
             async profile_update(){
               this.loading=true
-              let res=await this.$http.post("/admin/profile_update",{
-        				a_name:this.a_name,
-        				a_lname:this.a_lname,
-                a_tel:this.a_tel,
+              let res=await this.$http.post("/teacher/profile_update",{
+        				t_name:this.t_name,
+                t_tel:this.t_tel,
                 id:this.id,
               })
               this.loading=false
               if(res.data.ok==true){this.sh_profile(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             	else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             },
-            teacher(){
-              this.$router.push({name:"manage-teacher"})
-            }
+         
         }
     }
 </script>

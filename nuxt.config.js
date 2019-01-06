@@ -80,6 +80,7 @@ module.exports = {
     // '~/plugins/cordova',
     '~/plugins/vuetify',
     '~/plugins/axios',
+    '~/plugins/vue-cookies',
   ],
 
   // generate: {
