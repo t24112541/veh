@@ -50,7 +50,7 @@ module.exports = {
   },
 
   server: {
-    port: 9006,
+    port: 9007,
   },
 
   // Build options

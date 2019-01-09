@@ -109,7 +109,7 @@ export default {
           }
             
           
-        }else{this.type_api="error",this.danger=true,this.alt_txt=res.data.message}
+        }else{this.type_api="error",this.danger=true,this.alt_txt=res.data.alt_txt}
       }else{this.type_api="error",this.danger=true,this.alt_txt="กรุณากรอกข้อมูล"}
     },
   },

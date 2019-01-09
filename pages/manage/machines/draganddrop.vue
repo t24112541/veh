@@ -1,78 +1,122 @@
-<style>
-  form{
-    display: block;
-    height: 400px;
-    width: 400px;
-    background: #ccc;
-    margin: auto;
-    margin-top: 40px;
-    text-align: center;
-    line-height: 400px;
-    border-radius: 4px;
-  }
 
-  div.file-listing{
-    width: 400px;
-    margin: auto;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-
-  div.file-listing img{
-    height: 100px;
-  }
-
-  div.remove-container{
-    text-align: center;
-  }
-
-  div.remove-container a{
-    color: red;
-    cursor: pointer;
-  }
-
-  a.submit-button{
-    display: block;
-    margin: auto;
-    text-align: center;
-    width: 200px;
-    padding: 10px;
-    text-transform: uppercase;
-    background-color: #CCC;
-    color: white;
-    font-weight: bold;
-    margin-top: 20px;
-  }
-
-  progress{
-    width: 400px;
-    margin: auto;
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  .drop-files{
-    background-color: aqua;
-  }
-</style>
 
 <template>
-  <div id="file-drag-drop">
-    <form ref="fileform">
-      <span class="drop-files">Drop the files here!</span>
-    </form>
+  <div >
+    
+              <v-flex xs4
+                @click="$refs.img_font.click()" 
+                style="cursor: pointer;"
+              >
+                <input 
+                  type="file" 
+                  style="display:none;" 
+                  accept="image/*" 
+                  multiple  
+                  @change="upload_img_font($event)" 
+                  ref="img_font"
+                >
+                <v-card height="100%" class="grey lighten-4 paddign"> 
+                  <img :src="this.img_font" width="100%" >
+                  <v-card-actions style="font-size:100%">
+                    <span><i class="fas fa-image fa-2x"></i></span>
+                    <v-spacer></v-spacer>
+                    <span>รูปด้านหน้า</span>
+                   
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+              <!-- end 1 -->
 
-    <progress max="100" :value.prop="uploadPercentage"></progress>
+              <v-flex xs4 class="text-xs-center" 
+                @click="$refs.img_side.click()" 
+                style="cursor: pointer;"
+              >
+                <input 
+                  type="file" 
+                  style="display:none;" 
+                  accept="image/*" 
+                  multiple  
+                  @change="upload_img_side($event)" 
+                  ref="img_side"
+                >
+                <v-card height="100%" class="grey lighten-4 paddign" > 
+                  <img :src="this.img_side" width="100%">
+                  <v-card-actions style="font-size:100%">
+                    <span><i class="fas fa-image fa-2x"></i></span>
+                    <v-spacer></v-spacer>
+                    <span>รูปด้านข้าง</span>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+    <v-flex xs4 class="text-xs-center" 
+                @click="$refs.img_rear.click()" 
+                style="cursor: pointer;"
+              >
+                <input 
+                  type="file" 
+                  style="display:none;" 
+                  accept="image/*" 
+                  multiple  
+                  @change="upload_img_rear($event)" 
+                  ref="img_rear"
+                >
+                <v-card height="100%" class="grey lighten-4 paddign" > 
+                  <img :src="this.img_rear" width="100%">
+                  <v-card-actions style="font-size:100%">
+                    <span><i class="fas fa-image fa-2x"></i></span>
+                    <v-spacer></v-spacer>
+                    <span>รูปด้านหลัง</span>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+                        <v-btn flat color="green lighten-2"  @click="machine_add()"><i class="fas fa-save fa-2x"></i></v-btn>
+              <div v-if="value!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="100"
+                :width="15"
+                :value="value"
+                color="primary"
+              >
+                {{ value }}
+              </v-progress-circular>
+              </div>
+              <v-alert
+                v-model="danger"
+                dismissible
+                :type="type_api"
+              >
+                {{alt_txt}}
+              </v-alert>
+              <v-flex xs4 
+                @click="$refs.img_font.click()" 
+                style="cursor: pointer;"
+              >
+                <input 
+                  :disabled="!isEditing"
+                  type="file" 
+                  style="display:none;" 
+                  accept="image/*" 
+                  multiple  
+                  @change="upload_img_font($event)" 
+                  ref="img_font"
+                >
+                <v-card height="100%" class="grey lighten-4 paddign"> 
+                  <img :src="this.img_font" width="100%">
+                  <v-card-actions style="font-size:100%">
+                    <span><i class="fas fa-image fa-2x"></i></span>
+                    <v-spacer></v-spacer>
+                    <span>รูปด้านหน้า</span>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+              <v-btn @click="sh_img()">img</v-btn>
+              <router-link to="http://192.168.1.125:34001/img/machine/veh-1546874319889.jpg">Home</router-link>
 
-    <v-flex v-for="(file, key) in files" :key="file" class="file-listing">
-      <img class="preview" v-bind:ref="'preview'+parseInt( key )"/>
-     
-      <div class="remove-container">
-        <a class="remove" v-on:click="removeFile( key )">Remove</a>
-      </div>
-    </v-flex>
+<img src="/img/machine/veh-1546874319889.jpg">
+              <img :src="'/img/machine/veh-1546874319889.jpg'" width="100%">
 
-    <a class="submit-button" v-on:click="submitFiles()" v-show="files.length > 0">Submit</a>
   </div>
 </template>
 
@@ -80,101 +124,90 @@
   export default {
     data(){
       return {
-        dragAndDropCapable: false,
-        files: [],
-        uploadPercentage: 0
+        img_font:"http://192.168.1.125:34001/img/machine/veh-1546874319889.jpg",
+        img_side:[],
+        img_rear:[],
+        value:0,
+        type_api:"",
+        danger:false,
+        alt_txt:"",
+        image:'',
+        
       }
     },
+    async created(){
+      
+      this.$http({
+          method: 'post',
+          url: 'admin/cv',
+          // headers: {
+          //   'Content-type': 'image/jpeg'
+          // },
+          // params: {
+          //   id: step.id
+          // }
+      }).then(res => {
+        console.log(res.data)
+        
+        // this.image=res.data
+          // this.image = 'data:image/jpg;base64,'.concat(this.image.concat(res.data))            
+      })
 
-    mounted(){
-
-      this.dragAndDropCapable = this.determineDragAndDropCapable();
-      if( this.dragAndDropCapable ){
-        ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach( function( evt ) {
-          this.$refs.fileform.addEventListener(evt, function(e){
-            e.preventDefault();
-            e.stopPropagation();
-          }.bind(this), false);
-        }.bind(this));
-        this.$refs.fileform.addEventListener('drop', function(e){
-          for( let i = 0; i < e.dataTransfer.files.length; i++ ){
-            this.files.push( e.dataTransfer.files[i] );
-            this.getImagePreviews();
-          }
-        }.bind(this));
-      }
+      // let res=await this.$http.post("admin/cv",{img:"veh-1546874319889.jpg"})
+      // this.image=res.data
+      //   console.log(res.data)
     },
+   
 
     methods: {
-      determineDragAndDropCapable(){
-        var div = document.createElement('div');
-        return ( ( 'draggable' in div )
-                || ( 'ondragstart' in div && 'ondrop' in div ) )
-                && 'FormData' in window
-                && 'FileReader' in window;
+      async sh_img(){
+        let res=await this.$http.post("admin/cv",{img:"veh-1546874319889.jpg"})
+        console.log(res)
       },
-      getImagePreviews(){
-        for( let i = 0; i < this.files.length; i++ ){
-          if ( /\.(jpe?g|png|gif)$/i.test( this.files[i].name ) ) {
-            let reader = new FileReader();
-            reader.addEventListener("load", function(){
-              this.$refs['preview'+parseInt( i )][0].src = reader.result;
-            }.bind(this), false);
-            reader.readAsDataURL( this.files[i] );
-          }else{
-            this.$nextTick(function(){
-              this.$refs['preview'+parseInt( i )][0].src = '/images/file.png';
-            });
+      async machine_add(){
+        console.log(this.$refs.img_rear.files[0])
+        const formData = new FormData()
+        formData.append('img_font',this.$refs.img_font.files[0])
+        formData.append('img_side',this.$refs.img_side.files[0])
+        formData.append('img_rear',this.$refs.img_rear.files[0])
+        let data = await this.$http.post('upload/upload', formData,{
+          onUploadProgress: uploadEvent => {
+            this.value=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+            // console.log(Math.round(uploadEvent.loaded / uploadEvent.total*100))
           }
-        }
+        })
+        
+      
+
       },
-
-      // /*
-      //   Submits the files to the server
-      // */
-      // submitFiles(){
-      //   /*
-      //     Initialize the form data
-      //   */
-      //   let formData = new FormData();
-
-      //   /*
-      //     Iteate over any file sent over appending the files
-      //     to the form data.
-      //   */
-      //   for( var i = 0; i < this.files.length; i++ ){
-      //     let file = this.files[i];
-
-      //     formData.append('files[' + i + ']', file);
-      //   }
-
-      //   /*
-      //     Make the request to the POST /file-drag-drop URL
-      //   */
-      //   this.$http.post( 'upload/file-drag-drop',
-      //     formData,
-      //     {
-      //       headers: {
-      //           'Content-Type': 'multipart/form-data'
-      //       },
-      //       onUploadProgress: function( progressEvent ) {
-      //         this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
-      //       }.bind(this)
-      //     }
-      //   ).then(function(){
-      //     console.log('SUCCESS!!');
-      //   })
-      //   .catch(function(){
-      //     console.log('FAILURE!!');
-      //   });
-      // },
-
-      // /*
-      //   Removes a select file the user has uploaded
-      // */
-      removeFile( key ){
-        this.files.splice( key, 1 );
-      }
+               upload_img_font(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_font=e.target.result;
+              // console.log(this.img_font);
+            };
+          },
+          upload_img_side(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_side=e.target.result;
+              // console.log("this.img_side");
+              // console.log(this.img_side);
+            };
+          },
+      upload_img_rear(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_rear=e.target.result;
+              // console.log( this.$refs.img_rear.files[0]);
+            };
+          },
     }
   }
 </script>

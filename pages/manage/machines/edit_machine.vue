@@ -52,7 +52,7 @@
                   ref="img_font"
                 >
                 <v-card height="100%" class="grey lighten-4 paddign"> 
-                  <img :src="this.img_font" width="100%">
+                  <img :src="img_font" width="100%">
                   <v-card-actions style="font-size:100%">
                     <span><i class="fas fa-image fa-2x"></i></span>
                     <v-spacer></v-spacer>
@@ -178,7 +178,19 @@
           </v-btn>
 
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="machine_update(mc_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+            <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+            </div>
+          <v-btn v-if="load_status==0" flat color="green lighten-2" :disabled="!isEditing" @click="machine_update(mc_id)"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
         <v-alert
           v-model="danger"
@@ -208,6 +220,7 @@
               img_side:"",
               img_rear:"",
 
+              link_img:"http://localhost:34001/img/machine/",
               img_font_id:"",
               img_side_id:"",
               img_rear_id:"",
@@ -220,6 +233,8 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              cv_dir:"",
+              load_status:0,
             }
         },
         async created(){
@@ -257,39 +272,44 @@
             this.std_name=res.data.datas[0].std_name
             this.std_lastname=res.data.datas[0].std_lastname
 
-            this.img_font=res.data.datas[0].img_img
+            this.img_font=this.link_img+res.data.datas[0].img_img
             this.img_font_id=res.data.datas[0].img_id
 
-            this.img_side=res.data.datas[1].img_img
+            this.img_side=this.link_img+res.data.datas[1].img_img
             this.img_side_id=res.data.datas[1].img_id
 
-            this.img_rear=res.data.datas[2].img_img
+            this.img_rear=this.link_img+res.data.datas[2].img_img
             this.img_rear_id=res.data.datas[2].img_id
 
             // if(!this.$route.query.ms){this.ms=!this.ms}
-            // console.log(res.data.datas)
+            // console.log("res.data.cv_dir")
+            // console.log(res.data.cv_dir)
+            this.cv_dir=res.data.cv_dir
           },
           async machine_update(mc_id){
+            const formData = new FormData()
+              formData.append('mc_id',this.mc_id)
+              formData.append('mc_code',this.mc_code)
+              formData.append('mc_brand',this.mc_brand)
+              formData.append('mc_series',this.mc_series)
+              formData.append('std_id',this.std_code)
+              formData.append('u_id',sessionStorage.getItem("username"))
+
+              formData.append('img_font',this.$refs.img_font.files[0])
+              formData.append('img_side',this.$refs.img_side.files[0])
+              formData.append('img_rear',this.$refs.img_rear.files[0])
+
+              formData.append('img_font_id',this.img_font_id)
+              formData.append('img_side_id',this.img_side_id)
+              formData.append('img_rear_id',this.img_rear_id)
+
             //console.log("mc_id"+mc_id)
-            let res=await this.$http.post("/machine/machine_update",{
-              mc_code:this.mc_code,
-              mc_brand:this.mc_brand,
-              mc_series:this.mc_series,
-              std_id:this.std_code,
-              mc_id:mc_id,
-
-              img_font:this.img_font,
-              img_side:this.img_side,
-              img_rear:this.img_rear,
-
-              img_font_id:this.img_font_id,
-              img_side_id:this.img_side_id,
-              img_rear_id:this.img_rear_id,
-
-              u_id:sessionStorage.getItem("username")
-            })
-      
-            if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
+              let res=await this.$http.post("/machine/machine_update",formData,{
+                onUploadProgress: uploadEvent => {
+                  this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                }
+              })
+            if(res.data.ok==true){this.sh_machine(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.load_status=0}
             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
           machine(){
