@@ -50,6 +50,7 @@
                   multiple  
                   @change="upload_img_font($event)" 
                   ref="img_font"
+                  :v-model="img_font"
                 >
                 <v-card height="100%" class="grey lighten-4 paddign"> 
                   <img :src="img_font" width="100%">
@@ -190,6 +191,7 @@
                 {{ load_status }}
               </v-progress-circular>
             </div>
+            <!--  -->
           <v-btn v-if="load_status==0" flat color="green lighten-2" :disabled="!isEditing" @click="machine_update(mc_id)"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
         <v-alert
@@ -233,7 +235,6 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
-              cv_dir:"",
               load_status:0,
             }
         },
@@ -280,13 +281,8 @@
 
             this.img_rear=this.link_img+res.data.datas[2].img_img
             this.img_rear_id=res.data.datas[2].img_id
-
-            // if(!this.$route.query.ms){this.ms=!this.ms}
-            // console.log("res.data.cv_dir")
-            // console.log(res.data.cv_dir)
-            this.cv_dir=res.data.cv_dir
           },
-          async machine_update(mc_id){
+          async machine_update(mc_id){console.log("1")
             const formData = new FormData()
               formData.append('mc_id',this.mc_id)
               formData.append('mc_code',this.mc_code)
@@ -295,21 +291,20 @@
               formData.append('std_id',this.std_code)
               formData.append('u_id',sessionStorage.getItem("username"))
 
-              formData.append('img_font',this.$refs.img_font.files[0])
-              formData.append('img_side',this.$refs.img_side.files[0])
-              formData.append('img_rear',this.$refs.img_rear.files[0])
+              formData.append('img_font-'+this.img_font_id,this.$refs.img_font.files[0])
+              formData.append('img_side-'+this.img_side_id,this.$refs.img_side.files[0])
+              formData.append('img_rear-'+this.img_rear_id,this.$refs.img_rear.files[0])
 
               formData.append('img_font_id',this.img_font_id)
               formData.append('img_side_id',this.img_side_id)
               formData.append('img_rear_id',this.img_rear_id)
 
-            //console.log("mc_id"+mc_id)
               let res=await this.$http.post("/machine/machine_update",formData,{
                 onUploadProgress: uploadEvent => {
                   this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
                 }
               })
-            if(res.data.ok==true){this.sh_machine(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.load_status=0}
+            if(res.data.ok==true){this.load_status=0,this.sh_machine(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
           machine(){
