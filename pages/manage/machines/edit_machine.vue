@@ -295,10 +295,6 @@
               formData.append('img_side-'+this.img_side_id,this.$refs.img_side.files[0])
               formData.append('img_rear-'+this.img_rear_id,this.$refs.img_rear.files[0])
 
-              formData.append('img_font_id',this.img_font_id)
-              formData.append('img_side_id',this.img_side_id)
-              formData.append('img_rear_id',this.img_rear_id)
-
               let res=await this.$http.post("/machine/machine_update",formData,{
                 onUploadProgress: uploadEvent => {
                   this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)

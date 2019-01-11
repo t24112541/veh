@@ -129,7 +129,6 @@
         { icon: 'fas fa-users', text: 'กลุ่มการเรียน' ,link: '../../manage/group'},
         { icon: 'fas fa-motorcycle', text: 'ยานพาหนะ' ,link: '../../manage/machines'},
         { icon: 'fas fa-wrench', text: 'อุปกรณ์เสริม' ,link: '../../manage/accessories'},
-        { icon: 'fas fa-motorcycle', text: 'ยานพาหนะ' ,link: '../../manage/machines/draganddrop'},
         
         { divider: true },
         { heading: 'การทำงาน' },

@@ -109,11 +109,11 @@
               </v-flex>
 
             <v-flex xs12>
-                <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_std(ac_u_id)">
+                <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_user(ac_u_id)">
                  <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{u_name}} <v-spacer></v-spacer>
                 </v-btn>
             </v-flex>
-            <v-flex xs12 >
+            <!-- <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
                   :disabled="true"
@@ -127,7 +127,7 @@
                   v-model="u_name"
                 ></v-text-field>
               </v-layout>
-            </v-flex>
+            </v-flex> -->
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -172,12 +172,24 @@
             
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="accessories_update(ac_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+          <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+            </div>
+          <v-btn v-if="load_status==0" flat color="green lighten-2" :disabled="!isEditing" @click="accessories_update(ac_id)"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
         <v-alert
           v-model="danger"
           dismissible
-          :type=type_api
+          :type="type_api"
         >
           {{alt_txt}}
         </v-alert>
@@ -190,6 +202,7 @@
 
         data () {
             return {
+              link_img:"http://localhost:34001/img/accessories/",
               ms:null,
 
               ac_description:"",
@@ -216,17 +229,28 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              load_status:0,
             }
         },
         async created(){
           this.sh_accessories()
         },
         methods:{
-          async sh_std(ac_u_id){
-            let res=await this.$http.post('/student/std_id/',{
-              std_code:this.ac_u_id,
-            })
-            this.$router.push({path: '../../manage/student/edit_student?std_id='+res.data.datas[0].std_id})
+          async sh_user(ac_u_id){
+            if(this.ac_u_table=="pk_teacher"){
+              let res=await this.$http.post('/teacher/t_id/',{
+                t_code:this.ac_u_id,
+              })
+              this.$router.push({path: '../../manage/teacher/edit_teacher?t_id='+res.data.datas[0].t_id})
+            }
+            else if(this.ac_u_table=="pk_student"){
+              let res=await this.$http.post('/student/std_id/',{
+                std_code:this.ac_u_id,
+              })
+              this.$router.push({path: '../../manage/student/edit_student?std_id='+res.data.datas[0].std_id})
+            }
+            
+            
           },
           conf_del(){this.conf_del=true},
           async accessoriess_del(){
@@ -251,40 +275,40 @@
             this.ac_id=this.$route.query.ac_id
             this.u_name=res.data.datas[0].u_name
 
-            this.img_font=res.data.datas[0].img_img
+            this.img_font=this.link_img+res.data.datas[0].img_img
             this.img_font_id=res.data.datas[0].img_id
 
-            this.img_side=res.data.datas[1].img_img
+            this.img_side=this.link_img+res.data.datas[1].img_img
             this.img_side_id=res.data.datas[1].img_id
 
-            this.img_rear=res.data.datas[2].img_img
+            this.img_rear=this.link_img+res.data.datas[2].img_img
             this.img_rear_id=res.data.datas[2].img_id
 
             if(!this.$route.query.ms){this.ms=!this.ms}
             // else{this.ms=this.ms}
           },
           async accessories_update(ac_id){
-            //console.log("ac_id"+ac_id)
-            let res=await this.$http.post("/accessories/accessories_update",{
-              ac_description:this.ac_description,
-              ac_name:this.ac_name,
-              ac_id:this.$route.query.ac_id,
-              ac_u_id:this.ac_u_id,
-              ac_u_table:this.ac_u_table,
+            if(this.ac_description!='' && this.ac_u_id!=''&& this.ac_name!='' ){
+              const formData = new FormData()
+              formData.append('img_font-'+this.img_font_id,this.$refs.img_font.files[0])
+              formData.append('img_side-'+this.img_side_id,this.$refs.img_side.files[0])
+              formData.append('img_rear-'+this.img_rear_id,this.$refs.img_rear.files[0])
+              
+              formData.append('ac_id',this.$route.query.ac_id)
+              formData.append('ac_description',this.ac_description)
+              formData.append('ac_u_id',this.ac_u_id)
+              formData.append('ac_name',this.ac_name)
+              formData.append('ac_u_table',this.ac_u_table)
+              formData.append('u_id',sessionStorage.getItem("username"))
 
-              img_font:this.img_font,
-              img_side:this.img_side,
-              img_rear:this.img_rear,
-
-              img_font_id:this.img_font_id,
-              img_side_id:this.img_side_id,
-              img_rear_id:this.img_rear_id,
-
-              u_id:sessionStorage.getItem("username")
-            })
-            // console.log(res.data)
+              let res=await this.$http.post("/accessories/accessories_update",formData,{
+                onUploadProgress: uploadEvent => {
+                    this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                  }
+              })
               if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_accessories()}
-             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            }
           },
           accessories(){
             this.$router.push({name:"manage-accessories"})
