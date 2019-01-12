@@ -8,12 +8,12 @@
       :items="datas"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>

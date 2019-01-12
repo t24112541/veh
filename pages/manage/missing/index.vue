@@ -8,8 +8,8 @@
 
         <v-flex xs6>
         <v-radio-group v-model="ms_table" row style="margin-top:25px">
-          <v-radio label="พาหนะ" value="pk_machine"></v-radio>
-          <v-radio label="อุปกรณ์" value="pk_accessories"></v-radio>
+          <v-radio label="พาหนะ" value="pk_machine"></v-radio>{{count_status_mc.count}}
+          <v-radio label="อุปกรณ์" value="pk_accessories"></v-radio>{{count_status_ac.count}}
         </v-radio-group>
         </v-flex>
 
@@ -109,6 +109,8 @@
         stp1:"",
         stp2:"",
         stp3:"",
+        count_status_mc:"",
+        count_status_ac:"",
       }
     },
     async created(){
@@ -143,6 +145,8 @@
         this.stp1=res.data.stp1[0]
         this.stp2=res.data.stp2[0]
         this.stp3=res.data.stp3[0]
+        this.count_status_mc=res.data.machines[0],
+        this.count_status_ac=res.data.accessories[0],
         this.state=false
       },
       chang_value(vl){

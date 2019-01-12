@@ -1,13 +1,7 @@
 
 <template>
     <v-card @keypress.enter="std_update(std_id)">
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -43,7 +37,31 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
+            <v-flex xs4></v-flex>
+            <v-flex xs4 class="text-xs-center" 
+                @click="$refs.img.click()" 
+                style="cursor: pointer;"
+              >
+                <input 
+                  type="file" 
+                  style="display:none;" 
+                  accept="image/*" 
+                  multiple  
+                  @change="upload_img($event)" 
+                  ref="img"
+                >
+                <v-card height="100%" class="grey lighten-4 paddign" > 
+                  <img :src="this.img" width="100%">
+                  <v-card-actions style="font-size:100%">
+                    <span><i class="fas fa-image fa-2x"></i></span>
+                    <v-spacer></v-spacer>
+                    <span>รูปภาพ</span>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+              
             <span class="headline">{{d_name}} กลุ่ม {{g_name}}</span>
+            
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -66,7 +84,7 @@
                 ></v-text-field>
               </v-layout>
             </v-flex>
-   
+            
            <v-flex xs4>
               <v-select 
                 :disabled="!isEditing"
@@ -147,9 +165,29 @@
           
           <v-btn flat color="red lighten-2" @click="student()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="std_update(std_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+            <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+            </div>
+          <v-btn v-if="load_status==0" flat color="green lighten-2" 
+          :disabled="!isEditing || std_code=='' ||std_gender=='' ||std_prename=='' ||std_name=='' ||std_lname=='' ||std_pin_id=='' ||std_birthday=='' ||std_blood=='' || std_tel=='' || std_tel2==''" 
+          @click="std_update(std_id)"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
-        
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
     
 </template>
@@ -188,6 +226,11 @@
             date: null,
 
             menu1: false,
+
+            img:[],
+            load_status:"",
+            link_img:"http://localhost:34001/img/users/",
+            img_id:"",
           }
         },
         async created(){
@@ -242,39 +285,54 @@
 
               this.std_tel=res.data.datas.std_tel
               this.std_tel2=res.data.datas.std_tel2
-              
-              // console.log(res.data)
+              this.img=this.link_img+res.data.img[0].img_img
+              this.img_id=res.data.img[0].img_id
+              // console.log(res.data.img[0].img_img)
+
             },
             async std_update(std_id){
-              //console.log("std_id"+std_id)
-              let res=await this.$http.post("/student/std_update",{
-                
-        				std_code:this.std_code,
-        				std_pin_id:this.std_pin_id,
-        				std_prename:this.std_prename,
-        				std_name:this.std_name,
-        				std_lname:this.std_lname,
-        				std_birthday:this.std_birthday,
-        				std_gender:this.std_gender,
-        				std_blood:this.std_blood,
-        				g_code:this.g_code,
-                std_id:std_id,
+              const formData = new FormData()
+              formData.append('img-'+this.img_id,this.$refs.img.files[0])
 
-                std_tel:this.std_tel,
-                std_tel2:this.std_tel2,
+              formData.append('std_code',this.std_code)
+              formData.append('std_gender',this.std_gender)
+              formData.append('std_prename',this.std_prename)
+              formData.append('std_name',this.std_name)
+              formData.append('std_lname',this.std_lname)
+              formData.append('std_pin_id',this.std_pin_id)
+              formData.append('std_birthday',this.std_birthday)
+              formData.append('std_blood',this.std_blood)
+              formData.append('g_code',this.g_code)
+              formData.append('std_tel',this.std_tel)
+              formData.append('std_tel2',this.std_tel2)
+              formData.append('std_id',this.std_id)
+              formData.append('u_id',sessionStorage.getItem("username"))
+              
 
-                u_id:sessionStorage.getItem("username")
+              let res=await this.$http.post("/student/std_update",formData,{
+                onUploadProgress: uploadEvent => {
+                  this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                }
               })
-              console.log(res.data)
-                if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt
-                  this.$router.push({name:"manage-student"})
+                if(res.data.ok==true){
+                  this.load_status=0,
+                  this.sh_std(),
+                  this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt
                 }
             	 else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             },
             student(){
               this.$router.push({name:"manage-student"})
             },
-          
+            upload_img(e){
+              const image = e.target.files[0];
+              const reader = new FileReader();
+              reader.readAsDataURL(image);
+              reader.onload = e =>{              
+                this.img=e.target.result;
+                // console.log(this.img_side);
+              };
+            },
         },
        
     }

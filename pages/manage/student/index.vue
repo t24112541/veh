@@ -36,7 +36,7 @@
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
       
     >
     <template slot="headerCell" slot-scope="props">

@@ -197,7 +197,7 @@
         <v-alert
           v-model="danger"
           dismissible
-          :type=type_api
+          :type="type_api"
         >
           {{alt_txt}}
         </v-alert>

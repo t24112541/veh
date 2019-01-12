@@ -8,12 +8,12 @@
       :items="datas"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>
@@ -32,7 +32,6 @@
         <td class="text-xs-left">{{ props.item.std_prename }}{{ props.item.std_name }}{{ props.item.std_lname }}</td>
         <td class="text-xs-left">{{ props.item.g_name }}</td>
         <td class="text-xs-left">{{ props.item.d_name }}</td>
-        <td class="text-xs-left">{{ props.item.u_name }}</td>
 
       </tr>
     </template>
@@ -65,8 +64,7 @@
           { text: 'ชื่อนักเรียน/นักศึกษา', value: 'ชื่อนักเรียน/นักศึกษา',align: 'left',sortable: false,  },
           { text: 'กลุ่มการเรียน', value: 'กลุ่มการเรียน',align: 'left',sortable: false,  },
           { text: 'แผนกวิชา', value: 'แผนกวิชา',align: 'left',sortable: false,  },
-          { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
-          
+
         ],
         datas: []
       }

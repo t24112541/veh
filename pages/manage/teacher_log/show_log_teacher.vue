@@ -3,7 +3,7 @@
     <v-alert
         v-model="danger"
         dismissible
-        :type=type_api
+        :type="type_api"
       >
         {{alt_txt}}
       </v-alert>
@@ -16,12 +16,12 @@
       :items="datas"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>
@@ -94,11 +94,11 @@
       this.state=true
       let res=await this.$http.post('/log_list/log_teacher_show/',{t_id:this.$route.query.t_id})
       // console.log("ola")
-      //  console.log(res.data.datas)
-      this.datas=res.data.datas
-      this.g_name=this.datas[0].g_name
-      this.d_name=this.datas[0].d_name
-      this.t_name=this.datas[0].t_name
+       console.log(res.data)
+      // this.datas=res.data.datas
+      // this.g_name=this.datas[0].g_name
+      // this.d_name=this.datas[0].d_name
+      // this.t_name=this.datas[0].t_name
       // console.log(this.datas[0].g_name)
       this.state=false
     },
