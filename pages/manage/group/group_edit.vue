@@ -1,13 +1,7 @@
 
 <template>
     <v-card @keypress.enter="group_update(g_id)">
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+     
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -49,7 +43,7 @@
                   maxlength="10"
                   counter
                   prepend-icon="fas fa-credit-card"
-                  placeholder="รหัสกลุ่ม"
+                  label="รหัสกลุ่มการเรียน"
                   name="g_code"
                   v-model="g_code"
                 ></v-text-field>
@@ -63,21 +57,22 @@
                   maxlength="100"
                   counter
                   prepend-icon="fas fa-users"
-                  placeholder="ชื่อกลุ่มการเียน"
+                  label="ชื่อกลุ่มการเรียน"
                   name="g_name"
                   v-model="g_name"
                 ></v-text-field>
               </v-layout>
             </v-flex>
+          
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
-                  :disabled="!isEditing"
+                  :disabled="true"
                  
                   maxlength="255"
                   counter
                   prepend-icon="fas fa-credit-card"
-                  placeholder="รหัสแผนก"
+                  label="แผนกวิชา"
                   name="d_code"
                   v-model="d_code"
                 ></v-text-field>
@@ -93,6 +88,13 @@
           <v-spacer></v-spacer>
           <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="group_update(g_id)"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+         <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -138,7 +140,7 @@
             this.g_id=this.$route.query.g_id
             this.g_code=res.data.datas.g_code
             this.g_name=res.data.datas.g_name
-            this.d_code=res.data.datas.d_code
+            this.d_code=res.data.datas.d_name
             this.nums=res.data.nums[0]
           },
           async group_update(g_id){
@@ -146,7 +148,6 @@
             let res=await this.$http.post("/group/group_update",{
               g_code:this.g_code,
               g_name:this.g_name,
-              d_code:this.d_code,
               g_id:g_id,
               u_id:sessionStorage.getItem("username")
             })

@@ -57,33 +57,38 @@
                 ></v-text-field>
               </v-layout>
             </v-flex>
+           
             <v-flex xs12 >
-              <v-layout align-center>
-               <v-text-field
-                  :rules="[rules.required]"
-                
-                  counter
-                  prepend-icon="fas fa-th"
-                  placeholder="รหัสกลุ่มการเรียน"
-                  name="g_code"
-                  v-model="g_code"
-                ></v-text-field>
-              </v-layout>
+              <v-select
+                prepend-icon="fas fa-th"
+                :items="item_dep"
+                item-value="d_code"
+                label="แผนกวิชา"
+                placeholder="แผนกวิชา"
+                v-model="d_code"
+              >
+               <template slot="selection" slot-scope="props">
+                  {{ props.item.d_name }}
+                </template>
+                <template slot="item" slot-scope="props">
+                  {{ props.item.d_name}}
+                </template>
+              </v-select>
             </v-flex>
             <v-flex xs12 >
               <v-select
                 prepend-icon="fas fa-th"
-                :items="item_group"
+                :items="filter_group"
                 item-value="g_code"
                 label="กลุ่มการเรียน"
                 placeholder="รหัสกลุ่มการเรียน"
                 v-model="g_code"
               >
                <template slot="selection" slot-scope="props">
-                  {{ props.item.g_name }}-{{ props.item.d_code }}
+                  {{ props.item.g_name }}
                 </template>
                 <template slot="item" slot-scope="props">
-                  {{ props.item.g_name}}-{{ props.item.d_code}}
+                  {{ props.item.g_name}}
                 </template>
               </v-select>
             </v-flex>
@@ -240,7 +245,12 @@
             type_api:"",
             danger:false,
             alt_txt:"",
+
             item_group:[],
+            item_dep:[],
+
+            d_code:"",
+
             bld:['A', 'B', 'O','AB' ],
             item_pre_name:['นาย','นางสาว','นาง',],
             rules: {
@@ -258,6 +268,7 @@
         },
         async created(){
           this.sh_group()
+          this.sh_dep()
         },
         watch:{
           std_prename(newValue){
@@ -271,9 +282,9 @@
           },
         },
         methods:{
-         str(){
-           return item_group.g_code
-         },
+          str(){
+            return item_group.g_code
+          },
          
           async std_add(){
 
@@ -315,6 +326,10 @@
             let res=await this.$http.get('/group/list/')
             this.item_group=res.data.datas
           },
+          async sh_dep(){
+            let res=await this.$http.get('/department/list/')
+            this.item_dep=res.data.datas
+          },
           student(){
                   this.$router.push({name:"manage-student"})
                 },
@@ -334,6 +349,9 @@
         computed: {
           computedDateFormatted () {
             return this.formatDate(this.std_birthday)
+          },
+          filter_group(){
+            return this.item_group.filter(x=>''+x.d_code===this.d_code)
           }
         },
 

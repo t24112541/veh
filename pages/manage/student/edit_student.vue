@@ -59,15 +59,16 @@
                   </v-card-actions>
                 </v-card>
               </v-flex>
-              
+              <v-flex xs4></v-flex>
             <span class="headline">{{d_name}} กลุ่ม {{g_name}}</span>
             
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
-                  :disabled="!isEditing"
+                  :disabled="true"
                   prepend-icon="fas fa-id-card-alt fa-2x"
                   placeholder="รหัสประจำตัวนักเรียน / นักศึกษา"
+                  label="รหัสประจำตัวนักเรียน / นักศึกษา"
                   name="std_code"
                   v-model="std_code"
                 ></v-text-field>
@@ -76,9 +77,10 @@
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
-                  :disabled="!isEditing"
+                  :disabled="true"
                   prepend-icon="fas fa-id-card fa-2x"
                   placeholder="รหัสประจำตัวประชาชน"
+                  label="รหัสประจำตัวประชาชน"
                   name="std_pin_id"
                   v-model="std_pin_id"
                 ></v-text-field>
@@ -102,6 +104,7 @@
                   :disabled="!isEditing"
                   prepend-icon=""
                   placeholder="ชื่อ"
+                  label="ชื่อ"
                   name="std_name"
                   v-model="std_name"
                 ></v-text-field>
@@ -111,6 +114,7 @@
                   :disabled="!isEditing"
                   prepend-icon=""
                   placeholder="นามสกุล"
+                  label="นามสกุล"
                   name="std_lname"
                   v-model="std_lname"
                 ></v-text-field>
@@ -122,6 +126,7 @@
                   maxlength="10"
                   counter
                   placeholder="เบอร์ติดต่อ"
+                  label="เบอร์ติดต่อ"
                   v-model="std_tel"
                 ></v-text-field>
             </v-flex>
@@ -132,17 +137,46 @@
                   maxlength="10"
                   counter
                   placeholder="เบอร์ติดต่อผู้ที่สามารถติดต่อได้"
+                  label="เบอร์ติดต่อผู้ที่สามารถติดต่อได้"
                   v-model="std_tel2"
                 ></v-text-field>
             </v-flex>
+          
             <v-flex xs12>
-              <v-text-field
-                :disabled="!isEditing"
-                prepend-icon="fas fa-birthday-cake"
-                placeholder="วัน เดือน ปี เกิด เช่น 8 พฤษภาคม 2540"
-                name="std_birthday"
-                v-model="std_birthday"
+
+             <v-dialog
+                    ref="modal"
+                    v-model="modal"
+                    :return-value.sync="std_birthday"
+                    persistent
+                    lazy
+                    full-width
+                    width="290px"
+                    :disabled="!isEditing"
+                  >
+
+                <v-text-field
+                  :disabled="!isEditing"
+                  slot="activator"
+                  v-model="dateFormatted"
+                  label="วัน/เดือน/ปีเกิด"
+                  prepend-icon="fas fa-birthday-cake"
+                  @blur="date = parseDate(dateFormatted)"
+                  hint="วัน/เดือน/ปีเกิด"
+                  persistent-hint
                 ></v-text-field>
+                <v-date-picker
+                  locale="th"             
+                  ref="picker"
+                  v-model="std_birthday"
+                  :max="new Date().toISOString().substr(0, 10)"
+                  min="1950-01-01"
+                >
+                      <v-spacer></v-spacer>
+                      <v-btn flat color="primary" @click="modal = false">ยกเลิก</v-btn>
+                      <v-btn flat color="primary" @click="$refs.modal.save(std_birthday)">ตกลง</v-btn></v-date-picker>
+              </v-dialog>
+
             </v-flex>
 
             <v-flex xs6>
@@ -240,8 +274,23 @@
           std_prename(newValue){
             if(newValue=="นาย"){this.std_gender="ช"}else{this.std_gender="ญ"}
           },
+          std_birthday (val) {
+            this.dateFormatted = this.formatDate(this.std_birthday)
+          },
         },
         methods:{
+          formatDate (std_birthday) {
+            if (!std_birthday) return null
+
+            const [year, month, day] = std_birthday.split('-')
+            return `${day}/${month}/${year}`
+          },
+          parseDate (std_birthday) {
+            if (!std_birthday) return null
+
+            const [month, day, year] = std_birthday.split('/')
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+          },
             conf_del(){this.conf_del=true},
             async std_del(std_id){
               let res=await this.$http.post('/student/std_del/',{
@@ -333,6 +382,11 @@
                 // console.log(this.img_side);
               };
             },
+        },//methods
+        computed: {
+          computedDateFormatted () {
+            return this.formatDate(this.std_birthday)
+          }
         },
        
     }

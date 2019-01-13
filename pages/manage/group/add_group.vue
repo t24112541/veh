@@ -1,13 +1,7 @@
 
 <template>
     <v-card @keypress.enter="group_add()">
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -43,6 +37,23 @@
               </v-layout>
             </v-flex>
             <v-flex xs12 >
+              <v-select
+                prepend-icon="fas fa-th"
+                :items="department"
+                item-value="d_code"
+                label="แผนกวิชา"
+                placeholder="แผนกวิชา"
+                v-model="d_code"
+              >
+               <template slot="selection" slot-scope="props">
+                  {{ props.item.d_name }}
+                </template>
+                <template slot="item" slot-scope="props">
+                  {{ props.item.d_name}}
+                </template>
+              </v-select>
+            </v-flex>
+            <!-- <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
                   maxlength="255"
@@ -53,7 +64,7 @@
                   v-model="d_code"
                 ></v-text-field>
               </v-layout>
-            </v-flex>
+            </v-flex> -->
            
           </v-layout>
         </v-container>
@@ -63,6 +74,13 @@
           <v-spacer></v-spacer>
           <v-btn flat color="green lighten-2" @click="group_add()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -82,10 +100,17 @@
                   required: value => !!value || 'ห้ามว่าง.',
                   // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
             },
+            department:[],
           }
         },
-
+        created(){
+          this.sh_department()
+        },
         methods:{
+          async sh_department(){
+            let res=await this.$http.get("department/list")
+            this.department=res.data.datas
+          },
           async group_add(){
             if(this.g_code!='' && this.g_name!='' && this.d_code!=''){
               let res=await this.$http.post("group/group_add",{
