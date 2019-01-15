@@ -8,12 +8,12 @@
       :items="datas"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>
@@ -29,7 +29,7 @@
       <tr v-on:click="log_department_show(props.item.d_id)">
         <td class="text-xs-center">{{ props.item.count }}</td>
         <td class="text-xs-left">{{ props.item.d_name }}</td>
-        <td class="text-xs-left">{{ props.item.u_id }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.u_id }}</td> -->
 
       </tr>
     </template>
@@ -59,7 +59,7 @@ var moment =require("moment");
         headers: [
           { text: 'การทำงาน', value: 'การทำงาน',align: 'center',sortable: false,  },
           { text: 'ชื่อแผนก', value: 'ชื่อแผนก',align: 'left',sortable: false,  },
-          { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
+          // { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
           
         ],
         datas: []

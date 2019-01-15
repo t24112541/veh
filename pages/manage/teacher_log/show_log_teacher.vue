@@ -40,7 +40,7 @@
         <td class="text-xs-left">{{ props.item.t_code }}</td>
         <td class="text-xs-left">{{ props.item.t_name }}</td>
         <td class="text-xs-left">{{ props.item.d_name }}</td>
-        <td class="text-xs-left">{{ props.item.u_name }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.u_name }}</td> -->
         <td class="text-xs-left">
           <v-flex>
               <v-btn flat icon color="green" v-on:click="restore(props.item.run_id)">
@@ -83,7 +83,7 @@
             { text: 'รหัสครู/บุคลากร', value: 'รหัสครู/บุคลากร',align: 'left',sortable: false, },
             { text: 'ชื่อครู/บุคลากร', value: 'ชื่อครู/บุคลากร',align: 'left',sortable: false,  },
             { text: 'ชื่อแผนก', value: 'ชื่อแผนก',align: 'left',sortable: false,  },
-            { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
+            // { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
             { text: 'เรียกคืนข้อมูล', value: 'เรียกคืนข้อมูล',align: 'left',sortable: false,  },
           
         ],
@@ -94,12 +94,12 @@
       this.state=true
       let res=await this.$http.post('/log_list/log_teacher_show/',{t_id:this.$route.query.t_id})
       // console.log("ola")
-       console.log(res.data)
-      // this.datas=res.data.datas
-      // this.g_name=this.datas[0].g_name
-      // this.d_name=this.datas[0].d_name
-      // this.t_name=this.datas[0].t_name
-      // console.log(this.datas[0].g_name)
+      //  console.log(res.data)
+      this.datas=res.data.datas
+      this.g_name=this.datas[0].g_name
+      this.d_name=this.datas[0].d_name
+      this.t_name=this.datas[0].t_name
+      console.log(this.datas[0].g_name)
       this.state=false
     },
     computed: {

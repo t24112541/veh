@@ -16,7 +16,7 @@
                 <v-radio label="ครู / บุคลากร" color="success" value="pk_teacher"></v-radio>
                 <v-radio label="นักเรียน / นักศึกษา" color="success" value="pk_student"></v-radio>
               </v-radio-group>
-            </v-flex>
+            </v-flex> 
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field

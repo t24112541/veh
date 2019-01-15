@@ -3,25 +3,25 @@
     <v-alert
         v-model="danger"
         dismissible
-        :type=type_api
+        :type="type_api"
       >
         {{alt_txt}}
       </v-alert>
     <v-card >
     <h2 align="center" class="padding-top-mn">บันทึกการทำงาน</h2>
-    <div class="cv_header ">ข้ออุปกรณ์ {{ac_name}}</div>
+    <div class="cv_header ">ชื่ออุปกรณ์ {{ac_name}}</div>
 
   <v-data-table
       :headers="headers"
       :items="datas"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>
@@ -39,7 +39,7 @@
         <td class="text-xs-center xs10">{{ props.item.ac_log_date }}</td>
         <td class="text-xs-left xs10">{{ props.item.ac_name }}</td>
         <td class="text-xs-left">{{ props.item.ac_description }}</td>
-        <td class="text-xs-left">{{ props.item.u_name }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.u_name }}</td> -->
         <td class="text-xs-left">
           <v-flex>
               <v-btn flat icon color="green" v-on:click="restore(props.item.run_id)">
@@ -81,7 +81,7 @@
           { text: 'วันที่ทำงาน', value: 'วันที่ทำงาน',align: 'center',sortable: false,  },
           { text: 'ชื่ออุปกรณ์',align: 'left',sortable: false, value: 'ชื่ออุปกรณ์'},
           { text: 'รายละเอียด', value: 'รายละเอียด',align: 'left', sortable: false,},
-          { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
+          // { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
           { text: 'เรียกคืนข้อมูล', value: 'เรียกคืนข้อมูล',align: 'left',sortable: false,  },
         ],
         datas: []

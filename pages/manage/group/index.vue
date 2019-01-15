@@ -13,8 +13,12 @@
         <v-icon>add</v-icon>
       </v-btn>
     </div>
-    <div class="cv_header xs12">
-      
+    <div class="cv_header padding-top-mn"> 
+      <v-text-field
+              label="ค้นหาข้อมูลครู / บุคลากร"
+              append-icon="search"
+              v-model="txt_search"
+            ></v-text-field>
     </div>
     <v-spacer></v-spacer>
   <v-data-table
@@ -22,12 +26,12 @@
       :items="group"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>
@@ -62,6 +66,7 @@
     layout: 'manage',
     data () {
       return {
+        txt_search:"",
         state:false,
         search: '',
         pagination: {},
@@ -75,29 +80,39 @@
         group: []
       }
     },
+    watch:{ 
+      async txt_search(newValue){
+        let s=newValue
+        this.state=true
+        let res=await this.$http.post('/group/search',{
+          txt_search:s
+        })
+        this.group=res.data.datas
+        this.state=false
+      }
+      
+    },//watch
     async created(){
       this.state=true
       let res=await this.$http.get('/group/list')
-      //  console.log(res.data)
       this.group=res.data.datas
-      // console.log("num=".res.data.num)
       this.state=false
-    },
+    },//created
     computed: {
       pages () {
         if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) return 0
         return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
-      }
-    },
+      },
+    },//computed
     methods:{
       list_group(g_id){
-        // this.$router.replace('../manage/group/group_edit?g_id='+g_id)
         this.$router.push({path: '../manage/group/group_edit?g_id='+g_id})
       },
       group_add(){
         this.$router.push({path:"../manage/group/add_group"})
       }
      
-    }
+    },// methods
+   
   }
 </script>

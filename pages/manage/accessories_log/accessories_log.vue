@@ -8,12 +8,12 @@
       :items="datas"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>
@@ -30,7 +30,7 @@
         <td class="text-xs-center xs10">{{ props.item.count }}</td>
         <td class="text-xs-left xs10">{{ props.item.ac_name }}</td>
         <td class="text-xs-left">{{ props.item.ac_description }}</td>
-        <td class="text-xs-left">{{ props.item.u_name }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.u_name }}</td> -->
       </tr>
     </template>
      <template slot="no-data">
@@ -60,7 +60,7 @@
           { text: 'การทำงาน', value: 'การทำงาน',align: 'center',sortable: false,  },
           { text: 'ชื่ออุปกรณ์',align: 'left',sortable: false, value: 'ชื่ออุปกรณ์'},
           { text: 'รายละเอียด', value: 'รายละเอียด',align: 'left', sortable: false,},
-          { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
+          // { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
         ],
         datas: []
       }

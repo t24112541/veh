@@ -112,7 +112,7 @@
             <v-flex xs12 >
               <v-layout align-center>
                  <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_std(std_code)">
-                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{std_name}} <v-spacer></v-spacer>
+                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{std_name}} <v-spacer></v-spacer>ตำแหน่ง:{{position}}
                 </v-btn>
               </v-layout>
             </v-flex>
@@ -217,6 +217,7 @@
               mc_brand:"",
               mc_series: '',
               std_code: '',
+              mc_u_table:'',
 
               img_font:"",
               img_side:"",
@@ -236,17 +237,32 @@
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
               load_status:0,
+              position:"",
             }
         },
         async created(){
           this.sh_machine()
         },
+        watch:{
+          mc_u_table(){
+            if(this.mc_u_table=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
+          },
+        },
+        
         methods:{
-          async sh_std(std_code){
-            let res=await this.$http.post('/student/std_id/',{
-              std_code:this.std_code,
-            })
-            this.$router.push({path: '../../manage/student/edit_student?std_id='+res.data.datas[0].std_id})
+          async sh_std(std_code){console.log("sh_std")
+          console.log(this.mc_u_table)
+            if(this.mc_u_table=="pk_teacher"){
+              let res=await this.$http.get('/teacher/sh_teacher/'+std_code)
+              this.$router.push({path: '../../manage/teacher/edit_teacher?t_id='+res.data.datas[0].t_id})
+            }
+            else{
+              let res=await this.$http.post('/student/std_id/',{
+                std_code:this.std_code,
+              })
+              this.$router.push({path: '../../manage/student/edit_student?std_id='+res.data.datas[0].std_id})
+            }
+            
           },
           conf_del(){this.conf_del=true},
           async machines_del(){
@@ -263,7 +279,7 @@
           },
           async sh_machine(){
             let res=await this.$http.get('/machine/sh_machine/'+this.$route.query.mc_id)
-            // console.log(res.data.datas)
+            console.log(res.data.datas)
             this.mc_id=this.$route.query.mc_id
             this.mc_code=res.data.datas[0].mc_code
             this.mc_brand=res.data.datas[0].mc_brand
@@ -272,6 +288,7 @@
             this.std_code=res.data.datas[0].std_code
             this.std_name=res.data.datas[0].std_name
             this.std_lastname=res.data.datas[0].std_lastname
+            this.mc_u_table=res.data.datas[0].mc_u_table
 
             this.img_font=this.link_img+res.data.datas[0].img_img
             this.img_font_id=res.data.datas[0].img_id

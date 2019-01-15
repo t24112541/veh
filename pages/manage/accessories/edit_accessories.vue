@@ -110,7 +110,7 @@
 
             <v-flex xs12>
                 <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_user(ac_u_id)">
-                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{u_name}} <v-spacer></v-spacer>
+                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{u_name}} <v-spacer></v-spacer>ตำแหน่ง:{{position}}
                 </v-btn>
             </v-flex>
             <!-- <v-flex xs12 >
@@ -230,10 +230,16 @@
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
               load_status:0,
+              position:"",
             }
         },
         async created(){
           this.sh_accessories()
+        },
+        watch:{
+          ac_u_table(){
+            if(this.ac_u_table=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
+          },
         },
         methods:{
           async sh_user(ac_u_id){
@@ -306,7 +312,7 @@
                     this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
                   }
               })
-              if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_accessories()}
+              if(res.data.ok==true){this.load_status=0,this.sh_accessories(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
               else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             }
           },

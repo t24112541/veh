@@ -1,13 +1,7 @@
 
 <template>
     <v-card>
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type="type_api"
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -16,6 +10,13 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
+            <v-flex xs12>
+              <p>ตำแหน่งเจ้าของพาหนะ {{ position || '' }}</p>
+              <v-radio-group v-model="mc_u_table" :mandatory="false" row>
+                <v-radio label="ครู / บุคลากร" color="success" value="pk_teacher"></v-radio>
+                <v-radio label="นักเรียน / นักศึกษา" color="success" value="pk_student"></v-radio>
+              </v-radio-group>
+            </v-flex>
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -165,6 +166,13 @@
               </div>
           <v-btn v-if="load_status==0" flat color="green lighten-2"  @click="machine_add()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -185,8 +193,10 @@
               mc_code:"",
               mc_brand:"",
               mc_series: '',
+              mc_u_table:"",
               std_id: '',
               img_img:"",
+
               type_api:"",
               danger:false,
               conf_del:false,
@@ -196,6 +206,12 @@
                     counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
               load_status:0,
+              position:"",
+          }
+        },
+        watch:{
+          mc_u_table(newValue){
+            if(newValue=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
           }
         },
         methods:{
@@ -208,6 +224,7 @@
               formData.append('std_id',this.std_id)
               formData.append('u_id',sessionStorage.getItem("username"))
               formData.append('u_table',"pk_machine")
+              formData.append('mc_u_table',this.mc_u_table)
 
               formData.append('img_font',this.$refs.img_font.files[0])
               formData.append('img_side',this.$refs.img_side.files[0])

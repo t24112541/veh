@@ -3,7 +3,7 @@
     <v-alert
         v-model="danger"
         dismissible
-        :type=type_api
+        :type="type_api"
       >
         {{alt_txt}}
       </v-alert>
@@ -16,12 +16,12 @@
       :items="datas"
       :search="search"
       :pagination.sync="pagination"
-      :loading=state
+      :loading="state"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
     >
     <template slot="headerCell" slot-scope="props">
       <v-tooltip bottom>
@@ -40,7 +40,7 @@
         <td class="text-xs-left xs10">{{ props.item.mc_code }}</td>
         <td class="text-xs-left">{{ props.item.mc_brand }}</td>
         <td class="text-xs-left">{{ props.item.mc_series }}</td>
-        <td class="text-xs-left">{{ props.item.u_id }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.u_id }}</td> -->
         <td class="text-xs-left">
           <v-flex>
               <v-btn flat icon color="green" v-on:click="restore(props.item.run_id)">
@@ -82,7 +82,7 @@
           { text: 'ทะเบียนรถ',align: 'left',sortable: false, value: 'ทะเบียนรถ'},
           { text: 'แบรนด์รถ', value: 'แบรนด์รถ',align: 'left', sortable: false,},
           { text: 'รุ่นรถ', value: 'รุ่นรถ',align: 'left',sortable: false,  },
-          { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
+          // { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
           { text: 'เรียกคืนข้อมูล', value: 'เรียกคืนข้อมูล',align: 'left',sortable: false,  },
         ],
         datas: []

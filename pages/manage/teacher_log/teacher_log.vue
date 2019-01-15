@@ -31,7 +31,7 @@
         <td class="text-xs-left">{{ props.item.t_code }}</td>
         <td class="text-xs-left">{{ props.item.t_name }}</td>
         <td class="text-xs-left">{{ props.item.d_name }}</td>
-        <td class="text-xs-left">{{ props.item.u_name }}</td>
+        <!-- <td class="text-xs-left">{{ props.item.u_name }}</td> -->
 
       </tr>
     </template>
@@ -63,7 +63,7 @@
           { text: 'รหัสครู/บุุคลากร', value: 'รหัสครู/บุุคลากร',align: 'left',sortable: false,  },
           { text: 'ชื่อครู/บุุคลากร', value: 'ชื่อครู/บุุคลากร',align: 'left',sortable: false,  },
           { text: 'แผนกวิชา', value: 'แผนกวิชา',align: 'left',sortable: false,  },
-          { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
+          // { text: 'ผู้ดำเนินการ', value: 'ผู้ดำเนินการ',align: 'left',sortable: false,  },
           
         ],
         datas: []
