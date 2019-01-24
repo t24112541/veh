@@ -160,25 +160,137 @@
                 ></v-text-field>
               </v-layout>
             </v-flex>
-           
+            <v-flex xs12 class="cv-danger">
+              *หากข้อมูลไม่ปรากฎอาจเป็นเพราะกรอกข้อมูลที่ไม่ถูกต้องเข้าสู่ระบบโปรดทำการลบข้อมูลแล้วกรอกข้อมูลที่ถูกต้องเข้าสู่ระบบแทน
+            </v-flex>
           </v-layout>
         </v-container>
         
         <v-card-actions>
+          <v-flex xs3>
+            <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
+          </v-flex>
+          <v-flex xs3 >
+            <v-dialog v-model="dialog_rule" persistent max-width="500" >
+              <v-btn  slot="activator" flat color="orange accent-4">
+                <v-flex xs12 md6>
+                  <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </v-flex>
+                <!-- <v-flex xs12 md6>
+                  แจ้งอุปกรณ์ผิดระเบียบ
+                </v-flex> -->
+              </v-btn>
+              <v-card>
+                <v-container>
+                  <v-layout wrap>
+                    <v-flex xs12 sm12 md12>
+                      <v-textarea
+                       
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="mc_detail"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+                      ></v-textarea>
+                    </v-flex>
+                    <v-flex xs12 class="text-xs-center" 
+                      @click="$refs.img_ms.click()" 
+                      style="cursor: pointer;"
+                    >
+                      <input 
+                        type="file" 
+                        style="display:none;" 
+                        accept="image/*" 
+                        multiple  
+                        @change="upload_img_ms($event)" 
+                        ref="img_ms"
+                      >
+                      <v-card height="100%" class="grey lighten-4 paddign" > 
+                        <img :src="this.img_ms" width="50%">
+                        <v-card-actions style="font-size:100%">
+                          <span><i class="fas fa-image fa-2x"></i></span>
+                          <v-spacer></v-spacer>
+                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                        </v-card-actions>
+                      </v-card>
+                    </v-flex>
+                   
+                  </v-layout>
+                </v-container>
+                
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ไม่ใช่</v-btn>
+                  <v-btn color="primary" flat @click="missing(ac_id)">ใช่</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-flex>
           
-          <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
-          <v-spacer></v-spacer>
+          <!--////////////////////////////////  missing ///////////////////////////////-->
+          <v-flex xs3 >
+            <v-dialog v-model="dialog_ms" persistent max-width="500" >
+              <v-btn  slot="activator" flat color="orange accent-4">
+                <v-flex xs12>
+                  <i class="fas fa-headset fa-2x"></i>
+                </v-flex>
+                <!-- <v-flex xs12>
+                  แจ้งอุปกรณ์สูญหาย
+                </v-flex> -->
+              </v-btn>
+              <v-card>
+                <v-container>
+                  <v-layout wrap>
+                    <v-flex xs12 sm12 md12>
+                      <v-textarea
+                       
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="ms_detail"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+                      ></v-textarea>
+                    </v-flex>
+                    <v-flex xs12 class="text-xs-center" 
+                      @click="$refs.img_ms.click()" 
+                      style="cursor: pointer;"
+                    >
+                      <input 
+                        type="file" 
+                        style="display:none;" 
+                        accept="image/*" 
+                        multiple  
+                        @change="upload_img_ms($event)" 
+                        ref="img_ms"
+                      >
+                      <v-card height="100%" class="grey lighten-4 paddign" > 
+                        <img :src="this.img_ms" width="50%">
+                        <v-card-actions style="font-size:100%">
+                          <span><i class="fas fa-image fa-2x"></i></span>
+                          <v-spacer></v-spacer>
+                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                        </v-card-actions>
+                      </v-card>
+                    </v-flex>
+                   
+                  </v-layout>
+                </v-container>
+                
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ยกเลิก</v-btn>
+                  <v-btn color="primary" :disabled="ms_detail=='' || img_ms==''" flat @click="missing(mc_id)">ตกลง</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-flex>
 
-          <v-btn flat color="orange accent-4" @click="missing(mc_id)" >
-            <v-flex xs12>
-              <i class="fas fa-exclamation fa-2x"></i>
-            </v-flex>
-            <v-flex xs12>
-              แจ้งพาหนะสูญหาย
-            </v-flex>
-          </v-btn>
-
           <v-spacer></v-spacer>
+          <v-flex xs3>
             <div v-if="load_status!=0">
               <v-progress-circular
                
@@ -193,6 +305,7 @@
             </div>
             <!--  -->
           <v-btn v-if="load_status==0" flat color="green lighten-2" :disabled="!isEditing" @click="machine_update(mc_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+          </v-flex>
         </v-card-actions>
         <v-alert
           v-model="danger"
@@ -236,6 +349,11 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              dialog_ms:false,
+              img_ms:"",
+              ms_detail:"",
+
+              dialog_rule:false,
               load_status:0,
               position:"",
             }
@@ -324,15 +442,30 @@
             this.$router.push({name:"manage-machines"})
           },
           async missing(mc_id){
-            let res=await this.$http.post("/missing/missing",{
-              u_id:mc_id,
-              ms_table:"pk_machine",
-              ms_u_id:sessionStorage.getItem("username"),
-              ms_u_table:sessionStorage.getItem("status"),
-              ms_status:"ขั้นที่ 1 รอรับเรื่อง",
+            const formData = new FormData()
+            formData.append('img_ms',this.$refs.img_ms.files[0])
+            formData.append('u_id',mc_id)
+            formData.append('ms_table',"pk_machine")
+            formData.append('ms_u_id',sessionStorage.getItem("username"))
+            formData.append('ms_u_table',sessionStorage.getItem("status"))
+            formData.append('ms_status',"ขั้นที่ 1 รอรับเรื่อง")
+            formData.append('ms_detail',this.ms_detail)
+            let res=await this.$http.post("/missing/missing",formData,{
+              onUploadProgress: uploadEvent => {
+                this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+              }
             })
-             if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
+             if(res.data.ok==true){this.dialog_ms=false,this.sh_machine(),this.load_status=0,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+          },
+          upload_img_ms(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_ms=e.target.result;
+              console.log(this.img_ms);
+            };
           },
           upload_img_font(e){
             const image = e.target.files[0];

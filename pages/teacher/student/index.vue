@@ -1,8 +1,9 @@
 <template>
   <div><v-card>
     <div class="cv_header padding-top-mn" >ข้อมูลนักเรียน / นักศึกษา</div>
-    <div class="cv_header padding-top-mn"> 
+    <div class="cv_header padding-top-mn" @keypress.enter="cv_sh()"> 
       <v-text-field
+              
               label="ค้นหาชื่อนักเรียน / นักศึกษา"
               append-icon="search"
               v-model="txt_search"
@@ -27,15 +28,13 @@
   <v-data-table
       :headers="headers"
       :items="std"
-      :search="search"
-
-      :loading=state
+      :loading="state"
       class="elevation-1"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
       
     >
     <template slot="headerCell" slot-scope="props">
@@ -92,20 +91,14 @@
       }
     },
     watch:{ 
-      async txt_search(newValue){
-        let s=newValue
-        this.state=true
-        let res=await this.$http.post('/student/search',{
-          txt_search:s
-        })
-        // console.log(res.data)
-        this.std=res.data.datas
-        this.state=false
-      }
+      
     },
     async created(){
       if(this.$route.query.g_code){
-        let res=await this.$http.get('/student/list_g/'+this.$route.query.g_code)
+        let res=await this.$http.post('/student/list_g/',{
+          g_code:this.$route.query.g_code,
+          txt_search:'txt_search'
+        })
         this.part_url="./edit_student?std_id="
         this.std=res.data.datas
         this.state=false
@@ -128,6 +121,17 @@
       // },
     },
     methods:{
+      async cv_sh(){
+        let s=this.txt_search
+        this.state=true
+        let res=await this.$http.post('/student/list_g',{
+          g_code:this.$route.query.g_code,
+          txt_search:s
+        })
+        console.log(res.data)
+        this.std=res.data.datas
+        this.state=false
+      },
       list_student(std_id){
         this.$router.push({path: this.part_url+std_id})
       },

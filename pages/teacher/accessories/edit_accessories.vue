@@ -1,17 +1,11 @@
 
 <template>
     <v-card>
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
-        <v-flex xs10 >
+        <v-flex xs7 >
           แก้ไขข้ออุปกรณ์
         </v-flex>
         <v-flex xs2 >
@@ -24,7 +18,20 @@
             <i v-else class="fas fa-edit fa-2x "></i>
           </v-btn>
         </v-flex>
-      
+        <v-flex xs2 >
+          <v-dialog v-model="conf_del" persistent max-width="290" >
+            <v-btn  slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
+            <v-card>
+              <v-card-title class="headline">ยืนยันการลบข้อมูล</v-card-title>
+              <v-card-text>ต้องการลบข้อมูล {{mc_code}}<br> ใช่หรือไม่?</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red lighten-2" flat @click.native="conf_del = false">ไม่ใช่</v-btn>
+                <v-btn color="primary" flat @click="accessoriess_del()">ใช่</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-flex>
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
@@ -102,10 +109,11 @@
               </v-flex>
 
             <v-flex xs12>
-              <p>ตำแหน่งเจ้าของอุปกรณ์ {{ position || '' }}</p>
-              
+                <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_user(ac_u_id)">
+                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{u_name}} <v-spacer></v-spacer><!--ตำแหน่ง:{{position}}-->
+                </v-btn>
             </v-flex>
-            <v-flex xs12 >
+            <!-- <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
                   :disabled="true"
@@ -119,7 +127,7 @@
                   v-model="u_name"
                 ></v-text-field>
               </v-layout>
-            </v-flex>
+            </v-flex> -->
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -147,25 +155,158 @@
                 ></v-textarea>
               </v-layout>
             </v-flex>
-           
+            <v-flex xs12 class="cv-danger">
+              *หากข้อมูลไม่ปรากฎอาจเป็นเพราะกรอกข้อมูลที่ไม่ถูกต้องเข้าสู่ระบบโปรดทำการลบข้อมูลแล้วกรอกข้อมูลที่ถูกต้องเข้าสู่ระบบแทน
+            </v-flex>
           </v-layout>
         </v-container>
         <v-card-actions>
-          
+          <v-flex xs3>
           <v-btn flat color="red lighten-2" @click="accessories()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
+          </v-flex>
           <v-spacer></v-spacer>
-          <v-btn flat color="orange accent-4" @click="missing(ac_id)" >
-            <v-flex xs12>
-              <i class="fas fa-exclamation fa-2x"></i>
-            </v-flex>
-            <v-flex xs12>
-              แจ้งอุปกรณ์สูญหาย
-            </v-flex>
-            
-          </v-btn>
+          <v-flex xs3 >
+            <v-dialog v-model="dialog_rule" persistent max-width="500" >
+              <v-btn  slot="activator" flat color="orange accent-4">
+                <v-flex xs12 md6>
+                  <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </v-flex>
+                <!-- <v-flex xs12 md6>
+                  แจ้งอุปกรณ์ผิดระเบียบ
+                </v-flex> -->
+              </v-btn>
+              <v-card>
+                <v-container>
+                  <v-layout wrap>
+                    <v-flex xs12 sm12 md12>
+                      <v-textarea
+                       
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="mc_detail"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+                      ></v-textarea>
+                    </v-flex>
+                    <v-flex xs12 class="text-xs-center" 
+                      @click="$refs.img_ms.click()" 
+                      style="cursor: pointer;"
+                    >
+                      <input 
+                        type="file" 
+                        style="display:none;" 
+                        accept="image/*" 
+                        multiple  
+                        @change="upload_img_ms($event)" 
+                        ref="img_ms"
+                      >
+                      <v-card height="100%" class="grey lighten-4 paddign" > 
+                        <img :src="this.img_ms" width="50%">
+                        <v-card-actions style="font-size:100%">
+                          <span><i class="fas fa-image fa-2x"></i></span>
+                          <v-spacer></v-spacer>
+                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                        </v-card-actions>
+                      </v-card>
+                    </v-flex>
+                    
+
+                  </v-layout>
+                </v-container>
+                
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ไม่ใช่</v-btn>
+                  <v-btn color="primary" flat @click="missing(ac_id)">ใช่</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-flex>
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="accessories_update(ac_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+          <v-flex xs3 >
+            <v-dialog v-model="dialog_ms" persistent max-width="500" >
+              <v-btn  slot="activator" flat color="orange accent-4">
+                <v-flex xs12>
+                  <i class="fas fa-headset fa-2x"></i>
+                </v-flex>
+                <!-- <v-flex xs12>
+                  แจ้งอุปกรณ์สูญหาย
+                </v-flex> -->
+              </v-btn>
+              <v-card>
+                <v-container>
+                  <v-layout wrap>
+                    <v-flex xs12 sm12 md12>
+                      <v-textarea
+                       
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="ms_detail"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+                      ></v-textarea>
+                    </v-flex>
+                    <v-flex xs12 class="text-xs-center" 
+                      @click="$refs.img_ms.click()" 
+                      style="cursor: pointer;"
+                    >
+                      <input 
+                        type="file" 
+                        style="display:none;" 
+                        accept="image/*" 
+                        multiple  
+                        @change="upload_img_ms($event)" 
+                        ref="img_ms"
+                      >
+                      <v-card height="100%" class="grey lighten-4 paddign" > 
+                        <img :src="this.img_ms" width="50%">
+                        <v-card-actions style="font-size:100%">
+                          <span><i class="fas fa-image fa-2x"></i></span>
+                          <v-spacer></v-spacer>
+                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                        </v-card-actions>
+                      </v-card>
+                    </v-flex>
+                   
+                  </v-layout>
+                </v-container>
+                
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ยกเลิก</v-btn>
+                  <v-btn color="primary" :disabled="ms_detail=='' || img_ms==''" flat @click="missing(ac_id)">ตกลง</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-flex>
+          <v-spacer></v-spacer>
+          <v-flex xs3>
+          <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+            </div>
+          <v-btn v-if="load_status==0" flat color="green lighten-2" :disabled="!isEditing" @click="accessories_update(ac_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+          </v-flex>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -175,6 +316,7 @@
 
         data () {
             return {
+              link_img:"http://localhost:34001/img/accessories/",
               ms:null,
 
               ac_description:"",
@@ -201,18 +343,46 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              dialog_ms:false,
+              img_ms:"",
+              ms_detail:"",
+
+              dialog_rule:false,
+              load_status:0,
+              position:"",
             }
         },
         async created(){
           this.sh_accessories()
         },
+        watch:{
+          ac_u_table(){
+            if(this.ac_u_table=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
+          },
+        },
         methods:{
+          async sh_user(ac_u_id){
+            if(this.ac_u_table=="pk_teacher"){
+              let res=await this.$http.post('/teacher/t_id/',{
+                t_code:this.ac_u_id,
+              })
+              this.$router.push({path: '../../teacher/teacher/edit_teacher?t_id='+res.data.datas[0].t_id})
+            }
+            else if(this.ac_u_table=="pk_student"){
+              let res=await this.$http.post('/student/std_id/',{
+                std_code:this.ac_u_id,
+              })
+              this.$router.push({path: '../../teacher/student/edit_student?std_id='+res.data.datas[0].std_id})
+            }
+            
+            
+          },
           conf_del(){this.conf_del=true},
           async accessoriess_del(){
             let res=await this.$http.post('/accessories/accessories_del/',{
               ac_description:this.ac_description,
               ac_name:this.ac_name,
-              ac_id:this.ac_id,
+              ac_id:this.$route.query.ac_id,
               ac_u_id:this.ac_u_id,
               ac_u_table:this.ac_u_table,
               u_id:sessionStorage.getItem("username")
@@ -222,7 +392,7 @@
           },
           async sh_accessories(){
             let res=await this.$http.post('/accessories/sh_accessories/',{ac_id:this.$route.query.ac_id})
-            console.log(res.data.datas)
+            // console.log(res.data.datas)
             this.ac_u_id=res.data.datas[0].ac_u_id
             this.ac_u_table=res.data.datas[0].ac_u_table
             this.ac_description=res.data.datas[0].ac_description
@@ -230,54 +400,70 @@
             this.ac_id=this.$route.query.ac_id
             this.u_name=res.data.datas[0].u_name
 
-            this.img_font=res.data.datas[0].img_img
+            this.img_font=this.link_img+res.data.datas[0].img_img
             this.img_font_id=res.data.datas[0].img_id
 
-            this.img_side=res.data.datas[1].img_img
+            this.img_side=this.link_img+res.data.datas[1].img_img
             this.img_side_id=res.data.datas[1].img_id
 
-            this.img_rear=res.data.datas[2].img_img
+            this.img_rear=this.link_img+res.data.datas[2].img_img
             this.img_rear_id=res.data.datas[2].img_id
 
             if(!this.$route.query.ms){this.ms=!this.ms}
             // else{this.ms=this.ms}
           },
           async accessories_update(ac_id){
-            //console.log("ac_id"+ac_id)
-            let res=await this.$http.post("/accessories/accessories_update",{
-              ac_description:this.ac_description,
-              ac_name:this.ac_name,
-              ac_id:this.ac_id,
-              ac_u_id:this.ac_u_id,
-              ac_u_table:this.ac_u_table,
+            if(this.ac_description!='' && this.ac_u_id!=''&& this.ac_name!='' ){
+              const formData = new FormData()
+              formData.append('img_font-'+this.img_font_id,this.$refs.img_font.files[0])
+              formData.append('img_side-'+this.img_side_id,this.$refs.img_side.files[0])
+              formData.append('img_rear-'+this.img_rear_id,this.$refs.img_rear.files[0])
+              
+              formData.append('ac_id',this.$route.query.ac_id)
+              formData.append('ac_description',this.ac_description)
+              formData.append('ac_u_id',this.ac_u_id)
+              formData.append('ac_name',this.ac_name)
+              formData.append('ac_u_table',this.ac_u_table)
+              formData.append('u_id',sessionStorage.getItem("username"))
 
-              img_font:this.img_font,
-              img_side:this.img_side,
-              img_rear:this.img_rear,
-
-              img_font_id:this.img_font_id,
-              img_side_id:this.img_side_id,
-              img_rear_id:this.img_rear_id,
-
-              u_id:sessionStorage.getItem("username")
-            })
-            // console.log(res.data)
-              if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_accessories()}
-             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              let res=await this.$http.post("/accessories/accessories_update",formData,{
+                onUploadProgress: uploadEvent => {
+                    this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                  }
+              })
+              if(res.data.ok==true){this.load_status=0,this.sh_accessories(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            }
           },
           accessories(){
             this.$router.push({name:"teacher-accessories"})
           },
           async missing(ac_id){
-            let res=await this.$http.post("/missing/missing",{
-              u_id:ac_id,
-              ms_table:"pk_accessories",
-              ms_u_id:sessionStorage.getItem("username"),
-              ms_u_table:sessionStorage.getItem("status"),
-              ms_status:"ขั้นที่ 1 รอรับเรื่อง",
+            const formData = new FormData()
+            formData.append('img_ms',this.$refs.img_ms.files[0])
+            formData.append('u_id',this.ac_id)
+            formData.append('ms_table',"pk_accessories")
+            formData.append('ms_u_id',sessionStorage.getItem("username"))
+            formData.append('ms_u_table',sessionStorage.getItem("status"))
+            formData.append('ms_status',"ขั้นที่ 1 รอรับเรื่อง")
+            formData.append('ms_detail',this.ms_detail)
+            
+            let res=await this.$http.post("/missing/missing",formData,{
+              onUploadProgress: uploadEvent => {
+                this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+              }
             })
-             if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
+             if(res.data.ok==true){this.load_status=0,this.dialog_ms=false,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+          },
+          upload_img_ms(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_ms=e.target.result;
+              console.log(this.img_ms);
+            };
           },
           upload_img_font(e){
             const image = e.target.files[0];

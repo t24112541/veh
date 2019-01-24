@@ -1,13 +1,7 @@
 
 <template>
     <v-card>
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -16,6 +10,13 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
+            <v-flex xs12>
+              <p>ตำแหน่งเจ้าของพาหนะ {{ position || '' }}</p>
+              <v-radio-group v-model="mc_u_table" :mandatory="false" row>
+                <v-radio label="ครู / บุคลากร" color="success" value="pk_teacher"></v-radio>
+                <v-radio label="นักเรียน / นักศึกษา" color="success" value="pk_student"></v-radio>
+              </v-radio-group>
+            </v-flex>
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -150,8 +151,27 @@
           
           <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2"  @click="machine_add()"><i class="fas fa-save fa-2x"></i></v-btn>
+            <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+              </div>
+          <v-btn v-if="load_status==0" flat color="green lighten-2"  @click="machine_add()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -170,6 +190,7 @@
               img_side:[],
               img_rear:[],
               mc_code:"",
+              mc_u_table:"",
               mc_brand:"",
               mc_series: '',
               std_id: '',
@@ -182,35 +203,41 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              load_status:0,
+              position:"",
+          }
+        },
+        watch:{
+          mc_u_table(newValue){
+            if(newValue=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
           }
         },
         methods:{
            async machine_add(){
             if(this.mc_code!='' && this.mc_brand!=''&& this.mc_series!=''&& this.std_id!='' &&this.img_font!=''&&this.img_side!=''&&this.img_rear!=''){
-              let res=await this.$http.post("machine/machine_add",{
-                mc_code:this.mc_code,
-                mc_brand:this.mc_brand,
-                mc_series:this.mc_series,
-                std_id:this.std_id,
+              const formData = new FormData()
+              formData.append('mc_code',this.mc_code)
+              formData.append('mc_brand',this.mc_brand)
+              formData.append('mc_series',this.mc_series)
+              formData.append('std_id',this.std_id)
+              formData.append('u_id',sessionStorage.getItem("username"))
+              formData.append('u_table',"pk_machine")
+              formData.append('mc_u_table',this.mc_u_table)
 
-                // img_img:this.img_font,img_side,img_rear,
-                img_font:this.img_font,
-                img_side:this.img_side,
-                img_rear:this.img_rear,
+              formData.append('img_font',this.$refs.img_font.files[0])
+              formData.append('img_side',this.$refs.img_side.files[0])
+              formData.append('img_rear',this.$refs.img_rear.files[0])
 
-                
-                u_id:sessionStorage.getItem("username"),
-                u_table:"pk_machine"
+              let res=await this.$http.post("machine/machine_add",formData,{
+                onUploadProgress: uploadEvent => {
+                  this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                }
               })
               if(res.data.ok==true){
-                this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt
-              this.machine()
-              
-              }
-              else{
-                this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt
-                console.log(res.data.txt)
-              }
+                this.$router.push({name:"teacher-machines"})
+                this.load_status=0
+                this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.load_status=0}
             }else{this.danger=true,this.alt_txt="กรุณากรอกข้อมูลให้ครบ",this.type_api="error"}
           },
           machine(){

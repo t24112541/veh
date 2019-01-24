@@ -1,17 +1,11 @@
 
 <template>
     <v-card>
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
-        <v-flex xs10 >
+        <v-flex xs7 >
           แก้ไขข้อมูลพาหนะ
         </v-flex>
         <v-flex xs2 >
@@ -24,7 +18,20 @@
             <i v-else class="fas fa-edit fa-2x "></i>
           </v-btn>
         </v-flex>
-       
+        <v-flex xs2 >
+          <v-dialog v-model="conf_del" persistent max-width="290">
+            <v-btn  slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
+            <v-card>
+              <v-card-title class="headline">ยืนยันการลบข้อมูล</v-card-title>
+              <v-card-text>ต้องการลบข้อมูล {{mc_code}}<br> ใช่หรือไม่?</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red lighten-2" flat @click.native="conf_del = false">ไม่ใช่</v-btn>
+                <v-btn color="primary" flat @click="machines_del()">ใช่</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-flex>
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
@@ -43,9 +50,10 @@
                   multiple  
                   @change="upload_img_font($event)" 
                   ref="img_font"
+                  :v-model="img_font"
                 >
                 <v-card height="100%" class="grey lighten-4 paddign"> 
-                  <img :src="this.img_font" width="100%">
+                  <img :src="img_font" width="100%">
                   <v-card-actions style="font-size:100%">
                     <span><i class="fas fa-image fa-2x"></i></span>
                     <v-spacer></v-spacer>
@@ -103,9 +111,8 @@
 
             <v-flex xs12 >
               <v-layout align-center>
-                
-                <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_std(std_code)">
-                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{std_name}} <v-spacer></v-spacer>
+                 <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_std(std_code)">
+                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{std_name}} <v-spacer></v-spacer>ตำแหน่ง:{{position}}
                 </v-btn>
               </v-layout>
             </v-flex>
@@ -153,26 +160,160 @@
                 ></v-text-field>
               </v-layout>
             </v-flex>
-           
+            <v-flex xs12 class="cv-danger">
+              *หากข้อมูลไม่ปรากฎอาจเป็นเพราะกรอกข้อมูลที่ไม่ถูกต้องเข้าสู่ระบบโปรดทำการลบข้อมูลแล้วกรอกข้อมูลที่ถูกต้องเข้าสู่ระบบแทน
+            </v-flex>
           </v-layout>
         </v-container>
+        
         <v-card-actions>
+          <v-flex xs3>
+            <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
+          </v-flex>
+          <v-flex xs3 >
+            <v-dialog v-model="dialog_rule" persistent max-width="500" >
+              <v-btn  slot="activator" flat color="orange accent-4">
+                <v-flex xs12 md6>
+                  <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </v-flex>
+                <!-- <v-flex xs12 md6>
+                  แจ้งอุปกรณ์ผิดระเบียบ
+                </v-flex> -->
+              </v-btn>
+              <v-card>
+                <v-container>
+                  <v-layout wrap>
+                    <v-flex xs12 sm12 md12>
+                      <v-textarea
+                       
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="mc_detail"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+                      ></v-textarea>
+                    </v-flex>
+                    <v-flex xs12 class="text-xs-center" 
+                      @click="$refs.img_ms.click()" 
+                      style="cursor: pointer;"
+                    >
+                      <input 
+                        type="file" 
+                        style="display:none;" 
+                        accept="image/*" 
+                        multiple  
+                        @change="upload_img_ms($event)" 
+                        ref="img_ms"
+                      >
+                      <v-card height="100%" class="grey lighten-4 paddign" > 
+                        <img :src="this.img_ms" width="50%">
+                        <v-card-actions style="font-size:100%">
+                          <span><i class="fas fa-image fa-2x"></i></span>
+                          <v-spacer></v-spacer>
+                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                        </v-card-actions>
+                      </v-card>
+                    </v-flex>
+                   
+                  </v-layout>
+                </v-container>
+                
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ไม่ใช่</v-btn>
+                  <v-btn color="primary" flat @click="missing(ac_id)">ใช่</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-flex>
           
-          <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
-          <v-spacer></v-spacer>
+          <!--////////////////////////////////  missing ///////////////////////////////-->
+          <v-flex xs3 >
+            <v-dialog v-model="dialog_ms" persistent max-width="500" >
+              <v-btn  slot="activator" flat color="orange accent-4">
+                <v-flex xs12>
+                  <i class="fas fa-headset fa-2x"></i>
+                </v-flex>
+                <!-- <v-flex xs12>
+                  แจ้งอุปกรณ์สูญหาย
+                </v-flex> -->
+              </v-btn>
+              <v-card>
+                <v-container>
+                  <v-layout wrap>
+                    <v-flex xs12 sm12 md12>
+                      <v-textarea
+                       
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="ms_detail"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+                      ></v-textarea>
+                    </v-flex>
+                    <v-flex xs12 class="text-xs-center" 
+                      @click="$refs.img_ms.click()" 
+                      style="cursor: pointer;"
+                    >
+                      <input 
+                        type="file" 
+                        style="display:none;" 
+                        accept="image/*" 
+                        multiple  
+                        @change="upload_img_ms($event)" 
+                        ref="img_ms"
+                      >
+                      <v-card height="100%" class="grey lighten-4 paddign" > 
+                        <img :src="this.img_ms" width="50%">
+                        <v-card-actions style="font-size:100%">
+                          <span><i class="fas fa-image fa-2x"></i></span>
+                          <v-spacer></v-spacer>
+                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                        </v-card-actions>
+                      </v-card>
+                    </v-flex>
+                   
+                  </v-layout>
+                </v-container>
+                
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ยกเลิก</v-btn>
+                  <v-btn color="primary" :disabled="ms_detail=='' || img_ms==''" flat @click="missing(mc_id)">ตกลง</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-flex>
 
-          <v-btn flat color="orange accent-4" @click="missing(mc_id)" >
-            <v-flex xs12>
-              <i class="fas fa-exclamation fa-2x"></i>
-            </v-flex>
-            <v-flex xs12>
-              แจ้งพาหนะสูญหาย
-            </v-flex>
-          </v-btn>
-
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2" :disabled="!isEditing" @click="machine_update(mc_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+          <v-flex xs3>
+            <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+            </div>
+            <!--  -->
+          <v-btn v-if="load_status==0" flat color="green lighten-2" :disabled="!isEditing" @click="machine_update(mc_id)"><i class="fas fa-save fa-2x"></i></v-btn>
+          </v-flex>
         </v-card-actions>
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -189,11 +330,13 @@
               mc_brand:"",
               mc_series: '',
               std_code: '',
+              mc_u_table:'',
 
               img_font:"",
               img_side:"",
               img_rear:"",
 
+              link_img:"http://localhost:34001/img/machine/",
               img_font_id:"",
               img_side_id:"",
               img_rear_id:"",
@@ -206,17 +349,38 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              dialog_ms:false,
+              img_ms:"",
+              ms_detail:"",
+
+              dialog_rule:false,
+              load_status:0,
+              position:"",
             }
         },
         async created(){
           this.sh_machine()
         },
+        watch:{
+          mc_u_table(){
+            if(this.mc_u_table=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
+          },
+        },
+        
         methods:{
-          async sh_std(std_code){
-            let res=await this.$http.post('/student/std_id/',{
-              std_code:this.std_code,
-            })
-            this.$router.push({path: '../../teacher/student/edit_student?std_id='+res.data.datas[0].std_id})
+          async sh_std(std_code){console.log("sh_std")
+          console.log(this.mc_u_table)
+            if(this.mc_u_table=="pk_teacher"){
+              let res=await this.$http.get('/teacher/sh_teacher/'+std_code)
+              this.$router.push({path: '../../teacher/teacher/edit_teacher?t_id='+res.data.datas[0].t_id})
+            }
+            else{
+              let res=await this.$http.post('/student/std_id/',{
+                std_code:this.std_code,
+              })
+              this.$router.push({path: '../../teacher/student/edit_student?std_id='+res.data.datas[0].std_id})
+            }
+            
           },
           conf_del(){this.conf_del=true},
           async machines_del(){
@@ -242,55 +406,66 @@
             this.std_code=res.data.datas[0].std_code
             this.std_name=res.data.datas[0].std_name
             this.std_lastname=res.data.datas[0].std_lastname
+            this.mc_u_table=res.data.datas[0].mc_u_table
 
-            this.img_font=res.data.datas[0].img_img
+            this.img_font=this.link_img+res.data.datas[0].img_img
             this.img_font_id=res.data.datas[0].img_id
 
-            this.img_side=res.data.datas[1].img_img
+            this.img_side=this.link_img+res.data.datas[1].img_img
             this.img_side_id=res.data.datas[1].img_id
 
-            this.img_rear=res.data.datas[2].img_img
+            this.img_rear=this.link_img+res.data.datas[2].img_img
             this.img_rear_id=res.data.datas[2].img_id
-
-            // if(!this.$route.query.ms){this.ms=!this.ms}
-            // console.log(res.data.datas)
           },
-          async machine_update(mc_id){
-            //console.log("mc_id"+mc_id)
-            let res=await this.$http.post("/machine/machine_update",{
-              mc_code:this.mc_code,
-              mc_brand:this.mc_brand,
-              mc_series:this.mc_series,
-              std_id:this.std_code,
-              mc_id:mc_id,
+          async machine_update(mc_id){console.log("1")
+            const formData = new FormData()
+              formData.append('mc_id',this.mc_id)
+              formData.append('mc_code',this.mc_code)
+              formData.append('mc_brand',this.mc_brand)
+              formData.append('mc_series',this.mc_series)
+              formData.append('std_id',this.std_code)
+              formData.append('u_id',sessionStorage.getItem("username"))
 
-              img_font:this.img_font,
-              img_side:this.img_side,
-              img_rear:this.img_rear,
+              formData.append('img_font-'+this.img_font_id,this.$refs.img_font.files[0])
+              formData.append('img_side-'+this.img_side_id,this.$refs.img_side.files[0])
+              formData.append('img_rear-'+this.img_rear_id,this.$refs.img_rear.files[0])
 
-              img_font_id:this.img_font_id,
-              img_side_id:this.img_side_id,
-              img_rear_id:this.img_rear_id,
-
-              u_id:sessionStorage.getItem("username")
-            })
-            console.log(res.data)
-              if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
-             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              let res=await this.$http.post("/machine/machine_update",formData,{
+                onUploadProgress: uploadEvent => {
+                  this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                }
+              })
+            if(res.data.ok==true){this.load_status=0,this.sh_machine(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
           machine(){
             this.$router.push({name:"teacher-machines"})
           },
           async missing(mc_id){
-            let res=await this.$http.post("/missing/missing",{
-              u_id:mc_id,
-              ms_table:"pk_machine",
-              ms_u_id:sessionStorage.getItem("username"),
-              ms_u_table:sessionStorage.getItem("status"),
-              ms_status:"ขั้นที่ 1 รอรับเรื่อง",
+            const formData = new FormData()
+            formData.append('img_ms',this.$refs.img_ms.files[0])
+            formData.append('u_id',mc_id)
+            formData.append('ms_table',"pk_machine")
+            formData.append('ms_u_id',sessionStorage.getItem("username"))
+            formData.append('ms_u_table',sessionStorage.getItem("status"))
+            formData.append('ms_status',"ขั้นที่ 1 รอรับเรื่อง")
+            formData.append('ms_detail',this.ms_detail)
+            let res=await this.$http.post("/missing/missing",formData,{
+              onUploadProgress: uploadEvent => {
+                this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+              }
             })
-             if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
+             if(res.data.ok==true){this.dialog_ms=false,this.sh_machine(),this.load_status=0,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+          },
+          upload_img_ms(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_ms=e.target.result;
+              console.log(this.img_ms);
+            };
           },
           upload_img_font(e){
             const image = e.target.files[0];

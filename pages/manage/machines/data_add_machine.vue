@@ -214,7 +214,7 @@
             if(newValue=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
           }
         },
-        methods:{
+        methods:{ 
            async machine_add(){
             if(this.mc_code!='' && this.mc_brand!=''&& this.mc_series!=''&& this.std_id!='' &&this.img_font!=''&&this.img_side!=''&&this.img_rear!=''){
               const formData = new FormData()
@@ -239,7 +239,7 @@
                 this.$router.push({name:"manage-machines-data_add_machine"})
                 this.load_status=0
                 this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
-              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.load_status=0}
             }else{this.danger=true,this.alt_txt="กรุณากรอกข้อมูลให้ครบ",this.type_api="error"}
           },
           machine(){
