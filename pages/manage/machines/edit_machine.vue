@@ -35,7 +35,68 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
+              <!-- //////////////////////////  rule  ///////////////////////////////// -->
+            
+            <v-flex xs12 >       
+              <v-dialog v-model="dialog_rule" persistent max-width="500" >
+                <v-btn  slot="activator" flat color="orange accent-4">
+                  <v-flex xs12 >
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                  </v-flex>
+                  <v-flex xs12 >
+                    แจ้งพาหนะผิดระเบียบ
+                  </v-flex>
+                </v-btn>
+                <v-card>
+                  <v-container>
+                    <v-layout wrap>
+                      <v-flex xs10 sm10 md10>
+                        <v-select
+                          prepend-icon="fas fa-th"
+                          :items="items_oc_detail"
+                          item-value="itm_oc_id"
+                          label="จุดผิดระเบียบ"
+                          placeholder="จุดผิดระเบียบ"
+                          v-model="itm_oc_id"
+                        >
+                          <template slot="selection" slot-scope="props">
+                            {{props.item.itm_oc_name}}
+                          </template>
+                          <template slot="item" slot-scope="props">
+                            {{props.item.itm_oc_name}}
+                          </template>
+                        </v-select>
+                      </v-flex>
+                      <v-flex xs2>
+                        <v-checkbox
+                          label="อื่นๆ"
+                          v-model="itm_oc_name_more"
+                        ></v-checkbox>
+                      </v-flex>
+                      <v-flex xs12 v-if="this.itm_oc_name_more==true">
+                        <v-textarea
+                          solo
+                          rows='2'
+                          label="พิมพ์เหตุผิดระเบียบที่นี่"
+                          v-model="itm_oc_name"
+                          prepend-icon="fas fa-exclamation-triangle fa-2x"
+                          placeholder="พิมพ์เหตุผิดระเบียบที่นี่"
+                        ></v-textarea>
+                      </v-flex>
+                    
+                    </v-layout>
+                  </v-container>
+                  
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="red lighten-2" flat @click.native="dialog_rule = false">ยกเลิก</v-btn>
+                    <v-btn color="primary" flat @click="object_control(mc_id)">ตกลง</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-flex>
 
+           
                         <!-- image zone -->
 
               <v-flex xs4 
@@ -112,7 +173,7 @@
             <v-flex xs12 >
               <v-layout align-center>
                  <v-btn  color="#55b159" style="font-size:110%;width:95%;color:#fff" @click="sh_std(std_code)">
-                 <i class="fas fa-user fa-2x"></i>เจ้าของพาหนะ: <v-spacer></v-spacer>{{std_name}} <v-spacer></v-spacer>ตำแหน่ง:{{position}}
+                 <i class="fas fa-user fa-2x"></i>{{position}}: <v-spacer></v-spacer>{{std_name}} <v-spacer></v-spacer>
                 </v-btn>
               </v-layout>
             </v-flex>
@@ -160,6 +221,66 @@
                 ></v-text-field>
               </v-layout>
             </v-flex>
+             <!--////////////////////////////////  missing ///////////////////////////////-->
+            <v-flex xs12 >
+              <v-dialog v-model="dialog_ms" persistent max-width="500" >
+                <v-btn  slot="activator" flat color="orange accent-4">
+                  <v-flex xs12>
+                    <i class="fas fa-headset fa-2x"></i>
+                  </v-flex>
+                  <v-flex xs12>
+                    แจ้งพาหนะสูญหาย
+                  </v-flex>
+                </v-btn>
+                <v-card>
+                  <v-container>
+                    <v-layout wrap>
+                      <v-flex xs12 sm12 md12>
+                        <v-textarea
+                        
+                          :rules="[rules.required]"
+                          solo
+                          rows='10'
+                          label="สถานที่ที่พบเห็นล่าสุด"
+                          v-model="ms_detail"
+                          prepend-icon="fas fa-id-card-alt fa-2x"
+                          placeholder="สถานที่ที่พบเห็นล่าสุด"
+                        ></v-textarea>
+                      </v-flex>
+                      <v-flex xs12 class="text-xs-center" 
+                        @click="$refs.img_ms.click()" 
+                        style="cursor: pointer;"
+                      >
+                        <input 
+                          type="file" 
+                          style="display:none;" 
+                          accept="image/*" 
+                          multiple  
+                          @change="upload_img_ms($event)" 
+                          ref="img_ms"
+                        >
+                        <v-card height="100%" class="grey lighten-4 paddign" > 
+                          <img :src="this.img_ms" width="50%">
+                          <v-card-actions style="font-size:100%">
+                            <span><i class="fas fa-image fa-2x"></i></span>
+                            <v-spacer></v-spacer>
+                            <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                          </v-card-actions>
+                        </v-card>
+                      </v-flex>
+                    
+                    </v-layout>
+                  </v-container>
+                  
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ยกเลิก</v-btn>
+                    <v-btn color="primary" :disabled="ms_detail=='' || img_ms==''" flat @click="missing(mc_id)">ตกลง</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-flex>
+              
             <v-flex xs12 class="cv-danger">
               *หากข้อมูลไม่ปรากฎอาจเป็นเพราะกรอกข้อมูลที่ไม่ถูกต้องเข้าสู่ระบบโปรดทำการลบข้อมูลแล้วกรอกข้อมูลที่ถูกต้องเข้าสู่ระบบแทน
             </v-flex>
@@ -170,124 +291,9 @@
           <v-flex xs3>
             <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
           </v-flex>
-          <v-flex xs3 >
-            <v-dialog v-model="dialog_rule" persistent max-width="500" >
-              <v-btn  slot="activator" flat color="orange accent-4">
-                <v-flex xs12 md6>
-                  <i class="fas fa-exclamation-triangle fa-2x"></i>
-                </v-flex>
-                <!-- <v-flex xs12 md6>
-                  แจ้งอุปกรณ์ผิดระเบียบ
-                </v-flex> -->
-              </v-btn>
-              <v-card>
-                <v-container>
-                  <v-layout wrap>
-                    <v-flex xs12 sm12 md12>
-                      <v-textarea
-                       
-                        :rules="[rules.required]"
-                        solo
-                        rows='10'
-                        label="สถานที่ที่พบเห็นล่าสุด"
-                        v-model="mc_detail"
-                        prepend-icon="fas fa-id-card-alt fa-2x"
-                        placeholder="สถานที่ที่พบเห็นล่าสุด"
-                      ></v-textarea>
-                    </v-flex>
-                    <v-flex xs12 class="text-xs-center" 
-                      @click="$refs.img_ms.click()" 
-                      style="cursor: pointer;"
-                    >
-                      <input 
-                        type="file" 
-                        style="display:none;" 
-                        accept="image/*" 
-                        multiple  
-                        @change="upload_img_ms($event)" 
-                        ref="img_ms"
-                      >
-                      <v-card height="100%" class="grey lighten-4 paddign" > 
-                        <img :src="this.img_ms" width="50%">
-                        <v-card-actions style="font-size:100%">
-                          <span><i class="fas fa-image fa-2x"></i></span>
-                          <v-spacer></v-spacer>
-                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
-                        </v-card-actions>
-                      </v-card>
-                    </v-flex>
-                   
-                  </v-layout>
-                </v-container>
-                
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ไม่ใช่</v-btn>
-                  <v-btn color="primary" flat @click="missing(ac_id)">ใช่</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-flex>
+
           
-          <!--////////////////////////////////  missing ///////////////////////////////-->
-          <v-flex xs3 >
-            <v-dialog v-model="dialog_ms" persistent max-width="500" >
-              <v-btn  slot="activator" flat color="orange accent-4">
-                <v-flex xs12>
-                  <i class="fas fa-headset fa-2x"></i>
-                </v-flex>
-                <!-- <v-flex xs12>
-                  แจ้งอุปกรณ์สูญหาย
-                </v-flex> -->
-              </v-btn>
-              <v-card>
-                <v-container>
-                  <v-layout wrap>
-                    <v-flex xs12 sm12 md12>
-                      <v-textarea
-                       
-                        :rules="[rules.required]"
-                        solo
-                        rows='10'
-                        label="สถานที่ที่พบเห็นล่าสุด"
-                        v-model="ms_detail"
-                        prepend-icon="fas fa-id-card-alt fa-2x"
-                        placeholder="สถานที่ที่พบเห็นล่าสุด"
-                      ></v-textarea>
-                    </v-flex>
-                    <v-flex xs12 class="text-xs-center" 
-                      @click="$refs.img_ms.click()" 
-                      style="cursor: pointer;"
-                    >
-                      <input 
-                        type="file" 
-                        style="display:none;" 
-                        accept="image/*" 
-                        multiple  
-                        @change="upload_img_ms($event)" 
-                        ref="img_ms"
-                      >
-                      <v-card height="100%" class="grey lighten-4 paddign" > 
-                        <img :src="this.img_ms" width="50%">
-                        <v-card-actions style="font-size:100%">
-                          <span><i class="fas fa-image fa-2x"></i></span>
-                          <v-spacer></v-spacer>
-                          <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
-                        </v-card-actions>
-                      </v-card>
-                    </v-flex>
-                   
-                  </v-layout>
-                </v-container>
-                
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red lighten-2" flat @click.native="dialog_ms = false">ยกเลิก</v-btn>
-                  <v-btn color="primary" :disabled="ms_detail=='' || img_ms==''" flat @click="missing(mc_id)">ตกลง</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-flex>
+          
 
           <v-spacer></v-spacer>
           <v-flex xs3>
@@ -346,7 +352,7 @@
               conf_del:false,
               isEditing:null,
               rules: {
-                    required: value => !!value || 'ห้ามว่าง.',
+                    // required: value => !!value || 'ห้ามว่าง.',
                     // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
               dialog_ms:false,
@@ -356,10 +362,16 @@
               dialog_rule:false,
               load_status:0,
               position:"",
+
+              items_oc_detail:"",
+              itm_oc_id:"",
+              itm_oc_name_more:false,
+              itm_oc_name:"",
             }
         },
         async created(){
           this.sh_machine()
+          this.sh_object_control()
         },
         watch:{
           mc_u_table(){
@@ -417,6 +429,11 @@
             this.img_rear=this.link_img+res.data.datas[2].img_img
             this.img_rear_id=res.data.datas[2].img_id
           },
+          async sh_object_control(){
+            let res=await this.$http.get('/object_control/item_object_control')
+            console.log(res.data.datas)
+            this.items_oc_detail=res.data.datas
+          },
           async machine_update(mc_id){console.log("1")
             const formData = new FormData()
               formData.append('mc_id',this.mc_id)
@@ -456,6 +473,27 @@
               }
             })
              if(res.data.ok==true){this.dialog_ms=false,this.sh_machine(),this.load_status=0,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+          },
+          async object_control(mc_id){console.log("ok")
+            
+            if(this.itm_oc_name_more===true){
+              
+              let res=await this.$http.post("/object_control/add_item_object_control",{
+                itm_oc_name:this.itm_oc_name
+              })
+              this.itm_oc_id=res.data.itm
+              console.log(this.itm_oc_id)
+            }
+          
+            let res=await this.$http.post("/object_control/add_object_control",{
+              oc_u_id:mc_id,
+              oc_u_table:"pk_machine",
+              oc_oc_u_id:sessionStorage.getItem("username"),
+              oc_oc_u_table:sessionStorage.getItem("status"),
+              itm_oc_id:this.itm_oc_id,
+            })
+             if(res.data.ok==true){this.dialog_rule=false,this.sh_machine(),this.load_status=0,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
           upload_img_ms(e){
