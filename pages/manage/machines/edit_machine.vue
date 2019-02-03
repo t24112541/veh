@@ -58,6 +58,7 @@
                           label="จุดผิดระเบียบ"
                           placeholder="จุดผิดระเบียบ"
                           v-model="itm_oc_id"
+                          :disabled="itm_oc_name_more==true"
                         >
                           <template slot="selection" slot-scope="props">
                             {{props.item.itm_oc_name}}
@@ -83,11 +84,43 @@
                           placeholder="พิมพ์เหตุผิดระเบียบที่นี่"
                         ></v-textarea>
                       </v-flex>
-                    
+                      <v-flex xs12 class="text-xs-center" 
+                        @click="$refs.img_oc.click()" 
+                        style="cursor: pointer;"
+                      >
+                        <input 
+                          type="file" 
+                          style="display:none;" 
+                          accept="image/*" 
+                          multiple  
+                          @change="upload_img_oc($event)" 
+                          ref="img_oc"
+                        >
+                        <v-card height="100%" class="grey lighten-4 paddign" > 
+                          <img :src="this.img_oc" width="50%">
+                          <v-card-actions style="font-size:100%">
+                            <span><i class="fas fa-image fa-2x"></i></span>
+                            <v-spacer></v-spacer>
+                            <span>รูปประกอบข้อมูลผิดระเบียบ</span>
+                          </v-card-actions>
+                        </v-card>
+                      </v-flex>
                     </v-layout>
                   </v-container>
                   
                   <v-card-actions>
+                    <div v-if="load_status!=0">
+                      <v-progress-circular
+                      
+                        :rotate="-90"
+                        :size="70"
+                        :width="15"
+                        :value="load_status"
+                        color="green lighten-2"
+                      >
+                        {{ load_status }}
+                      </v-progress-circular>
+                    </div>
                     <v-spacer></v-spacer>
                     <v-btn color="red lighten-2" flat @click.native="dialog_rule = false">ยกเลิก</v-btn>
                     <v-btn color="primary" flat @click="object_control(mc_id)">ตกลง</v-btn>
@@ -367,6 +400,8 @@
               itm_oc_id:"",
               itm_oc_name_more:false,
               itm_oc_name:"",
+              img_oc:"",
+              dis_oc:true,
             }
         },
         async created(){
@@ -376,6 +411,9 @@
         watch:{
           mc_u_table(){
             if(this.mc_u_table=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
+          },
+          itm_oc_name_more(){
+            if(this.itm_oc_name_more==true){this.dis_oc=true}else{this.dis_oc=false}
           },
         },
         
@@ -475,23 +513,30 @@
              if(res.data.ok==true){this.dialog_ms=false,this.sh_machine(),this.load_status=0,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
-          async object_control(mc_id){console.log("ok")
+          async object_control(mc_id){
+            const data = new FormData()
+            data.append('img_oc',this.$refs.img_oc.files[0])
+            data.append('oc_u_id',mc_id)
+            data.append('oc_u_table',"pk_machine")
+            data.append('oc_oc_u_id',sessionStorage.getItem("username"))
+            data.append('oc_oc_u_table',sessionStorage.getItem("status"))
             
+
             if(this.itm_oc_name_more===true){
               
               let res=await this.$http.post("/object_control/add_item_object_control",{
                 itm_oc_name:this.itm_oc_name
               })
-              this.itm_oc_id=res.data.itm
-              console.log(this.itm_oc_id)
+              // this.itm_oc_id=res.data.itm
+              data.append('itm_oc_id',res.data.itm)
+            }else{
+              data.append('itm_oc_id',this.itm_oc_id)
             }
           
-            let res=await this.$http.post("/object_control/add_object_control",{
-              oc_u_id:mc_id,
-              oc_u_table:"pk_machine",
-              oc_oc_u_id:sessionStorage.getItem("username"),
-              oc_oc_u_table:sessionStorage.getItem("status"),
-              itm_oc_id:this.itm_oc_id,
+            let res=await this.$http.post("/object_control/add_object_control",data,{
+              onUploadProgress: uploadEvent => {
+                this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+              }
             })
              if(res.data.ok==true){this.dialog_rule=false,this.sh_machine(),this.load_status=0,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
@@ -531,6 +576,15 @@
             reader.onload = e =>{              
               this.img_rear=e.target.result;
               console.log(this.img_rear);
+            };
+          },
+          upload_img_oc(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_oc=e.target.result;
+              console.log(this.img_oc);
             };
           },
         }

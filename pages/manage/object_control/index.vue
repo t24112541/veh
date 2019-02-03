@@ -31,7 +31,8 @@
         >
           <v-tabs-slider></v-tabs-slider>
           <v-tab href="#cv-1" @click="chang_value(1)" class="primary--text">ผิดระเบียบ | {{this.stp1.count}}</v-tab>
-          <v-tab href="#cv-2" @click="chang_value(2)" class="primary--text">แก้ไขแล้ว | {{this.stp2.count}}</v-tab>
+          <v-tab href="#cv-2" @click="chang_value(2)" class="primary--text">รอการตรวจสอบ | {{this.stp2.count}}</v-tab>
+          <v-tab href="#cv-2" @click="chang_value(3)" class="primary--text">ผ่านการตรวจสอบ | {{this.stp3.count}}</v-tab>
         </v-tabs>
       </v-toolbar>
   
@@ -128,7 +129,8 @@
     watch:{
       mis_status(newValue){console.log("ok")
         if(newValue==1){this.mis_status="ผิดระเบียบ"}
-        else if(newValue==2){this.mis_status="แก้ไขแล้ว"}
+        else if(newValue==2){this.mis_status="รอการตรวจสอบ"}
+        else if(newValue==3){this.mis_status="ผ่านการตรวจสอบ"}
       },
       oc_table(newValue){
         this.load_list(newValue)
@@ -143,6 +145,7 @@
         this.object_control=res.data.datas
         this.stp1=res.data.stp1[0]
         this.stp2=res.data.stp2[0]
+        this.stp3=res.data.stp3[0]
         this.count_status_mc=res.data.machines[0],
         this.count_status_ac=res.data.accessories[0],
         this.state=false
