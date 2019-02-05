@@ -1,7 +1,13 @@
 
 <template>
     <v-card>
-      
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
         <v-card-title
           class="grey lighten-4 py-4 title"
         >

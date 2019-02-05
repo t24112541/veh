@@ -1,4 +1,5 @@
 <template>
+
   <v-app id="inspire">
     <v-navigation-drawer
       :clipped="$vuetify.breakpoint.lgAndUp"

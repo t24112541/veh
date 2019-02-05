@@ -1,6 +1,8 @@
 
 <template>
+
     <v-card  @keypress.enter="update_object_control(oc_id)">
+      <notifications group="foo" />
       <v-alert
         v-model="danger"
         dismissible
@@ -165,6 +167,7 @@
                 >
                   <v-layout pt-3>
                     <v-flex xs5>
+                      
                       <strong>วันที่แจ้งข้อมูลผิดระเบียบ</strong>
                     </v-flex>
                     <v-flex>
@@ -210,11 +213,15 @@
           <v-spacer></v-spacer>
           <v-btn flat color="green lighten-2"  @click="update_object_control()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        
     </v-card>
+
 </template>
 
 <script>
+
     export default {
+      
         layout: 'manage',
         data(){
           return{
@@ -254,10 +261,18 @@
             dialog_co_true:false,
             load_status:0,
             pk_comment:"",
+
+   
           }
         },
         async created(){
           this.sh_object_control()
+          this.sh_comment()
+          this.$notify({
+            group: 'foo',
+            title: 'Important message',
+            text: 'Hello user! This is a notification!'
+          })
         },
         watch:{
           ms_step(newValue){
@@ -279,12 +294,6 @@
         },
         methods:{
           async oc_fail(){console.log("OK")
-            // const frmdt = new FormData()
-            //   frmdt.append('co_co_u_id',sessionStorage.getItem("id"))
-            //   frmdt.append('co_co_u_table',this.status)
-            //   frmdt.append('co_u_id',this.oc_id)
-            //   frmdt.append('co_u_table',"object_control")
-            //   frmdt.append('co_comment',this.co_comment)
 
             let oc_fail=await this.$http.post("/comment/add_comment",{
               co_co_u_id:sessionStorage.getItem("id"),
@@ -302,8 +311,6 @@
             this.dialog_co=false
           },
           oc_link_oc_btn(ob_id){
-            console.log(this.oc_u_table)
-            console.log(this.ms_link_mis)
             this.$router.push({path:this.ms_link_mis+ob_id}) 
           },
           step_plus(){
@@ -326,26 +333,27 @@
             else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
           async sh_object_control(){
-            let res=await this.$http.post('/object_control/sh_object_control/',{oc_id:this.$route.query.oc_id})
-            this.oc_id=this.$route.query.oc_id
-            this.oc_date=res.data.datas[0].oc_date 
-            this.oc_date=res.data.datas[0].oc_u_id
-            this.oc_type=res.data.type
-            this.oc_status=res.data.datas[0].oc_status
-            this.oc_name=res.data.datas[0].oc_name
-            this.oc_update_date=res.data.datas[0].oc_update_date
-            this.itm_oc_name=res.data.datas[0].itm_oc_name
-            this.img=this.link_img+res.data.img[0].img_img
-            this.oc_u_table=res.data.datas[0].oc_u_table
-            this.ob_id=res.data.datas[0].u_id
-              console.log(res.data)
-            // console.log(res.data)
+            let sh=await this.$http.post('/object_control/sh_object_control/',{oc_id:this.$route.query.oc_id})
 
+
+            this.oc_id=this.$route.query.oc_id
+            this.oc_date=sh.data.datas[0].oc_date 
+            this.oc_u_id=sh.data.datas[0].oc_u_id
+            this.oc_type=sh.data.type
+            this.oc_status=sh.data.datas[0].oc_status
+            this.oc_name=sh.data.datas[0].oc_name
+            this.oc_update_date=sh.data.datas[0].oc_update_date
+            this.itm_oc_name=sh.data.datas[0].itm_oc_name
+            this.oc_u_table=sh.data.datas[0].oc_u_table
+            this.ob_id=sh.data.datas[0].oc_u_id
+            this.img=this.link_img+sh.data.img[0].img_img
+          },
+          async sh_comment(){
             let co=await this.$http.post("/comment/list_comment_where_topic",{
-              co_u_id:this.oc_id,
+              co_u_id:this.$route.query.oc_id,
               co_u_table:"object_control",
             })
-            console.log(co.data)
+            // console.log(co.data)
             this.pk_comment=co.data.datas
           },
           async update_object_control(oc_id){
