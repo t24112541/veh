@@ -146,3 +146,8 @@ select {
       line-height: 34px;
     }
 }
+
+.v-sheet--offset {
+  top: -24px;
+  position: relative;
+}
