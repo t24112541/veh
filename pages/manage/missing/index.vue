@@ -13,15 +13,15 @@
         </v-radio-group>
         </v-flex>
 
-        <!-- <v-text-field
+        <v-text-field
           style="margin-top:25px"
           class="margin-top-md"
           label="ค้นหา"
-          v-model="txt_search"
+          v-model="filter_txt_search"
         ></v-text-field>
         <v-btn icon>
           <v-icon>search</v-icon>
-        </v-btn> -->
+        </v-btn>
 
         <v-tabs
           slot="extension"
@@ -123,7 +123,16 @@
       },
       filter_missing(){
         return this.missing.filter(x=>''+x.ms_status===this.mis_status)
-      }
+      },
+      filter_txt_search(){
+        let sh=[]
+        for(let i=0;i<this.missing.length;i++){
+          if(this.missing[i].ms_table+''==="pk_machine" && this.missing[i].ms_status+''!=="ขั้นที่ 2 รับเรื่องแล้ว" &&  this.missing[i].ms_status+''==="ขั้นที่ 3 พบเเล้ว"){
+            sh.push(this.missing[i])
+          }
+        }
+        return sh.length
+      },
     },
     watch:{
       mis_status(newValue){console.log("ok")

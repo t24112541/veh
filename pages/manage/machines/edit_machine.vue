@@ -505,7 +505,7 @@
           async missing(mc_id){
             const formData = new FormData()
             formData.append('img_ms',this.$refs.img_ms.files[0])
-            formData.append('u_id',mc_id)
+            formData.append('u_id',this.mc_id)
             formData.append('ms_table',"pk_machine")
             formData.append('ms_u_id',sessionStorage.getItem("username"))
             formData.append('ms_u_table',sessionStorage.getItem("status"))
