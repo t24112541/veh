@@ -178,6 +178,7 @@
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../student/home'},
       { icon: 'fas fa-book-open', text: 'การแจ้งหาย' ,link: '../../student/missing'},
+      { icon: 'fas fa-book-open', text: 'ข้อมูลผิดระเบียบ' ,link: '../../student/object_control'},
       { divider: true },
        { heading: 'จัดการข้อมูล' },
         // {

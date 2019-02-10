@@ -93,6 +93,7 @@
                     <span><i class="fas fa-image fa-2x"></i></span>
                     <v-spacer></v-spacer>
                     <span>รูปด้านหน้า</span>
+                    
                   </v-card-actions>
                 </v-card>
               </v-flex>
@@ -190,11 +191,12 @@
               img_side:[],
               img_rear:[],
               mc_code:"",
-              mc_u_table:"",
               mc_brand:"",
               mc_series: '',
+              mc_u_table:"",
               std_id: '',
               img_img:"",
+
               type_api:"",
               danger:false,
               conf_del:false,
@@ -212,7 +214,7 @@
             if(newValue=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
           }
         },
-        methods:{
+        methods:{ 
            async machine_add(){
             if(this.mc_code!='' && this.mc_brand!=''&& this.mc_series!=''&& this.std_id!='' &&this.img_font!=''&&this.img_side!=''&&this.img_rear!=''){
               const formData = new FormData()
@@ -234,7 +236,7 @@
                 }
               })
               if(res.data.ok==true){
-                this.$router.push({name:"teacher-machines"})
+                this.$router.push({name:"teacher-machines-data_add_machine"})
                 this.load_status=0
                 this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
               else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.load_status=0}
@@ -249,7 +251,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_font=e.target.result;
-              console.log(this.img_font);
+              // console.log(this.img_font);
             };
           },
           upload_img_side(e){
@@ -258,8 +260,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_side=e.target.result;
-              // console.log("this.img_side");
-              console.log(this.img_side);
+              // console.log(this.img_side);
             };
           },
           upload_img_rear(e){
@@ -268,7 +269,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_rear=e.target.result;
-              console.log(this.img_rear);
+              // console.log(this.img_rear);
             };
           },
         }

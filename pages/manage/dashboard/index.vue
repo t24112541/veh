@@ -25,6 +25,17 @@
                 <div class="subheading font-weight-light grey--text">ในระบบ</div>
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
+              
+                <v-btn
+                  :loading="loading3"
+                  :disabled="loading3"
+                  color="blue-grey"
+                  class="white--text"
+                  @click="loader = 'loading3' && sh_machine()"
+                >
+                  แสดงพาหนะ 
+                  <i class="fas fa-external-link-alt fa-1x"></i>
+                </v-btn>
                 <span class="caption grey--text font-weight-light"></span>
               </v-card-text>
             </v-card>
@@ -54,6 +65,16 @@
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
                 <span class="caption grey--text font-weight-light"></span>
+                <v-btn
+                  :loading="loading3"
+                  :disabled="loading3"
+                  color="blue-grey"
+                  class="white--text"
+                  @click="loader = 'loading3' && sh_missing_machine()"
+                >
+                  แสดงการสูญหาย 
+                  <i class="fas fa-external-link-alt fa-1x"></i>
+                </v-btn>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -80,6 +101,16 @@
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
                 <span class="caption grey--text font-weight-light"></span>
+                <v-btn
+                  :loading="loading3"
+                  :disabled="loading3"
+                  color="blue-grey"
+                  class="white--text"
+                  @click="loader = 'loading3' && sh_object_control_machine()"
+                >
+                  แสดงข้อมูลผิดระเบียบ 
+                  <i class="fas fa-external-link-alt fa-1x"></i>
+                </v-btn>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -108,6 +139,16 @@
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
                 <span class="caption grey--text font-weight-light"></span>
+                <v-btn
+                  :loading="loading3"
+                  :disabled="loading3"
+                  color="blue-grey"
+                  class="white--text"
+                  @click="loader = 'loading3' && sh_accessories()"
+                >
+                  แสดงพาหนะ 
+                  <i class="fas fa-external-link-alt fa-1x"></i>
+                </v-btn>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -136,6 +177,16 @@
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
                 <span class="caption grey--text font-weight-light"></span>
+                <v-btn
+                  :loading="loading3"
+                  :disabled="loading3"
+                  color="blue-grey"
+                  class="white--text"
+                  @click="loader = 'loading3' && sh_missing_machine()"
+                >
+                  แสดงการสูญหาย 
+                  <i class="fas fa-external-link-alt fa-1x"></i>
+                </v-btn>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -162,6 +213,16 @@
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
                 <span class="caption grey--text font-weight-light"></span>
+                <v-btn
+                  :loading="loading3"
+                  :disabled="loading3"
+                  color="blue-grey"
+                  class="white--text"
+                  @click="loader = 'loading3' && sh_object_control_machine()"
+                >
+                  แสดงข้อมูลผิดระเบียบ 
+                  <i class="fas fa-external-link-alt fa-1x"></i>
+                </v-btn>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -197,6 +258,8 @@ export default {
 
       chart_oc:"",
       chart_data_oc:[],
+      loader: null,
+      loading3: false,
 
     }
   },
@@ -205,6 +268,18 @@ export default {
     
   },
   methods:{
+    sh_machine(){
+      this.$router.push({path: '../../manage/machines/'})
+    },
+    sh_missing_machine(){
+      this.$router.push({path: '../../manage/missing/'})
+    },
+    sh_object_control_machine(){
+      this.$router.push({path: '../../manage/object_control/'})
+    },
+    sh_accessories(){
+      this.$router.push({path: '../../manage/accessories/'})
+    },
     async sh_mis(){
       let res= await this.$http.post("/dashboard/missing_chart")
       this.machine=res.data.pk_machine_all 
@@ -281,11 +356,17 @@ export default {
     },
   },
 
-  mounted() {
-    
+  watch: {
+    loader () {
+      const l = this.loader
+      this[l] = !this[l]
 
+      setTimeout(() => (this[l] = false), 3000)
+
+      this.loader = null
+    }
   },
-   computed: {
+  computed: {
     /////////////////////////////  machine /////////////////////////////////////// 
 
       filter_machine(){

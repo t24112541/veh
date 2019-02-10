@@ -82,9 +82,10 @@ export default {
             sessionStorage.setItem("id",res.data.login.std_id)
             sessionStorage.setItem("username",res.data.login.std_username)
             sessionStorage.setItem("password",(res.data.login.std_password))
+            sessionStorage.setItem("std_code",(res.data.login.std_code))
             sessionStorage.setItem("status",(res.data.status))
             this.$router.push({path: "/student/home"})
-            // console.log(res.data)
+            // console.log(res.data.login.std_code)
           }else if(res.data.status=="pk_teacher"){
             sessionStorage.setItem("id",res.data.login.t_id)
             sessionStorage.setItem("username",res.data.login.t_username)
@@ -97,14 +98,14 @@ export default {
             sessionStorage.setItem("username",res.data.login[0].a_username)
             sessionStorage.setItem("password",(res.data.login[0].a_password))
             sessionStorage.setItem("status",(res.data.status))
-            this.$router.push({path: "/manage/missing"})
+            this.$router.push({path: "/manage/dashboard"})
             // console.log(res.data.login)
           }else if(res.data.status=="bld"){
             sessionStorage.setItem("id",res.data.login.bld_username)
             sessionStorage.setItem("username",res.data.login.bld_username)
             sessionStorage.setItem("password",(res.data.login.bld_password))
             sessionStorage.setItem("status",(res.data.status))
-            this.$router.push({path: "/manage/missing"})
+            this.$router.push({path: "/manage/dashboard"})
             //  console.log(res.data)
           }
             

@@ -10,20 +10,7 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-            <!-- <v-flex xs12 >
-              <v-layout align-center>
-                <v-text-field
-                  
-                  :rules="[rules.required]"
-                  maxlength="10"
-                  counter
-                  prepend-icon="fas fa-user"
-                  placeholder="รหัสเจ้าของพาหนะ"
-                  name="std_id"
-                  v-model="std_id"
-                ></v-text-field>
-              </v-layout>
-            </v-flex> -->
+           
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -86,6 +73,7 @@
                     <span><i class="fas fa-image fa-2x"></i></span>
                     <v-spacer></v-spacer>
                     <span>รูปด้านหน้า</span>
+                    
                   </v-card-actions>
                 </v-card>
               </v-flex>
@@ -144,9 +132,27 @@
           
           <v-btn flat color="red lighten-2" @click="machine()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2"  @click="machine_add()"><i class="fas fa-save fa-2x"></i></v-btn>
+            <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+              </div>
+          <v-btn v-if="load_status==0" flat color="green lighten-2"  @click="machine_add()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
-        
+        <v-alert
+          v-model="danger"
+          dismissible
+          :type="type_api"
+        >
+          {{alt_txt}}
+        </v-alert>
     </v-card>
 </template>
 
@@ -167,8 +173,10 @@
               mc_code:"",
               mc_brand:"",
               mc_series: '',
+              mc_u_table:"",
               std_id: '',
               img_img:"",
+
               type_api:"",
               danger:false,
               conf_del:false,
@@ -177,29 +185,41 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              load_status:0,
+              position:"",
           }
         },
-        methods:{
+        watch:{
+          mc_u_table(newValue){
+            if(newValue=="pk_teacher"){this.position="ครู / บุคลากร"}else{this.position="นักเรียน / นักศึกษา"}
+          }
+        },
+        methods:{ 
            async machine_add(){
             if(this.mc_code!='' && this.mc_brand!=''&& this.mc_series!=''&&this.img_font!=''&&this.img_side!=''&&this.img_rear!=''){
-              let res=await this.$http.post("machine/machine_add",{
-                mc_code:this.mc_code,
-                mc_brand:this.mc_brand,
-                mc_series:this.mc_series,
-                std_id:sessionStorage.getItem("username"),
+              const formData = new FormData()
+              formData.append('mc_code',this.mc_code)
+              formData.append('mc_brand',this.mc_brand)
+              formData.append('mc_series',this.mc_series)
+              formData.append('std_id',sessionStorage.getItem("std_code"))
+              formData.append('u_id',sessionStorage.getItem("std_code"))
+              formData.append('u_table',"pk_machine")
+              formData.append('mc_u_table',sessionStorage.getItem("status"))
 
-                // img_img:this.img_font,img_side,img_rear,
-                img_font:this.img_font,
-                img_side:this.img_side,
-                img_rear:this.img_rear,
+              formData.append('img_font',this.$refs.img_font.files[0])
+              formData.append('img_side',this.$refs.img_side.files[0])
+              formData.append('img_rear',this.$refs.img_rear.files[0])
 
-                
-                u_id:sessionStorage.getItem("username"),
-                u_table:"pk_machine"
+              let res=await this.$http.post("machine/machine_add",formData,{
+                onUploadProgress: uploadEvent => {
+                  this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                }
               })
-              if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt
-              this.machine()}
-              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              if(res.data.ok==true){
+                this.$router.push({name:"student-machines-data_add_machine"})
+                this.load_status=0
+                this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.load_status=0}
             }else{this.danger=true,this.alt_txt="กรุณากรอกข้อมูลให้ครบ",this.type_api="error"}
           },
           machine(){
@@ -211,7 +231,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_font=e.target.result;
-              console.log(this.img_font);
+              // console.log(this.img_font);
             };
           },
           upload_img_side(e){
@@ -220,8 +240,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_side=e.target.result;
-              // console.log("this.img_side");
-              console.log(this.img_side);
+              // console.log(this.img_side);
             };
           },
           upload_img_rear(e){
@@ -230,7 +249,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_rear=e.target.result;
-              console.log(this.img_rear);
+              // console.log(this.img_rear);
             };
           },
         }

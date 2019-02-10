@@ -156,6 +156,7 @@
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../teacher/home'},
       { icon: 'fas fa-book-open', text: 'การแจ้งหาย' ,link: '../../teacher/missing'},
+      { icon: 'fas fa-book-open', text: 'ข้อมูลผิดระเบียบ' ,link: '../../teacher/object_control'},
       { divider: true },
        { heading: 'จัดการข้อมูล' },
         // {

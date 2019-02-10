@@ -6,7 +6,6 @@
         color="green lighten-2"
         dark
         small
-       
         fab
         @click="accessories_add()"
       >
@@ -85,38 +84,30 @@
     watch:{
       async txt_search(newValue){
         let s=newValue
-        
-        if(s!=""){
-          this.state=true
-          let res=await this.$http.post('/accessories/search',{
-            txt_search:s
-          })
-          this.state=false
+        this.state=true
+        let res=await this.$http.post('/accessories/search',{
+          txt_search:s
+        })
         // console.log(res.data)
         this.datas=res.data.datas
-        }else{
-          this.sh_accessories()
-        }
-        
-        
+        this.state=false
       }
     },
-     created(){
-      this.sh_accessories()
+    async created(){
+      if(this.$route.query.g_code){
+        let res=await this.$http.get('/accessories/list_g/'+this.$route.query.g_code)
+        this.datas=res.data.datas
+        this.state=false
+      }else{
+        let res=await this.$http.get('/accessories/list')
+        this.datas=res.data.datas
+        this.state=false
+        // console.log(res.data.datas)
+      }
+      
+      
     },
     methods:{
-      async sh_accessories(){
-        if(this.$route.query.g_code){
-          let res=await this.$http.get('/accessories/list_g/'+this.$route.query.g_code)
-          this.datas=res.data.datas
-          this.state=false
-        }else{
-          let res=await this.$http.get('/accessories/list')
-          this.datas=res.data.datas
-          this.state=false
-          // console.log(res.data.datas)
-        }
-      },
       list_accessories(ac_id){
         this.$router.push({path: '../teacher/accessories/edit_accessories?ac_id='+ac_id})
       },

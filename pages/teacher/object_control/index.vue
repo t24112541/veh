@@ -3,11 +3,11 @@
     <v-card >
       <v-toolbar tabs>
         <v-flex xs12>
-        <v-toolbar-title>การแจ้งหาย</v-toolbar-title>
+        <v-toolbar-title>ข้อมูลผิดระเบียบ</v-toolbar-title>
         </v-flex>
 
         <v-flex xs6>
-        <v-radio-group v-model="ms_table" row style="margin-top:25px">
+        <v-radio-group v-model="oc_table" row style="margin-top:25px">
           <v-radio label="พาหนะ" value="pk_machine"></v-radio>{{count_status_mc.count}}
           <v-radio label="อุปกรณ์" value="pk_accessories"></v-radio>{{count_status_ac.count}}
         </v-radio-group>
@@ -17,7 +17,7 @@
           style="margin-top:25px"
           class="margin-top-md"
           label="ค้นหา"
-          v-model="filter_txt_search"
+          v-model="txt_search"
         ></v-text-field>
         <v-btn icon>
           <v-icon>search</v-icon>
@@ -30,9 +30,9 @@
           color="transparent"
         >
           <v-tabs-slider></v-tabs-slider>
-          <v-tab href="#cv-1" @click="chang_value(1)" class="primary--text">รอรับเรื่อง | {{this.stp1.count}}</v-tab>
-          <v-tab href="#cv-2" @click="chang_value(2)" class="primary--text">กำลังดำเนินการ | {{this.stp2.count}}</v-tab>
-          <v-tab href="#cv-3" @click="chang_value(3)" class="primary--text">พบแล้ว | {{this.stp3.count}}</v-tab>
+          <v-tab href="#cv-1" @click="chang_value(1)" class="primary--text">ผิดระเบียบ | {{this.stp1.count}}</v-tab>
+          <v-tab href="#cv-2" @click="chang_value(2)" class="primary--text">รอการตรวจสอบ | {{this.stp2.count}}</v-tab>
+          <v-tab href="#cv-2" @click="chang_value(3)" class="primary--text">ผ่านการตรวจสอบ | {{this.stp3.count}}</v-tab>
         </v-tabs>
       </v-toolbar>
   
@@ -44,7 +44,7 @@
         >
           <v-data-table
               :headers="headers"
-              :items="filter_missing"
+              :items="filter_ob_ctrl"
               :search="search"
               :pagination.sync="pagination"
               :loading="state"
@@ -65,10 +65,10 @@
               </v-tooltip>
             </template>
             <template slot="items" slot-scope="props">
-              <tr v-on:click="list_missing(props.item.ms_id)">
-                <td class="text-xs-left" >{{ props.item.ms_date }}</td>
-                <td class="text-xs-left">{{ props.item.ms_status }}</td>
-
+              <tr v-on:click="list_object_control(props.item.oc_id)">
+                <td class="text-xs-left" >{{ props.item.oc_date }}</td>
+                <td class="text-xs-left">{{ props.item.oc_status }}</td>
+                <td class="text-xs-left">{{ props.item.itm_oc_name }}</td>
               </tr>
 
             </template>
@@ -88,7 +88,7 @@
 
 <script>
   export default {
-    layout: 'manage',
+    layout: 'teacher',
     data () {
       return {
         tabs: null,
@@ -98,13 +98,14 @@
         selected: [],
         rows_per_page:[10,20,{"text":"แสดงทั้งหมด","value":-1}],//////////////////////////   teach me pleas!
         headers: [
-          { text: 'วันที่แจ้งหาย', value: 'วันที่แจ้งหาย',align: 'left',sortable: false, },
-          { text: 'สถานะการแจ้ง', value: 'สถานะการแจ้ง',align: 'left',sortable: false,  },
+          { text: 'วันที่แจ้ง', value: 'วันที่แจ้ง',align: 'left',sortable: false, },
+          { text: 'สถานะ', value: 'สถานะ',align: 'left',sortable: false,  },
+          { text: 'เหตุผิดระเบียบ', value: 'เหตุผิดระเบียบ',align: 'left',sortable: false,  },
         ],
-        missing: [],
+        object_control: [],
         ms_type:"",
-        mis_status:"ขั้นที่ 1 รอรับเรื่อง",
-        ms_table:"pk_machine",
+        mis_status:"ผิดระเบียบ",
+        oc_table:"pk_machine",
 
         stp1:"",
         stp2:"",
@@ -121,36 +122,27 @@
         if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) return 0
         return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
       },
-      filter_missing(){
-        return this.missing.filter(x=>''+x.ms_status===this.mis_status)
-      },
-      filter_txt_search(){
-        let sh=[]
-        for(let i=0;i<this.missing.length;i++){
-          if(this.missing[i].ms_table+''==="pk_machine" && this.missing[i].ms_status+''!=="ขั้นที่ 2 รับเรื่องแล้ว" &&  this.missing[i].ms_status+''==="ขั้นที่ 3 พบเเล้ว"){
-            sh.push(this.missing[i])
-          }
-        }
-        return sh.length
-      },
+      filter_ob_ctrl(){
+        return this.object_control.filter(x=>''+x.oc_status===this.mis_status)
+      }
     },
     watch:{
       mis_status(newValue){console.log("ok")
-        if(newValue==1){this.mis_status="ขั้นที่ 1 รอรับเรื่อง"}
-        else if(newValue==2){this.mis_status="ขั้นที่ 2 รับเรื่องแล้ว"}
-        else if(newValue==3){this.mis_status="ขั้นที่ 3 พบเเล้ว"}
+        if(newValue==1){this.mis_status="ผิดระเบียบ"}
+        else if(newValue==2){this.mis_status="รอการตรวจสอบ"}
+        else if(newValue==3){this.mis_status="ผ่านการตรวจสอบ"}
       },
-      ms_table(newValue){
+      oc_table(newValue){
         this.load_list(newValue)
       }
     },
     methods:{
       async load_list(cv_filter){
         this.state=true
-        let res=await this.$http.post('/missing/list',{cv_filter:cv_filter})
-        //  console.log(res.data.datas) 
-        this.missing=res.data.datas
-        this.ms_type=res.data.type
+        let res=await this.$http.post('/object_control/list',{cv_filter:cv_filter})
+         console.log(res.data.datas) 
+          console.log(res.data) 
+        this.object_control=res.data.datas
         this.stp1=res.data.stp1[0]
         this.stp2=res.data.stp2[0]
         this.stp3=res.data.stp3[0]
@@ -161,8 +153,8 @@
       chang_value(vl){
         this.mis_status=vl
       },
-      list_missing(ms_id){
-        this.$router.push({path: '../manage/missing/update_missing?ms_id='+ms_id})
+      list_object_control(oc_id){
+        this.$router.push({path: '../teacher/object_control/update_object_control?oc_id='+oc_id})
       },
      
     }

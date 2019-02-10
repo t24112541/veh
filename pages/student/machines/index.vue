@@ -1,20 +1,19 @@
 <template>
   <div>
     <v-card>
-    <div class="cv_header padding-top-mn" >ข้อมูลยานพาหนะ</div>
-    <div class="cv_header xs12">
+    <div class="cv_header padding-top-mn" >ข้อมูลยานพาหนะ
       <v-btn
         color="green lighten-2"
         dark
         small
-        absolute
-        top
-        right
         fab
         @click="machine_add()"
       >
         <v-icon>add</v-icon>
       </v-btn>
+    </div>
+    <div class="cv_header xs12">
+      
     </div>
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
@@ -23,13 +22,13 @@
       :items="std"
       :search="search"
 
-      :loading=state
+      :loading="state"
       class="elevation-1"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items=rows_per_page
+      :rows-per-page-items="rows_per_page"
       
     >
     <template slot="headerCell" slot-scope="props">

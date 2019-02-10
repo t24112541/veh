@@ -4,7 +4,7 @@
       <v-alert
         v-model="danger"
         dismissible
-        :type=type_api
+        :type="type_api"
       >
         {{alt_txt}}
       </v-alert>
@@ -33,42 +33,55 @@
               </v-stepper-header>
           
               <v-stepper-items>
-                <!-- <v-stepper-content step="1">
-                 <v-card
+                <v-stepper-content step="1">
+                  <!-- <v-card
                     class="mb-5"
                     color="grey lighten-1"
                     height="200px"
                   ></v-card> -->
                   
-                  <!-- <v-btn
+                  <v-btn
                     color="primary"
                     @click="ms_step = 2"
                     style="width:100%"
                   >
                     <i class="fas fa-check-circle fa-2x"></i>&nbsp;
                     <v-spacer></v-spacer> รับเรื่อง<v-spacer></v-spacer>
-                  </v-btn> -->
+                  </v-btn>
                   
-                <!-- </v-stepper-content> --> 
+                </v-stepper-content>
           
-                <!-- <v-stepper-content step="2"> -->
+                <v-stepper-content step="2">
                   <!-- <v-card
                     class="mb-5"
                     color="grey lighten-1"
                     height="200px"
                   ></v-card> -->
           
-                  <!-- <v-btn
+                  <v-btn
                     color="primary"
                     @click="ms_step = 3"
                     style="width:100%"
                   >
                     <i class="fas fa-search fa-2x"></i>&nbsp;
                     <v-spacer></v-spacer> พบแล้ว<v-spacer></v-spacer>
-                  </v-btn> -->
-                <!-- </v-stepper-content> -->
+                  </v-btn>
+                </v-stepper-content>
           
-                <v-stepper-content step="3">        
+                <v-stepper-content step="3">
+                  <!-- <v-card
+                    class="mb-5"
+                    style="text-align:center"
+                    height="50px"
+                  >พบแล้ว</v-card> -->
+        <!--   
+                  <v-btn
+                    color="primary"
+                    @click="ms_step = 3"
+                  >
+                    Continue
+                  </v-btn>-->
+          
                  <v-flex text-xs-center xs12 style="color:#81c784"><i class="fas fa-check-circle fa-2x" ></i></v-flex>
                  <v-flex text-xs-center xs12 style="color:#81c784">พบแล้ว</v-flex>
                 </v-stepper-content>
@@ -112,7 +125,6 @@
                       <strong>วันที่แจ้งหาย</strong>
                     </v-flex>
                     <v-flex>
-                      <!-- <strong>{{ms_date}}</strong> -->
                       <div class="caption">{{ms_date}}</div>
                     </v-flex>
                   </v-layout>
@@ -120,13 +132,36 @@
               </v-timeline>
 
             </v-flex>
-           
+            <v-flex xs12>
+              <v-textarea
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="ms_detail"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+              ></v-textarea>
+            </v-flex> 
+            <v-flex xs12>
+              <v-card height="100%" class="grey lighten-4 paddign" > 
+                <center><img :src="this.img_ms" width="50%"></center>
+                <v-card-actions style="font-size:100%">
+                  <span><i class="fas fa-image fa-2x"></i></span>
+                  <v-spacer></v-spacer>
+                  <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                </v-card-actions>
+              </v-card>
+
+            
+            </v-flex> 
+            
           </v-layout>
         </v-container>
         <v-card-actions>
           <v-btn flat color="red lighten-2" @click="missing()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
           <v-spacer></v-spacer>
-          <!-- <v-btn flat color="green lighten-2"  @click="missing_update()"><i class="fas fa-save fa-2x"></i></v-btn> -->
+          <v-btn flat color="green lighten-2"  @click="missing_update()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
     </v-card>
 </template>
@@ -136,6 +171,8 @@
         layout: 'teacher',
         data(){
           return{
+            link_img:"http://localhost:34001/img/missing/",
+
             ms_id:"",
             ms_date:"",
             ms_status:"",
@@ -157,6 +194,8 @@
                   required: value => !!value || 'ห้ามว่าง.',
                   // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
             },
+            img_ms:"",
+            ms_detail:"",
           }
         },
         async created(){
@@ -183,13 +222,13 @@
         },
         methods:{
           ms_link_mis_btn(u_id){
-            console.log("ms_link_mis_btn")
+            // console.log("ms_link_mis_btn")
             this.$router.push({path:this.ms_link_mis+u_id}) 
           },
           step_plus(){
-            console.log("step")
+            // console.log("step")
             if(this.ms_step!=3){this.ms_step++}
-            console.log(this.ms_step)
+            // console.log(this.ms_step)
           },
           conf_del(){this.conf_del=true},
           async missing_del(){//console.log("missing_del")
@@ -215,7 +254,9 @@
             this.u_ms_date=res.data.datas[0].u_ms_date
             this.u_id=res.data.datas[0].u_id
             this.ms_table=res.data.datas[0].ms_table
-            // console.log(res.data.datas[0].ms_date)
+            this.img_ms=this.link_img+res.data.datas[0].img_img
+            this.ms_detail=res.data.datas[0].ms_detail
+            // console.log(res.data)
           },
           async missing_update(ms_id){
             //console.log("ms_id"+ms_id)

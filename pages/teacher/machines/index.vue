@@ -6,14 +6,15 @@
         color="green lighten-2"
         dark
         small
-        absolute
       
         fab
         @click="machine_add()"
       >
         <v-icon>add</v-icon>
       </v-btn>
-
+    </div>
+     <div class="cv_header xs12">
+      
     </div>
     <div class="cv_header padding-top-mn"> 
       <v-text-field
@@ -22,9 +23,7 @@
               v-model="txt_search"
             ></v-text-field>
     </div> 
-    <div class="cv_header xs12">
-      
-    </div>
+   
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
   <v-data-table
@@ -32,13 +31,13 @@
       :items="std"
       :search="search"
 
-      :loading="state"
+      :loading=state
       class="elevation-1"
       prev-icon="fas fa-chevron-circle-left"
       next-icon="fas fa-chevron-circle-right"
       sort-icon="mdi-menu-down"
       rows-per-page-text="แสดง"
-      :rows-per-page-items="rows_per_page"
+      :rows-per-page-items=rows_per_page
       
     >
     <template slot="headerCell" slot-scope="props">
@@ -85,6 +84,18 @@
         std:[]
       }
     },
+     watch:{
+      async txt_search(newValue){
+        let s=newValue
+        this.state=true
+        let res=await this.$http.post('/machine/search',{
+          txt_search:s
+        })
+        console.log(res.data)
+        this.std=res.data.datas
+        this.state=false
+      }
+    },
     async created(){
       if(this.$route.query.g_code){
         let res=await this.$http.get('/machine/list_g/'+this.$route.query.g_code)
@@ -99,18 +110,6 @@
       
     },
     computed: {
-    },
-    watch:{
-      async txt_search(newValue){
-        let s=newValue
-        this.state=true
-        let res=await this.$http.post('/machine/search',{
-          txt_search:s
-        })
-        console.log(res.data)
-        this.std=res.data.datas
-        this.state=false
-      }
     },
     methods:{
       list_machine(mc_id){

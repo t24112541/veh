@@ -1,13 +1,7 @@
 
 <template>
     <v-card>
-      <v-alert
-        v-model="danger"
-        dismissible
-        :type=type_api
-      >
-        {{alt_txt}}
-      </v-alert>
+      
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
@@ -16,27 +10,7 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-            <!-- <v-flex xs12>
-              <p>ตำแหน่งเจ้าของอุปกรณ์ {{ position || '' }}</p>
-              <v-radio-group v-model="ac_u_table" :mandatory="false" row>
-                <v-radio label="ครู / บุคลากร" color="success" value="pk_teacher"></v-radio>
-                <v-radio label="นักเรียน / นักศึกษา" color="success" value="pk_student"></v-radio>
-              </v-radio-group>
-            </v-flex> -->
-            <!-- <v-flex xs12 >
-              <v-layout align-center>
-                <v-text-field
-                  :rules="[rules.required]"
-                  maxlength="10"
-                  counter
-                  placeholder="รหัสประจำตัวเจ้าของอุปกรณ์"
-                  label="เจ้าของอุปกรณ์"
-                  prepend-icon="fas fa-car"
-                  name="ac_u_id"
-                  v-model="ac_u_id"
-                ></v-text-field>
-              </v-layout>
-            </v-flex> -->
+          
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field
@@ -131,29 +105,41 @@
                 </v-card>
               </v-flex>
               
-  
-           
-
           </v-layout>
         </v-container>
         <v-card-actions>
           <v-btn flat color="red lighten-2" @click="accessories()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2"  @click="accessories_add()"><i class="fas fa-save fa-2x"></i></v-btn>
+          <div v-if="load_status!=0">
+              <v-progress-circular
+               
+                :rotate="-90"
+                :size="70"
+                :width="15"
+                :value="load_status"
+                color="green lighten-2"
+              >
+                {{ load_status }}
+              </v-progress-circular>
+            </div>
+          <v-btn v-if="load_status==0" flat color="green lighten-2"  @click="accessories_add()"><i class="fas fa-save fa-2x"></i></v-btn>
         </v-card-actions>
+        <v-alert
+        v-model="danger"
+        dismissible
+        :type="type_api"
+      >
+        {{alt_txt}}
+      </v-alert>
     </v-card>
 </template>
 
-<style>
-   .uploading-image{
-     display:flex;
-   }
- </style>
 <script>
     export default {
         layout: 'student',
         data () {
             return {
+              
               previewImage:[],
               img_font:[],
               img_side:[],
@@ -173,6 +159,7 @@
                     required: value => !!value || 'ห้ามว่าง.',
                     counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
               },
+              load_status:0,
           }
         },
         watch:{
@@ -182,22 +169,28 @@
         },
         methods:{
            async accessories_add(){
-            if(this.ac_description!='' && this.ac_name!='' &&this.img_font!=''&&this.img_side!=''&&this.img_rear!=''){
-              let res=await this.$http.post("accessories/accessories_add",{
-                ac_description:this.ac_description,
-                ac_u_id:sessionStorage.getItem("username"),
-                ac_name:this.ac_name,
-                ac_u_table:"pk_student",
+            if(this.ac_description!='' && this.ac_name!='' ){
+              if(this.$refs.img_font.files[0]!='' || this.$refs.img_side.files[0]!='' || this.$refs.img_rear.files[0]!=''){
+                const formData = new FormData()
+                formData.append('img_font',this.$refs.img_font.files[0])
+                formData.append('img_side',this.$refs.img_side.files[0])
+                formData.append('img_rear',this.$refs.img_rear.files[0])
 
-                img_font:this.img_font,
-                img_side:this.img_side,
-                img_rear:this.img_rear,
-                u_table:"pk_accessories",
-                u_id:sessionStorage.getItem("username"),
+                formData.append('ac_description',this.ac_description)
+                formData.append('ac_u_id',sessionStorage.getItem("std_code"))
+                formData.append('ac_name',this.ac_name)
+                formData.append('ac_u_table',sessionStorage.getItem("status"))
+                formData.append('u_table',"pk_accessories")
+                formData.append('u_id',sessionStorage.getItem("std_code"))
 
-              })
-              if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.accessories()}
-              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+                let res=await this.$http.post("accessories/accessories_add",formData,{
+                  onUploadProgress: uploadEvent => {
+                    this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                  }
+                })
+                if(res.data.ok==true){this.load_status=0,this.accessories(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+                else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+              }else{this.danger=true,this.alt_txt="กรุณาเลือกรูปภาพ",this.type_api="error"}
             }else{this.danger=true,this.alt_txt="กรุณากรอกข้อมูลให้ครบ",this.type_api="error"}
           },
           accessories(){
@@ -209,7 +202,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_font=e.target.result;
-              console.log(this.img_font);
+
             };
           },
           upload_img_side(e){
@@ -218,8 +211,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_side=e.target.result;
-              // console.log("this.img_side");
-              console.log(this.img_side);
+
             };
           },
           upload_img_rear(e){
@@ -228,7 +220,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_rear=e.target.result;
-              console.log(this.img_rear);
+
             };
           },
         }
