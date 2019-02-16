@@ -1,4 +1,5 @@
 <template>
+<v-app>
     <div>
 
             <nuxt/>
@@ -21,7 +22,7 @@
             </v-card>
         </v-footer>
     </div>
-  
+  </v-app>
 </template>
 
 <script>

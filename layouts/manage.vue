@@ -57,11 +57,15 @@
             class="my-3"
           ></v-divider>
           <v-list-tile v-else :key="item.text" :to="item.link">
-            <v-list-tile-action>
+            <v-list-tile-action v-if="!item.avatar">
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
+            <v-list-tile-avatar v-if="item.avatar">
+                  <img :src="item.avatar">
+            </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title>
+
                 {{ item.text }}
               </v-list-tile-title>
             </v-list-tile-content>
@@ -108,6 +112,7 @@
   export default {
     
     data: () => ({
+      link_img:"http://localhost:34001/img/accessories/",
       username:sessionStorage.getItem("username"),
       status:sessionStorage.getItem("status"),
       txt_search:"",
@@ -117,7 +122,7 @@
       drawer: null,
       items: [
       { heading: 'ผู้ใช้งาน' },
-      { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: '../../manage/profile'},
+      { avatar:"http://localhost:34001/img/users/veh-u-default.jpg", text: sessionStorage.getItem("a_name")+" "+sessionStorage.getItem("a_lname") ,link: '../../manage/profile'},
 
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'},
@@ -201,7 +206,7 @@
     },
       search(){
         console.log("txt_search="+this.txt_search)
-      }
+      },
     }
   }
 </script>

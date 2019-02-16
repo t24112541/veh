@@ -56,9 +56,12 @@
             class="my-3"
           ></v-divider>
           <v-list-tile v-else :key="item.text" :to="item.link">
-            <v-list-tile-action>
+            <v-list-tile-action  v-if="!item.avatar">
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
+            <v-list-tile-avatar v-if="item.avatar">
+                  <img :src="item.avatar">
+            </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title>
                 {{ item.text }}
@@ -139,10 +142,11 @@
       num_noti:'10',
       dialog: false,
       drawer: null,
+      img_img:"http://localhost:34001/img/teachers/",
       items: [
       { heading: 'ออนไลน์' },
       
-      { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: '../../teacher/profile'},
+      { avatar:'', text: sessionStorage.getItem("t_name") ,link: '../../teacher/profile'},
       // { divider: true }, ../../teacher/profile
       //   {
       //     icon: 'keyboard_arrow_up',
@@ -201,6 +205,7 @@
     },
     created(){
        this.set_session()
+       this.set_page()
     },
     beforeCreate() {
       if (!sessionStorage.getItem("username")|| !sessionStorage.getItem("password") || !sessionStorage.getItem("status")){
@@ -219,6 +224,11 @@
     }
   },
    methods: {
+      async set_page(){
+       let res=await this.$http.get('/teacher/sh_teacher/'+sessionStorage.getItem("id"))
+       console.log(res.data.image[0].img_img)
+        this.items[1].avatar=this.img_img+res.data.image[0].img_img
+      },
      home(){
        this.$router.push({name:"teacher-group"})
      },

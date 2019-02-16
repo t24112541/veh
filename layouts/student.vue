@@ -56,9 +56,12 @@
             class="my-3"
           ></v-divider>
           <v-list-tile v-else :key="item.text" :to="item.link">
-            <v-list-tile-action>
+            <v-list-tile-action v-if="!item.avatar">
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
+            <v-list-tile-avatar v-if="item.avatar">
+                  <img :src="item.avatar">
+            </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title>
                 {{ item.text }}
@@ -161,10 +164,11 @@
       num_noti:'10',
       dialog: false,
       drawer: null,
+      img_img:"http://localhost:34001/img/users/",
       items: [
       { heading: 'ออนไลน์' },
       
-      { icon: 'fas fa-user-circle', text: sessionStorage.getItem("username") ,link: '../../student/profile'},
+      { avatar:'', text: sessionStorage.getItem("std_name")+" "+sessionStorage.getItem("std_lname") ,link: '../../student/profile'},
       // { divider: true }, ../../student/profile
       //   {
       //     icon: 'keyboard_arrow_up',
@@ -223,6 +227,7 @@
     },
     created(){
        this.set_session()
+       this.set_page()
     },
     beforeCreate() {
       if (!sessionStorage.getItem("username")|| !sessionStorage.getItem("password") || !sessionStorage.getItem("status")){
@@ -241,6 +246,10 @@
     }
   },
    methods: {
+      async set_page(){
+       let res=await this.$http.get('/student/sh_std/'+sessionStorage.getItem("id"))
+        this.items[1].avatar=this.img_img+res.data.img[0].img_img
+      },
      home(){
        this.$router.push({name:"student-home"})
      },

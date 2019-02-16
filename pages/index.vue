@@ -23,10 +23,28 @@
               </v-card-text>
               <v-card-actions>
                 <v-flex xs12 sm12 md12 style="text-align:center">
-                 <v-btn @click="fnc_login()" color="primary" block>
+                 <v-btn @click="fnc_login()" color="primary" >
                    
                    <v-spacer></v-spacer>
                    เข้าสู่ระบบ
+                   <v-spacer></v-spacer>
+                   <v-progress-circular
+                      v-if="loading==true"
+                      v-model="loading"
+                      :size="25"
+                      color="white"
+                      indeterminate
+                    ></v-progress-circular></v-btn>
+                 <!--<br>
+                 <v-btn @click="submit" color="error" block>Google +</v-btn>-->
+                <br>
+                
+                 </v-flex>
+                 <v-flex xs12 sm12 md12 style="text-align:center">
+                 <v-btn @click="fnc_regist()" color="gray" >
+                   
+                   <v-spacer></v-spacer>
+                   สมัครใช้งาน
                    <v-spacer></v-spacer>
                    <v-progress-circular
                       v-if="loading==true"
@@ -65,6 +83,9 @@ export default {
     }
   },
   methods:{
+    fnc_regist(){
+      this.$router.push({path: "/register"})
+    },
     async fnc_login(){
       if(this.username!="" && this.password!=""){
         this.loading=true
@@ -83,6 +104,8 @@ export default {
             sessionStorage.setItem("username",res.data.login.std_username)
             sessionStorage.setItem("password",(res.data.login.std_password))
             sessionStorage.setItem("std_code",(res.data.login.std_code))
+            sessionStorage.setItem("std_name",(res.data.login.std_name))
+            sessionStorage.setItem("std_lname",(res.data.login.std_lname))
             sessionStorage.setItem("status",(res.data.status))
             this.$router.push({path: "/student/home"})
             // console.log(res.data.login.std_code)
@@ -90,6 +113,7 @@ export default {
             sessionStorage.setItem("id",res.data.login.t_id)
             sessionStorage.setItem("username",res.data.login.t_username)
             sessionStorage.setItem("password",(res.data.login.t_password))
+            sessionStorage.setItem("t_name",(res.data.login.t_name))
             sessionStorage.setItem("status",(res.data.status))
             this.$router.push({path: "/teacher/group"})
             // console.log(res.data)
@@ -97,6 +121,8 @@ export default {
             sessionStorage.setItem("id",res.data.login[0].a_id)
             sessionStorage.setItem("username",res.data.login[0].a_username)
             sessionStorage.setItem("password",(res.data.login[0].a_password))
+            sessionStorage.setItem("a_name",(res.data.login[0].a_name))
+            sessionStorage.setItem("a_lname",(res.data.login[0].a_lname))
             sessionStorage.setItem("status",(res.data.status))
             this.$router.push({path: "/manage/dashboard"})
             // console.log(res.data.login)
@@ -104,6 +130,8 @@ export default {
             sessionStorage.setItem("id",res.data.login.bld_username)
             sessionStorage.setItem("username",res.data.login.bld_username)
             sessionStorage.setItem("password",(res.data.login.bld_password))
+            sessionStorage.setItem("a_name",(res.data.login[0].bld_username))
+            sessionStorage.setItem("a_lname",(res.data.login[0].bld_username))
             sessionStorage.setItem("status",(res.data.status))
             this.$router.push({path: "/manage/dashboard"})
             //  console.log(res.data)

@@ -261,6 +261,8 @@ export default {
       loader: null,
       loading3: false,
 
+      test_filter:[],
+
     }
   },
   created(){
@@ -289,7 +291,8 @@ export default {
 
       this.chart_mc=res.data.chart_ms
       this.chart_oc=res.data.chart_oc
-      console.log(this.chart_oc)
+      this.test_filter=
+      console.log(res.data.pk_missing_all[3].ms_date.split("-")[1].substring(1,2))
         let sh=[]
         for(let i=0;i<this.chart_mc.length;i++){
               sh.push(this.chart_mc[i].num)
@@ -299,10 +302,24 @@ export default {
               sh_oc.push(this.chart_oc[i].num)
         }
 
+        let sh_mis=[]
+        for(let m=1;m<=12;m++){
+          console.log(m.toString().length)
+          // for(let i=0;i<this.missing.length;i++){
+          //   console.log(this.missing[i].ms_date.split("-,0").substr(0, 1))
+          //   if(this.missing[i].ms_date.split("-")[1]+''===m ){
+          //     sh_mis.push(this.missing[i])
+          //   }
+          // }
+        }
+        console.log("m")
+        console.log(sh_mis.length)
+
       this.chart_data_ms=sh
       this.chart_data_oc=sh_oc
       this.chart_set()
     },
+    
     chart_set(){
       var ctx = document.getElementById("ms_and_oc_chart");
       var ms_and_oc_chart = new Chart(ctx, {
@@ -371,6 +388,17 @@ export default {
 
       filter_machine(){
         return this.machine.length
+      },
+      filter_mount(){
+        let sh=[]
+        for(let i=0;i<this.missing.length;i++){
+                console.log(res.data.pk_missing_all[3].ms_date.split("-")[1])
+
+          if(this.missing[i].ms_date.split("-")[1]+''==="02" ){
+            sh.push(this.missing[i])
+          }
+        }
+        return sh.length
       },
       filter_pk_missing_where_machine(){
         let sh=[]
