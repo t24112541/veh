@@ -1,27 +1,20 @@
 <template>
+
   <div>
     <v-card >
       <v-toolbar tabs>
-        <v-flex xs12>
+        <v-flex xs12 md12 lg12>
         <v-toolbar-title>การแจ้งหาย</v-toolbar-title>
         </v-flex>
 
-        <v-flex xs6>
+        <v-flex xs6 md6 lg6>
         <v-radio-group v-model="ms_table" row style="margin-top:25px">
           <v-radio label="พาหนะ" value="pk_machine"></v-radio>{{count_status_mc.count}}
           <v-radio label="อุปกรณ์" value="pk_accessories"></v-radio>{{count_status_ac.count}}
         </v-radio-group>
         </v-flex>
 
-        <!-- <v-text-field
-          style="margin-top:25px"
-          class="margin-top-md"
-          label="ค้นหา"
-          v-model="filter_txt_search"
-        ></v-text-field>
-        <v-btn icon>
-          <v-icon>search</v-icon>
-        </v-btn> -->
+        
 
         <v-tabs
           slot="extension"
@@ -29,13 +22,26 @@
           fixed-tabs
           color="transparent"
         >
+        
           <v-tabs-slider></v-tabs-slider>
           <v-tab href="#cv-1" @click="chang_value(1)" class="primary--text">รอรับเรื่อง | {{this.stp1.count}}</v-tab>
           <v-tab href="#cv-2" @click="chang_value(2)" class="primary--text">กำลังดำเนินการ | {{this.stp2.count}}</v-tab>
           <v-tab href="#cv-3" @click="chang_value(3)" class="primary--text">พบแล้ว | {{this.stp3.count}}</v-tab>
         </v-tabs>
       </v-toolbar>
-  
+      <!-- <v-flex xs12>
+
+          <v-text-field
+            v-model="txt_search"
+            style="margin-top:25px;padding:10px"
+            class="margin-top-md"
+            label="ค้นหา"
+            append-icon="search"
+            @click:append=""
+            solo
+          ></v-text-field>
+
+      </v-flex> -->
       <v-tabs-items v-model="tabs" class="white elevation-1">
         <v-tab-item
           v-for="i in 3"
@@ -68,7 +74,8 @@
               <tr v-on:click="list_missing(props.item.ms_id)">
                 <td class="text-xs-left" >{{ props.item.ms_date }}</td>
                 <td class="text-xs-left" >{{ props.item.u_id }}</td>
-                <td class="text-xs-left">{{ props.item.ms_status }}</td>
+                <td class="text-xs-left">{{ props.item.ms_u_id }}</td>
+                <td class="text-xs-left">{{ props.item.ms_u_table }}</td>
 
               </tr>
 
@@ -85,6 +92,7 @@
         
     </v-card>
   </div>
+
 </template>
 
 <script>
@@ -101,7 +109,8 @@
         headers: [
           { text: 'วันที่แจ้งหาย', value: 'วันที่แจ้งหาย',align: 'left',sortable: false, },
           { text: 'ผู้แจ้ง', value: 'ผู้แจ้ง',align: 'left',sortable: false, },
-          { text: 'สถานะการแจ้ง', value: 'สถานะการแจ้ง',align: 'left',sortable: false,  },
+          { text: 'รายการสูญหาย', value: 'รายการสูญหาย',align: 'left',sortable: false,  },
+          { text: 'เจ้าของ', value: 'เจ้าของ',align: 'left',sortable: false,  },
         ],
         missing: [],
         ms_type:"",
@@ -109,6 +118,7 @@
         ms_table:"pk_machine",
 
         informer:"",
+        txt_search:"",
 
         stp1:"",
         stp2:"",
@@ -129,13 +139,7 @@
         return this.missing.filter(x=>''+x.ms_status===this.mis_status)
       },
       filter_txt_search(){
-        let sh=[]
-        for(let i=0;i<this.missing.length;i++){
-          if(this.missing[i].ms_table+''==="pk_machine" && this.missing[i].ms_status+''!=="ขั้นที่ 2 รับเรื่องแล้ว" &&  this.missing[i].ms_status+''==="ขั้นที่ 3 พบเเล้ว"){
-            sh.push(this.missing[i])
-          }
-        }
-        return sh.length
+        return this.missing.filter(x=>''+x.ms_u_table===this.txt_search)
       },
     },
     watch:{
@@ -154,15 +158,15 @@
         this.state=true
         let res=await this.$http.post('/missing/list',{cv_filter:cv_filter,cv_filter_stp:this.mis_status})
         // console.log("res.data") 
-         console.log(res.data) 
+        //  console.log(res.data) 
         this.missing=res.data.datas
         this.informer=res.data.name_1
         this.ms_type=res.data.type
         this.stp1=res.data.stp1[0]
         this.stp2=res.data.stp2[0]
         this.stp3=res.data.stp3[0]
-        this.count_status_mc=res.data.machines[0],
-        this.count_status_ac=res.data.accessories[0],
+        this.count_status_mc=res.data.machines[0]
+        this.count_status_ac=res.data.accessories[0]
         this.state=false
 
       },
