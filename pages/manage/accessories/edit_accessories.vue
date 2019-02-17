@@ -380,6 +380,8 @@
               type_api:"",
               danger:false,
               conf_del:false,
+              conf_ms:false,
+              conf_oc:false,
               isEditing:null,
               rules: {
                     required: value => !!value || 'ห้ามว่าง.',
@@ -431,6 +433,8 @@
             
           },
           conf_del(){this.conf_del=true},
+          conf_ms(){this.conf_ms=true},
+          conf_oc(){this.conf_oc=true},
           async accessoriess_del(){
             let res=await this.$http.post('/accessories/accessories_del/',{
               ac_description:this.ac_description,

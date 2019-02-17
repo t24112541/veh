@@ -74,16 +74,21 @@
                     style="text-align:center"
                     height="50px"
                   >พบแล้ว</v-card> -->
-        <!--   
-                  <v-btn
-                    color="primary"
-                    @click="ms_step = 3"
-                  >
-                    Continue
-                  </v-btn>-->
+     
+                  
           
                  <v-flex text-xs-center xs12 style="color:#81c784"><i class="fas fa-check-circle fa-2x" ></i></v-flex>
                  <v-flex text-xs-center xs12 style="color:#81c784">พบแล้ว</v-flex>
+                 <v-flex xs12>
+                   <center>
+                   <v-btn
+                    color="error"
+                    @click="ms_step = 2"
+                    >
+                      ย้อนกลับเป็นรับเรื่อง
+                    </v-btn>
+                    </center>
+                 </v-flex>
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
