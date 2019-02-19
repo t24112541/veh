@@ -141,7 +141,7 @@
       filter_txt_search(){
         return this.missing.filter(x=>''+x.ms_u_table===this.txt_search)
       },
-    },
+    }, 
     watch:{
       mis_status(newValue){console.log("ok")
         if(newValue==1){this.mis_status="ขั้นที่ 1 รอรับเรื่อง",this.load_list(this.ms_table)}

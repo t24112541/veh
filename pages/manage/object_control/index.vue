@@ -32,7 +32,7 @@
           <v-tabs-slider></v-tabs-slider>
           <v-tab href="#cv-1" @click="chang_value(1)" class="primary--text">ผิดระเบียบ | {{this.stp1.count}}</v-tab>
           <v-tab href="#cv-2" @click="chang_value(2)" class="primary--text">รอการตรวจสอบ | {{this.stp2.count}}</v-tab>
-          <v-tab href="#cv-2" @click="chang_value(3)" class="primary--text">ผ่านการตรวจสอบ | {{this.stp3.count}}</v-tab>
+          <v-tab href="#cv-3" @click="chang_value(3)" class="primary--text">ผ่านการตรวจสอบ | {{this.stp3.count}}</v-tab>
         </v-tabs>
       </v-toolbar>
   
@@ -44,7 +44,7 @@
         >
           <v-data-table
               :headers="headers"
-              :items="filter_ob_ctrl"
+              :items="object_control"
               :search="search"
               :pagination.sync="pagination"
               :loading="state"
@@ -67,8 +67,10 @@
             <template slot="items" slot-scope="props">
               <tr v-on:click="list_object_control(props.item.oc_id)">
                 <td class="text-xs-left" >{{ props.item.oc_date }}</td>
-                <td class="text-xs-left">{{ props.item.oc_status }}</td>
+                <td class="text-xs-left">{{ props.item.oc_u_id }}</td>
+                <td class="text-xs-left">{{ props.item.oc_u_table }}</td>
                 <td class="text-xs-left">{{ props.item.itm_oc_name }}</td>
+                <td class="text-xs-left">{{ props.item.oc_oc_u_id }}</td>
               </tr>
 
             </template>
@@ -99,8 +101,10 @@
         rows_per_page:[10,20,{"text":"แสดงทั้งหมด","value":-1}],//////////////////////////   teach me pleas!
         headers: [
           { text: 'วันที่แจ้ง', value: 'วันที่แจ้ง',align: 'left',sortable: false, },
-          { text: 'สถานะ', value: 'สถานะ',align: 'left',sortable: false,  },
+          { text: 'ผู้แจ้ง', value: 'ผู้แจ้ง',align: 'left',sortable: false, },
+          { text: 'รายการผิดระเบียบ', value: 'รายการผิดระเบียบ',align: 'left',sortable: false,  },
           { text: 'เหตุผิดระเบียบ', value: 'เหตุผิดระเบียบ',align: 'left',sortable: false,  },
+          { text: 'เจ้าของ', value: 'เจ้าของ',align: 'left',sortable: false,  },
         ],
         object_control: [],
         ms_type:"",
@@ -127,10 +131,10 @@
       }
     },
     watch:{
-      mis_status(newValue){console.log("ok")
-        if(newValue==1){this.mis_status="ผิดระเบียบ"}
-        else if(newValue==2){this.mis_status="รอการตรวจสอบ"}
-        else if(newValue==3){this.mis_status="ผ่านการตรวจสอบ"}
+      mis_status(newValue){
+        if(newValue==1){this.mis_status="ผิดระเบียบ",this.load_list(this.oc_table)}
+        else if(newValue==2){this.mis_status="รอการตรวจสอบ",this.load_list(this.oc_table)}
+        else if(newValue==3){this.mis_status="ผ่านการตรวจสอบ",this.load_list(this.oc_table)}
       },
       oc_table(newValue){
         this.load_list(newValue)
@@ -139,7 +143,7 @@
     methods:{
       async load_list(cv_filter){
         this.state=true
-        let res=await this.$http.post('/object_control/list',{cv_filter:cv_filter})
+        let res=await this.$http.post('/object_control/list',{cv_filter:cv_filter,cv_filter_stp:this.mis_status})
          console.log(res.data.datas) 
           console.log(res.data) 
         this.object_control=res.data.datas

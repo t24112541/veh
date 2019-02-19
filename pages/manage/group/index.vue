@@ -75,7 +75,7 @@
         headers: [
           { text: 'รหัสกลุ่มการเรียน', value: 'รหัสกลุ่มการเรียน',align: 'left',sortable: false, },
           { text: 'ชื่อกลุ่มการเรียน', value: 'ชื่อกลุ่มการเรียน',align: 'left',sortable: false, },
-          { text: 'รหัสแผนก', value: 'รหัสแผนก',align: 'left',sortable: false,  },
+          { text: 'แผนก', value: 'แผนก',align: 'left',sortable: false,  },
         ],
         group: []
       }

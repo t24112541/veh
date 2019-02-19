@@ -52,7 +52,7 @@
     <template slot="items" slot-scope="props" >
       <tr v-on:click="list_student(props.item.std_id)">
         <td class="text-xs-left ">{{ props.item.std_code }}</td>
-        <td class="text-xs-left">{{ props.item.std_pin_id }}</td>
+        <td class="text-xs-left">{{ props.item.std_name }} {{ props.item.std_lname }}</td>
         <!-- <td class="text-xs-left">{{ props.item.std_prename }}{{ props.item.std_name }} {{ props.item.std_lname }}</td> -->
         <td class="text-xs-center">{{ props.item.std_gender }}</td>
         <!-- <td class="text-xs-center">{{ props.item.std_birthday }}</td> -->
@@ -83,7 +83,7 @@
         rows_per_page:[10,20,{"text":"แสดงทั้งหมด","value":-1}],//////////////////////////   teach me pleas!
         headers: [
           { text: 'รหัสนักศึกษา',align: 'left',sortable: false, value: 'name',},
-          { text: 'รหัสประจำตัว', value: 'รหัสประจำตัว',align: 'left', sortable: false,},
+          { text: 'ชื่อ', value: 'ชื่อ',align: 'left', sortable: false,},
           // { text: 'ชื่อ', value: 'ชื่อ',align: 'center',sortable: false,  },
           { text: 'เพศ', value: 'เพศ',align: 'center',sortable: false,  },
           // { text: 'วันเกิด', value: 'วันเกิด',align: 'center',sortable: false,  },
@@ -107,9 +107,14 @@
     },
     async created(){
       if(this.$route.query.g_code){
-        let res=await this.$http.get('/student/list_g/'+this.$route.query.g_code)
+        let s=this.txt_search
+        let res=await this.$http.post('/student/list_g',{
+          g_code:this.$route.query.g_code,
+          txt_search:'txt_search'
+        })
         this.part_url="./edit_student?std_id="
         this.std=res.data.datas
+        console.log(res.data)
         this.state=false
       }else{
         this.part_url="./student/edit_student?std_id="
