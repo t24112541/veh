@@ -178,7 +178,67 @@
               
               ></v-select>
             </v-flex>
-           
+            <!-- /////////////////////// machine /////////////////////////////// -->
+             <v-flex xs12 md12 lg12>
+              <v-card-title class="cyan darken-1">
+              <span class="subheading white--text">พาหนะ</span>
+              </v-card-title>
+                <v-layout row wrap>
+                <v-flex xs6 md4 lg4 v-for="mc in machine" :key="mc.mc_id" style="padding:10px;cursor: pointer;"
+                  @click="list_machine(mc.mc_id)"
+                >
+                <v-card>
+                  <v-img
+                    :src="mc.t_status"
+                    aspect-ratio="2.75"
+                  ></v-img>
+          
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="headline mb-0">{{mc.mc_code}}</h3>
+                      <div>{{mc.mc_brand}} <br>{{mc.mc_series}}</div>
+                    </div>
+                  </v-card-title>
+          
+                  <!-- <v-card-actions>
+                    <v-btn flat color="orange">Share</v-btn>
+                    <v-btn flat color="orange">Explore</v-btn>
+                  </v-card-actions> -->
+                </v-card>
+                </v-flex>
+                </v-layout>
+            </v-flex> 
+<!-- //////////////////////   accessories //////////////////////////////// -->
+            <v-flex xs12 md12 lg12>
+              <v-card-title class="cyan darken-1">
+              <span class="subheading white--text">อุปกรณ์</span>
+              </v-card-title>
+                <v-layout row wrap>
+                <v-flex xs6 md4 lg4 v-for="ac in accessories" :key="ac.ac_id" style="padding:10px;cursor: pointer;"
+                  @click="list_accessories(ac.ac_id)"
+                >
+                <v-card>
+                  <v-img
+                    :src="ac.t_status"
+                    aspect-ratio="2.75"
+                  ></v-img>
+          
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="headline mb-0">{{ac.ac_name}}</h3>
+                      <div>{{ac.ac_description}}</div>
+                    </div>
+                  </v-card-title>
+          
+                  <!-- <v-card-actions>
+                    <v-btn flat color="orange">Share</v-btn>
+                    <v-btn flat color="orange">Explore</v-btn>
+                  </v-card-actions> -->
+                </v-card>
+                </v-flex>
+                </v-layout>
+            </v-flex> 
+
           </v-layout>
         </v-container>
         <v-card-actions>
@@ -252,6 +312,11 @@
             load_status:"",
             link_img:"http://localhost:34001/img/users/",
             img_id:"",
+
+            machine:"",
+            link_img_mc:"http://localhost:34001/img/machine/",
+            accessories:"",
+            link_img_ac:"http://localhost:34001/img/accessories/",
           }
         },
         async created(){
@@ -321,6 +386,8 @@
 
               this.std_tel=res.data.datas.std_tel
               this.std_tel2=res.data.datas.std_tel2
+              this.machine=res.data.machine
+              this.accessories=res.data.accessories
               this.img=this.link_img+res.data.img[0].img_img
               this.img_id=res.data.img[0].img_id
               // console.log(res.data.img[0].img_img)
@@ -368,6 +435,12 @@
                 this.img=e.target.result;
                 // console.log(this.img_side);
               };
+            },
+            list_machine(mc_id){
+              this.$router.push({path: '../../teacher/machines/edit_machine?mc_id='+mc_id})
+            },
+            list_accessories(ac_id){
+              this.$router.push({path: '../../teacher/accessories/edit_accessories?ac_id='+ac_id})
             },
         },//methods
         computed: {

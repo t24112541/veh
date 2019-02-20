@@ -399,13 +399,18 @@
 
               this.std_tel=res.data.datas.std_tel
               this.std_tel2=res.data.datas.std_tel2
-              this.img=this.link_img+res.data.img[0].img_img
-              this.img_id=res.data.img[0].img_id
-              
+
               this.machine=res.data.machine
               this.accessories=res.data.accessories
+
+              this.img_id=res.data.img[0].img_id
+              this.img=this.link_img+res.data.img[0].img_img 
+              
+              
+              
+              
               // console.log(res.data.img[0].img_img)
-              // console.log(res.data)
+              console.log(res.data)
 
             },
             async std_update(std_id){
