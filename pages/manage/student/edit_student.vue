@@ -252,6 +252,94 @@
                 </v-layout>
             </v-flex> 
 
+ <!-- //////////////////////   missing //////////////////////////////// -->
+            <v-flex xs12 md12 lg12>
+              <v-card-title class="cyan darken-1">
+              <span class="subheading white--text">การสูญหาย</span>
+              </v-card-title>
+                <v-layout row wrap>
+                <v-flex xs6 md3 lg2 v-for="mc in ms_mc" v-if="mc.ms_status!='ขั้นที่ 3 พบเเล้ว'"  :key="mc.ms_id" style="padding:10px;cursor: pointer;"
+                  @click="list_missing(mc.ms_id)"
+                >
+                <v-card>
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="body-2">{{mc.ms_status}}</h3>
+                      <div>{{mc.ms_date}}</div>
+                    </div>
+                  </v-card-title>
+          
+                  <!-- <v-card-actions>
+                    <v-btn flat color="orange">Share</v-btn>
+                    <v-btn flat color="orange">Explore</v-btn>
+                  </v-card-actions> -->
+                </v-card>
+                </v-flex>
+
+                <v-flex xs6 md3 lg2 v-for="ac in ms_ac" v-if="ac.ms_status!='ขั้นที่ 3 พบเเล้ว'"  :key="ac.ms_id" style="padding:10px;cursor: pointer;"
+                  @click="list_missing(ac.ms_id)"
+                >
+                <v-card>
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="body-2">{{ac.ms_status}}</h3>
+                      <div>{{ac.ms_date}}</div>
+                    </div>
+                  </v-card-title>
+          
+                  <!-- <v-card-actions>
+                    <v-btn flat color="orange">Share</v-btn>
+                    <v-btn flat color="orange">Explore</v-btn>
+                  </v-card-actions> -->
+                </v-card>
+                </v-flex>
+                
+                </v-layout>
+            </v-flex> 
+<!-- //////////////////////   object_control //////////////////////////////// -->
+            <v-flex xs12 md12 lg12>
+              <v-card-title class="cyan darken-1">
+              <span class="subheading white--text">ผิดระเบียบ</span>
+              </v-card-title>
+                <v-layout row wrap>
+                <v-flex xs6 md3 lg2 v-for="mc in oc_mc" v-if="mc.oc_status!='ผ่านการตรวจสอบ'" :key="mc.oc_id" style="padding:10px;cursor: pointer;"
+                  @click="list_object_control(mc.oc_id)"
+                >
+                <v-card>
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="body-2">{{mc.oc_status}}</h3>
+                      <div>{{mc.oc_date}}</div>
+                    </div>
+                  </v-card-title>
+          
+                  <!-- <v-card-actions>
+                    <v-btn flat color="orange">Share</v-btn>
+                    <v-btn flat color="orange">Explore</v-btn>
+                  </v-card-actions> -->
+                </v-card>
+                </v-flex>
+                 <v-flex xs6 md3 lg2 v-for="ac in oc_ac" v-if="ac.oc_status!='ผ่านการตรวจสอบ'" :key="ac.oc_id" style="padding:10px;cursor: pointer;"
+                  @click="list_object_control(ac.oc_id)"
+                >
+                <v-card>
+                  <v-card-title primary-title>
+                    <div>
+                      <h3 class="body-2">{{ac.oc_status}}</h3>
+                      <div>{{ac.oc_date}}</div>
+                    </div>
+                  </v-card-title>
+          
+                  <!-- <v-card-actions>
+                    <v-btn flat color="orange">Share</v-btn>
+                    <v-btn flat color="orange">Explore</v-btn>
+                  </v-card-actions> -->
+                </v-card>
+                </v-flex> 
+               
+                </v-layout>
+            </v-flex> 
+
           </v-layout>
         </v-container>
         <v-card-actions>
@@ -330,10 +418,16 @@
             link_img_mc:"http://localhost:34001/img/machine/",
             accessories:"",
             link_img_ac:"http://localhost:34001/img/accessories/",
+            
+            ms_mc:"",
+            ms_ac:"",
+            oc_mc:"",
+            oc_ac:"",
           }
         },
         async created(){
           this.sh_std()
+          
         },
         watch:{
           std_prename(newValue){
@@ -344,6 +438,12 @@
           },
         },
         methods:{
+          list_object_control(oc_id){
+            this.$router.push({path: '../object_control/update_object_control?oc_id='+oc_id})
+          },
+          list_missing(ms_id){
+            this.$router.push({path: '../missing/update_missing?ms_id='+ms_id})
+          },
           formatDate (std_birthday) {
             if (!std_birthday) return null
 
@@ -403,14 +503,34 @@
               this.machine=res.data.machine
               this.accessories=res.data.accessories
 
+              // console.log(res.data.img[0].img_img)
+
+              let sh_missing_w_std=await this.$http.post('/missing/sh_missing_w_std',{
+                std_id:this.$route.query.std_id,
+                type:"pk_machine"
+              })
+              this.ms_mc=sh_missing_w_std.data.datas
+
+              let sh_missing_w_std_accessories=await this.$http.post('/missing/sh_missing_w_std',{
+                std_id:this.$route.query.std_id,
+                type:"pk_accessories"
+              })
+              this.ms_ac=sh_missing_w_std_accessories.data.datas
+
+              let oc_mc=await this.$http.post('/object_control/sh_oc_w_std',{
+                std_id:this.$route.query.std_id,
+                type:"pk_machine"
+              })
+              this.oc_mc=oc_mc.data.datas
+
+              let oc_ac=await this.$http.post('/object_control/sh_oc_w_std',{
+                std_id:this.$route.query.std_id,
+                type:"pk_accessories"
+              })
+              this.oc_ac=oc_ac.data.datas
+             
               this.img_id=res.data.img[0].img_id
               this.img=this.link_img+res.data.img[0].img_img 
-              
-              
-              
-              
-              // console.log(res.data.img[0].img_img)
-              console.log(res.data)
 
             },
             async std_update(std_id){
