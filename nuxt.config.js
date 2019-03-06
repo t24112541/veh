@@ -96,8 +96,8 @@ module.exports = {
 
   ],
   proxy: {
-    '/api': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:34001' : 'http://api:34001',
-    '/files': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:34001' : 'http://api:34001',
+    '/api': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:34001' :  process.env.API_URL,
+    '/files': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:34001' :  process.env.API_URL,
     ws: true,
   },
 }

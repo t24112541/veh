@@ -14,7 +14,10 @@
         <v-flex xs7 >
           แก้ไขข้อมูลแผนก
         </v-flex>
-        <v-flex xs2 >
+        <v-flex xs12 v-if="this.ctrl_status.ctrl_status!='1'" class="cv_title_2">
+          การแก้ไขข้อมูลถูกปิดอยู่ <!-- กรุณาติดต่อผู้ดูแลระบบหากต้องการแก้ไขข้อมูลเป็นการด่วน -->
+        </v-flex>
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-btn
             color="green lighten-2"
             flat
@@ -24,7 +27,7 @@
             <i v-else class="fas fa-edit fa-2x "></i>
           </v-btn>
         </v-flex>
-        <v-flex xs2 >
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-dialog v-model="conf_del" persistent max-width="290">
             <v-btn slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
             <v-card>
@@ -94,12 +97,18 @@
                   required: value => !!value || 'ห้ามว่าง.',
                   // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
             },
+            ctrl_status:"",
           }
         },
         async created(){
           this.sh_dep()
+          this.load_ctrl_status()
         },
         methods:{
+          async load_ctrl_status(){
+            let res=await this.$http.post("/ctrl_edit_data/")
+            this.ctrl_status=res.data.datas[0]
+          },
           conf_del(){this.conf_del=true},
           async dep_del(){//console.log("dep_del")
             let res=await this.$http.post('/department/dep_del/',{

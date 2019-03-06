@@ -8,7 +8,10 @@
         <v-flex xs7 >
           แก้ไขข้อมูลครู / บุคลากร
         </v-flex>
-        <v-flex xs2 >
+       <v-flex xs12 v-if="this.ctrl_status.ctrl_status!='1'" class="cv_title_2">
+          การแก้ไขข้อมูลถูกปิดอยู่ <!-- กรุณาติดต่อผู้ดูแลระบบหากต้องการแก้ไขข้อมูลเป็นการด่วน -->
+        </v-flex>
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-btn
             color="green lighten-2"
             flat
@@ -18,7 +21,7 @@
             <i v-else class="fas fa-edit fa-2x "></i>
           </v-btn>
         </v-flex>
-        <v-flex xs2 >
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-dialog v-model="conf_del" persistent max-width="290">
             <v-btn slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
             <v-card>
@@ -189,14 +192,21 @@
             link_img:"http://localhost:34001/img/teachers/",
             itm:[],
             img_id:"",
+
+            ctrl_status:"",
           }
         },
         async created(){
           this.sh_teacher()
+          this.load_ctrl_status()
         },
         watch: {
         },
         methods:{
+          async load_ctrl_status(){
+            let res=await this.$http.post("/ctrl_edit_data/")
+            this.ctrl_status=res.data.datas[0]
+          },
             conf_del(){this.conf_del=true},
             async teacher_del(t_id){
               let res=await this.$http.post('/teacher/teacher_del/',{

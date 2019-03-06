@@ -126,6 +126,7 @@
 
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'},
+      { icon: 'fas fa-sliders-h', text: 'ระบบ' ,link: '../../manage/system_ctrl'},
       { icon: 'fas fa-clipboard', text: 'รายงาน' ,link: '../../manage/dashboard'},
       { icon: 'fas fa-book-open', text: 'การแจ้งหาย' ,link: '../../manage/missing'},
       { icon: 'fas fa-book-open', text: 'ข้อมูลผิดระเบียบ' ,link: '../../manage/object_control'},

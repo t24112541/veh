@@ -12,9 +12,12 @@
           class="grey lighten-4 py-4 title"
         >
         <v-flex xs7 >
-          แก้ไขข้อมูลพาหนะ
+          ข้อมูลพาหนะ
         </v-flex>
-        <v-flex xs2 >
+         <v-flex xs12 v-if="this.ctrl_status.ctrl_status!='1'" class="cv_title_2">
+          การแก้ไขข้อมูลถูกปิดอยู่ <!-- กรุณาติดต่อผู้ดูแลระบบหากต้องการแก้ไขข้อมูลเป็นการด่วน -->
+        </v-flex>
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-btn 
             color="green lighten-2"
             flat
@@ -24,7 +27,7 @@
             <i v-else class="fas fa-edit fa-2x "></i>
           </v-btn>
         </v-flex>
-        <v-flex xs2 >
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-dialog v-model="conf_del" persistent max-width="290">
             <v-btn  slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
             <v-card>
@@ -408,11 +411,14 @@
               itm_oc_name:"",
               img_oc:"",
               dis_oc:true,
+
+              ctrl_status:"",
             }
         },
         async created(){
           this.sh_machine()
           this.sh_object_control()
+          this.load_ctrl_status()
         },
         watch:{
           mc_u_table(){
@@ -424,6 +430,10 @@
         },
         
         methods:{
+          async load_ctrl_status(){
+            let res=await this.$http.post("/ctrl_edit_data/")
+            this.ctrl_status=res.data.datas[0]
+          },
           async sh_std(std_code){console.log("sh_std")
           console.log(this.mc_u_table)
             if(this.mc_u_table=="pk_teacher"){

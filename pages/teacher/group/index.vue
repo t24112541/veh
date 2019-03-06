@@ -80,7 +80,7 @@
       let res=await this.$http.post('/group/list_teacher?t_id=',{
         t_id:sessionStorage.getItem("id")
       })
-      //  console.log(res.data)
+       console.log(res.data)
       this.group=res.data.datas
       // console.log("num=".res.data.num)
       this.state=false

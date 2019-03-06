@@ -192,7 +192,7 @@
          model: false,
           children: [
             { icon:'fas fa-user-shield' ,text: 'ความปลอดภัย' ,link: '../../teacher/security/security'},
-            { icon:'fas fa-sliders-h' ,text: 'ระบบ' },
+
           ]},
         { icon: 'help', text: 'ช่วยเหลือ' },
         { icon: 'fas fa-sign-out-alt', text: 'ออกจากระบบ' ,link:"../../logout"},

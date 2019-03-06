@@ -60,7 +60,7 @@
               </v-sheet>
           
               <v-card-text class="pt-0">
-                <div class="title font-weight-light mb-2">สูญหาย</div>
+                <div class="title font-weight-light mb-2">สูญหายทั้งหมด {{filter_pk_missing_mc }}</div>
                 <div class="subheading font-weight-light grey--text">กำลังดำเนินการ {{filter_pk_missing_where_machine_stp2}}</div>
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
@@ -96,7 +96,7 @@
               </v-sheet>
           
               <v-card-text class="pt-0">
-                <div class="title font-weight-light mb-2">ผิดระเบียบ</div>
+                <div class="title font-weight-light mb-2">ผิดระเบียบทั้งหมด {{filter_pk_object_control_mc}}</div>
                 <div class="subheading font-weight-light grey--text">รอการตรวจสอบ {{filter_pk_object_control_where_machine_2}}</div>
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
@@ -172,7 +172,7 @@
               </v-sheet>
           
               <v-card-text class="pt-0">
-                <div class="title font-weight-light mb-2">สูญหาย</div>
+                <div class="title font-weight-light mb-2">สูญหายทั้งหมด {{filter_pk_missing_ac}} </div>
                 <div class="subheading font-weight-light grey--text">กำลังดำเนินการ {{filter_pk_missing_where_accessories_stp2}}</div>
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
@@ -208,7 +208,7 @@
               </v-sheet>
           
               <v-card-text class="pt-0">
-                <div class="title font-weight-light mb-2">ผิดระเบียบ</div>
+                <div class="title font-weight-light mb-2">ผิดระเบียบทั้งหมด {{filter_pk_object_control_ac}} </div>
                 <div class="subheading font-weight-light grey--text">รอการตรวจสอบ {{filter_pk_object_control_where_accessories_2}}</div>
                 <v-divider class="my-2"></v-divider>
                 <i style="color:#d8d8d8" color="red" class="fas fa-clock fa-1x"></i>
@@ -346,7 +346,7 @@ export default {
                       'rgba(254, 99, 132, 0)',
                   ],
                   borderColor: [
-                      'rgba(254,38,38,1)',
+                      'rgba(77,190,62,1)',
                   ],
                   borderWidth: 2,
                   
@@ -436,6 +436,24 @@ export default {
         }
         return sh.length
       },
+      filter_pk_object_control_mc(){
+        let sh=[]
+        for(let i=0;i<this.object_control.length;i++){
+          if(this.object_control[i].oc_u_table+''==="pk_machine"){
+            sh.push(this.object_control[i])
+          }
+        }
+        return sh.length
+      },
+      filter_pk_missing_mc(){
+        let sh=[]
+        for(let i=0;i<this.missing.length;i++){
+          if(this.missing[i].ms_table+''==="pk_machine"){
+            sh.push(this.missing[i])
+          }
+        }
+        return sh.length
+      },
       /////////////////////////////  accessoriws /////////////////////////////////////// 
       filter_accessories(){
         return this.accessories.length
@@ -472,6 +490,24 @@ export default {
         for(let i=0;i<this.object_control.length;i++){
           if(this.object_control[i].oc_u_table+''==="pk_accessories" && this.object_control[i].oc_status+''==="รอการตรวจสอบ"){
             sh.push(this.object_control[i])
+          }
+        }
+        return sh.length
+      },
+      filter_pk_object_control_ac(){
+        let sh=[]
+        for(let i=0;i<this.object_control.length;i++){
+          if(this.object_control[i].oc_u_table+''==="pk_accessories"){
+            sh.push(this.object_control[i])
+          }
+        }
+        return sh.length
+      },
+      filter_pk_missing_ac(){
+        let sh=[]
+        for(let i=0;i<this.missing.length;i++){
+          if(this.missing[i].ms_table+''==="pk_accessories"){
+            sh.push(this.missing[i])
           }
         }
         return sh.length

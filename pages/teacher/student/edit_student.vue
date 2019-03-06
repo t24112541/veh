@@ -8,7 +8,10 @@
         <v-flex xs10 >
           แก้ไขข้อมูลนักเรียน / นักศึกษา
         </v-flex>
-        <v-flex xs2 >
+        <v-flex xs12 v-if="this.ctrl_status.ctrl_status!='1'" class="cv_title_2">
+          การแก้ไขข้อมูลถูกปิดอยู่ <!-- กรุณาติดต่อผู้ดูแลระบบหากต้องการแก้ไขข้อมูลเป็นการด่วน -->
+        </v-flex>
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-btn
             color="green lighten-2"
             flat
@@ -317,10 +320,13 @@
             link_img_mc:"http://localhost:34001/img/machine/",
             accessories:"",
             link_img_ac:"http://localhost:34001/img/accessories/",
+
+            ctrl_status:"",
           }
         },
         async created(){
           this.sh_std()
+          this.load_ctrl_status()
         },
         watch:{
           std_prename(newValue){
@@ -331,6 +337,10 @@
           },
         },
         methods:{
+          async load_ctrl_status(){
+            let res=await this.$http.post("/ctrl_edit_data/")
+            this.ctrl_status=res.data.datas[0]
+          },
           formatDate (std_birthday) {
             if (!std_birthday) return null
 
