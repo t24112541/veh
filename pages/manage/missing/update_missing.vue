@@ -52,20 +52,83 @@
                 </v-stepper-content>
           
                 <v-stepper-content step="2">
-                  <!-- <v-card
-                    class="mb-5"
-                    color="grey lighten-1"
-                    height="200px"
-                  ></v-card> -->
-          
-                  <v-btn
-                    color="primary"
-                    @click="ms_step = 3"
-                    style="width:100%"
-                  >
-                    <i class="fas fa-search fa-2x"></i>&nbsp;
-                    <v-spacer></v-spacer> พบแล้ว<v-spacer></v-spacer>
-                  </v-btn>
+                  <v-flex xs12>
+                    <v-btn
+                      color="primary"
+                      @click="ms_step = 3"
+                      style="width:100%"
+                    >
+                      <i class="fas fa-search fa-2x"></i>&nbsp;
+                      <v-spacer></v-spacer> พบแล้ว<v-spacer></v-spacer>
+                    </v-btn>
+                  </v-flex>
+                  <v-flex xs12><center>
+                    <v-dialog v-model="dialog_co" persistent max-width="500" >
+                        <v-btn  slot="activator" color="default" style="width:100%">
+                          <i class="fas fa-comment fa-2x"></i> &nbsp;
+                          <v-spacer></v-spacer> บอกให้รู้ว่าคุณกำลังทำอะไรอยู่<v-spacer></v-spacer>
+                          
+                        
+                        </v-btn>
+                        <v-card>
+                          <v-container>
+                            <v-layout wrap>                
+                              <v-flex xs12 >
+                                <v-textarea
+                                  solo
+                                  rows='5'
+                                  label="บอกให้รู้ว่ากำลังทำอะไรอยู่....."
+                                  v-model="co_comment"
+                                  prepend-icon="fas fa-comment fa-2x"
+                                  placeholder="บอกให้รู้ว่ากำลังทำอะไรอยู่....."
+                                ></v-textarea>
+                              </v-flex>
+                              <!-- <v-flex xs12 class="text-xs-center" 
+                                @click="$refs.img_co.click()" 
+                                style="cursor: pointer;"
+                              >
+                                <input 
+                                  type="file" 
+                                  style="display:none;" 
+                                  accept="image/*" 
+                                  multiple  
+                                  @change="upload_img($event)" 
+                                  ref="img_co"
+                                >
+                                <v-card height="100%" class="grey lighten-4 paddign" > 
+                                  <img :src="this.img_co" width="50%">
+                                  <v-card-actions style="font-size:100%">
+                                    <span><i class="fas fa-image fa-2x"></i></span>
+                                    <v-spacer></v-spacer>
+                                    <span>แนบรูปภาพ</span>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-flex> -->
+                              
+                            </v-layout>
+                          </v-container>
+                          
+                          <v-card-actions>
+                            <div v-if="load_status!=0">
+                              <v-progress-circular
+                              
+                                :rotate="-90"
+                                :size="70"
+                                :width="15"
+                                :value="load_status"
+                                color="green lighten-2"
+                              >
+                                {{ load_status }}
+                              </v-progress-circular>
+                            </div>
+                            <v-spacer></v-spacer>
+                            <v-btn color="red lighten-2" flat @click.native="dialog_co = false">ยกเลิก</v-btn>
+                            <v-btn color="primary" flat @click="comment()" :disabled="co_comment==''">ตกลง</v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
+
+                    </center></v-flex>
                 </v-stepper-content>
           
                 <v-stepper-content step="3">
@@ -160,6 +223,33 @@
 
             
             </v-flex> 
+
+            <v-flex xs12>
+              <v-card-title class="cyan darken-1">
+              <span class="subheading white--text">การทำงาน</span>
+              </v-card-title>
+              <v-list v-for="itm in pk_comment" :key="itm.co_comment">
+                <v-list-tile >
+                  <v-list-tile-action>
+                    <v-icon>chat</v-icon>
+                  </v-list-tile-action>
+      
+                  <v-list-tile-content>
+                    <v-list-tile-sub-title>{{itm.co_date}}</v-list-tile-sub-title>
+                    <v-list-tile-title>{{itm.co_comment}}</v-list-tile-title>
+                    
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+      
+                    <!-- <v-icon>chat</v-icon> -->
+                  </v-list-tile-action>
+                </v-list-tile>
+      
+                <v-divider inset></v-divider>
+      
+                
+              </v-list>
+            </v-flex> 
             
           </v-layout>
         </v-container>
@@ -176,6 +266,7 @@
         layout: 'manage',
         data(){
           return{
+            status:sessionStorage.getItem("status"),
             link_img:"http://localhost:34001/img/missing/",
 
             ms_id:"",
@@ -201,10 +292,16 @@
             },
             img_ms:"",
             ms_detail:"",
+            
+            dialog_co:false,
+            load_status:"",
+            img_co:"",
+            pk_comment:"",
           }
         },
         async created(){
           this.sh_missing()
+          this.sh_comment()
         },
         watch:{
           ms_step(newValue){
@@ -270,7 +367,6 @@
               ms_status:this.ms_status,
               u_id:sessionStorage.getItem("username")
             })
-            console.log(res.data)
               if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt
                 this.isEditing=!this.isEditing
                 this.$router.push({name: 'manage-missing'})
@@ -279,7 +375,40 @@
           },
           missing(){
             this.$router.push({name: 'manage-missing'})
-          }
+          },
+          upload_img(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_co=e.target.result;
+              console.log(this.img_co)
+            };
+          },
+          async comment(){
+            let oc_fail=await this.$http.post("/comment/add_comment",{
+              co_co_u_id:sessionStorage.getItem("id"),
+              co_co_u_table:this.status,
+              co_u_id:this.ms_id,
+              co_u_table:"pk_missing",
+              co_comment:this.co_comment,
+            }
+            ,{
+              onUploadProgress: uploadEvent => {
+                this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+              }
+            })
+            this.sh_comment()
+            this.dialog_co=false
+          },
+          async sh_comment(){
+            let co=await this.$http.post("/comment/list_comment_where_topic",{
+              co_u_id:this.$route.query.ms_id,
+              co_u_table:"pk_missing",
+            })
+            // console.log(co.data)
+            this.pk_comment=co.data.datas
+          },
         }
     }
 </script>

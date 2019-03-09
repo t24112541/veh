@@ -158,7 +158,7 @@
         this.mis_status=vl
       },
       list_object_control(oc_id){
-        this.$router.push({path: '../manage/object_control/update_object_control?oc_id='+oc_id})
+        this.$router.push({path: "/manage/object_control/update_object_control?oc_id="+oc_id})
       },
      
     }

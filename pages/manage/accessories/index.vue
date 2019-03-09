@@ -109,10 +109,10 @@
     },
     methods:{
       list_accessories(ac_id){
-        this.$router.push({path: '../manage/accessories/edit_accessories?ac_id='+ac_id})
+        this.$router.push({path: "/manage/accessories/edit_accessories?ac_id="+ac_id})
       },
       accessories_add(){
-        this.$router.push({path:"../manage/accessories/data_add_accessories"})
+        this.$router.push({path:"/manage/accessories/data_add_accessories"})
       }
      
     }

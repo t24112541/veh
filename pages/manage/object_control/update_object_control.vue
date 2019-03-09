@@ -128,6 +128,15 @@
           
                  <v-flex text-xs-center xs12 style="color:#81c784"><i class="fas fa-check-circle fa-2x" ></i></v-flex>
                  <v-flex text-xs-center xs12 style="color:#81c784">ผ่านการตรวจแก้แล้ว</v-flex>
+                 <v-flex text-xs-center xs12 style="color:#81c784">
+                   <v-btn
+                    color="error"
+                    @click="ms_step = 2"
+                    >
+                      ย้อนเรื่องกลับ
+                  </v-btn>
+                 </v-flex>
+                 
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
@@ -307,6 +316,8 @@
                 this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
               }
             })
+            
+            this.sh_comment()
             this.ms_step =1
             this.dialog_co=false
           },

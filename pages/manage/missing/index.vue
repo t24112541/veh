@@ -175,7 +175,7 @@
         this.mis_status=vl
       },
       list_missing(ms_id){
-        this.$router.push({path: '../manage/missing/update_missing?ms_id='+ms_id})
+        this.$router.push({path: "/manage/missing/update_missing?ms_id="+ms_id})
       },
      
     }
