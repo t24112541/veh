@@ -224,7 +224,16 @@
             
             </v-flex> 
 
-            <v-flex xs12>
+            
+            
+          </v-layout>
+        </v-container>
+        <v-card-actions>
+          <v-btn flat color="red lighten-2" @click="missing()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
+          <v-spacer></v-spacer>
+          <v-btn flat color="green lighten-2"  @click="missing_update()"><i class="fas fa-save fa-2x"></i></v-btn>
+        </v-card-actions>
+        <v-flex xs12>
               <v-card-title class="cyan darken-1">
               <span class="subheading white--text">การทำงาน</span>
               </v-card-title>
@@ -250,14 +259,6 @@
                 
               </v-list>
             </v-flex> 
-            
-          </v-layout>
-        </v-container>
-        <v-card-actions>
-          <v-btn flat color="red lighten-2" @click="missing()"><i class="fas fa-arrow-circle-left fa-2x"></i></v-btn>
-          <v-spacer></v-spacer>
-          <v-btn flat color="green lighten-2"  @click="missing_update()"><i class="fas fa-save fa-2x"></i></v-btn>
-        </v-card-actions>
     </v-card>
 </template>
 
@@ -308,18 +309,18 @@
             if(newValue=="1"){this.ms_status="ขั้นที่ 1 รอรับเรื่อง"}
             else if(newValue=="2"){this.ms_status="ขั้นที่ 2 รับเรื่องแล้ว"}
             else if(newValue=="3"){this.ms_status="ขั้นที่ 3 พบเเล้ว"}
-            console.log(this.ms_status)
+            // console.log(this.ms_status)
           },
           ms_status(newValue){
             if(newValue=="ขั้นที่ 1 รอรับเรื่อง"){this.ms_step="1"}
             else if(newValue=="ขั้นที่ 2 รับเรื่องแล้ว"){this.ms_step="2"}
             else if(newValue=="ขั้นที่ 3 พบเเล้ว"){this.ms_step="3"}
-            console.log(this.ms_step)
+            // console.log(this.ms_step)
           },
           ms_table(newValue){
             if(newValue=="pk_machine"){this.ms_link_mis="../machines/edit_machine?ms=true&&mc_id="}
             else if(newValue=="pk_accessories"){this.ms_link_mis="../accessories/edit_accessories?ms=true&&ac_id="}
-            console.log(this.ms_step)
+            // console.log(this.ms_step)
           }
         },
         methods:{
@@ -382,7 +383,7 @@
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_co=e.target.result;
-              console.log(this.img_co)
+              // console.log(this.img_co)
             };
           },
           async comment(){
@@ -407,7 +408,7 @@
               co_u_table:"pk_missing",
             })
             // console.log(co.data)
-            this.pk_comment=co.data.datas
+            this.pk_comment=co.data.datas 
           },
         }
     }

@@ -1,5 +1,29 @@
 
 <template>
+<div>
+        <v-card class="white--text" :color="compute_color">
+         
+          <v-card-title primary-title>
+            <v-flex xs12 sm9 md9 style="padding-top:20px" >
+              <h3 class="headline mb-0">สถานะการยืนยันการใช้งานจากผู้ปกครอง</h3>
+            </v-flex>
+            <v-flex xs12 sm3 md3 style="padding-top:20px" >
+              
+              <h3 class="subheading mb-0" v-if="this.mc_confirm=='false'">ยังไม่ได้รับการยืนยัน</h3>
+              <h3 class="subheading mb-0" v-if="this.mc_confirm=='true'">ได้รับการยืนยันแล้ว</h3>
+            </v-flex>
+          </v-card-title>
+  
+          <v-card-actions>
+            <v-btn v-if="this.mc_confirm=='false'" flat color="white" @click="mc_confirm_mt('true')">ยืนยันข้อมูล</v-btn>
+            <v-btn v-if="this.mc_confirm=='true'" flat color="white" @click="mc_confirm_mt('false')">ย้อนคืนการยืนยันข้อมูล</v-btn>
+            <!-- <v-btn v-if="this.mc_confirm=='true'" flat color="orange" @click="watch_confirm()">ดู</v-btn> -->
+            <v-spacer></v-spacer>
+            <h4 class="body-1">วันที่ลงทะเบียน {{mc_confirm_date}}</h4>
+            <v-spacer></v-spacer>
+            <h3 class="body-1">วันที่หมดอายุ {{mc_expire_date}}</h3>
+          </v-card-actions>
+        </v-card>
     <v-card>
         <v-alert
           v-model="danger"
@@ -363,9 +387,11 @@
           {{alt_txt}}
         </v-alert>
     </v-card>
+</div>
 </template>
 
 <script>
+var dateFormat = require('dateformat');
     export default {
         layout: 'teacher',
 
@@ -413,6 +439,10 @@
               dis_oc:true,
 
               ctrl_status:"",
+              mc_confirm:"",
+              mc_confirm_date:"",
+              mc_expire_date:"",
+              mc_expire_date_watch:false,
             }
         },
         async created(){
@@ -427,9 +457,39 @@
           itm_oc_name_more(){
             if(this.itm_oc_name_more==true){this.dis_oc=true}else{this.dis_oc=false}
           },
+          mc_expire_date_watch(newValue){
+            if(newValue==true){this.mc_confirm_mt("false")}
+          },
         },
-        
+        computed: {
+
+          compute_color(){
+            let color=""
+            let d_now=dateFormat(new Date(), "dd/mm/yyyy h:MM:ss")
+            // let d_now="10/03/2021 10:40:44"
+            if(this.mc_id!=''){
+              if(this.mc_confirm=='false' || d_now>this.mc_expire_date){color="red"
+                if(d_now>this.mc_expire_date){this.mc_expire_date_watch=true}
+              }
+              else if(this.mc_confirm=='true' || d_now<this.mc_expire_date){color="green"}   
+            }       
+            return color
+          }
+        },
         methods:{
+          async mc_confirm_mt(confirm_value){
+            let res=await this.$http.post('/machine/confirm_machine/',{
+              mc_id:this.mc_id,
+              mc_confirm:confirm_value,
+            },
+            {
+              onUploadProgress: uploadEvent => {
+                  this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                }
+            })
+            if(res.data.ok==true){this.load_status=0,this.sh_machine(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+          },
           async load_ctrl_status(){
             let res=await this.$http.post("/ctrl_edit_data/")
             this.ctrl_status=res.data.datas[0]
@@ -473,6 +533,8 @@
             this.std_name=res.data.datas[0].std_name
             this.std_lastname=res.data.datas[0].std_lastname
             this.mc_u_table=res.data.datas[0].mc_u_table
+            this.mc_confirm=res.data.datas[0].mc_confirm
+            this.mc_confirm_date=res.data.datas[0].mc_confirm_date
 
             this.img_font=this.link_img+res.data.datas[0].img_img
             this.img_font_id=res.data.datas[0].img_id
@@ -482,6 +544,14 @@
 
             this.img_rear=this.link_img+res.data.datas[2].img_img
             this.img_rear_id=res.data.datas[2].img_id
+
+            let old_date=this.mc_confirm_date.split("-")
+            let day=old_date[2].split(" ")
+            let test_years=parseInt(old_date[0])
+            const years=parseInt(old_date[0])+1
+   
+            this.mc_expire_date=day[0]+"/"+old_date[1]+"/"+years+" "+day[1]
+            this.mc_confirm_date=day[0]+"/"+old_date[1]+"/"+test_years+" "+day[1]
           },
           async sh_object_control(){
             let res=await this.$http.get('/object_control/item_object_control')

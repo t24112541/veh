@@ -81,6 +81,7 @@ module.exports = {
     '~/plugins/vuetify',
     '~/plugins/axios',
     '~/plugins/vue-cookies',
+    // '~/plugins/dateformat',
     
     // '~/plugins/Notifications',
     // '~/plugins/chart',
