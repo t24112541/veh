@@ -125,11 +125,11 @@
       { avatar:"http://localhost:34001/img/users/veh-u-default.jpg", text: sessionStorage.getItem("a_name")+" "+sessionStorage.getItem("a_lname") ,link: '../../manage/profile'},
 
       { divider: true },
-      { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'},
-      { icon: 'fas fa-sliders-h', text: 'ระบบ' ,link: '../../manage/system_ctrl'},
+      { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'}, 
       { icon: 'fas fa-clipboard', text: 'รายงาน' ,link: '../../manage/dashboard'},
       { icon: 'fas fa-book-open', text: 'การแจ้งหาย' ,link: '../../manage/missing'},
       { icon: 'fas fa-book-open', text: 'ข้อมูลผิดระเบียบ' ,link: '../../manage/object_control'},
+      { icon: 'fas fa-sliders-h', text: 'ระบบ' ,link: '../../manage/system_ctrl'},
       { divider: true },
        { heading: 'จัดการข้อมูล' },
         { icon: 'fas fa-user-graduate', text: 'นักเรียน / นักศึกษา' ,link: '../../manage/student'},
@@ -163,9 +163,9 @@
          model: false,
           children: [
             { icon:'fas fa-user-shield' ,text: 'ความปลอดภัย' ,link: '../../manage/security/security'},
-            { icon:'fas fa-sliders-h' ,text: 'ระบบ' },
+       
           ]},
-        { icon: 'help', text: 'ช่วยเหลือ' },
+        // { icon: 'help', text: 'ช่วยเหลือ' },
         { icon: 'fas fa-sign-out-alt', text: 'ออกจากระบบ' ,link:"../../logout"},
         
       ],
@@ -195,7 +195,7 @@
   },
    methods: {
      home(){
-       this.$router.push({name:"manage-missing"})
+       this.$router.push({name:"manage-dashboard"})
      },
      set_session(){
        this.id=sessionStorage.getItem("id")
