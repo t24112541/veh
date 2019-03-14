@@ -122,7 +122,7 @@
       drawer: null,
       items: [
       { heading: 'ผู้ใช้งาน' },
-      { avatar:"http://localhost:34001/img/users/veh-u-default.jpg", text: sessionStorage.getItem("a_name")+" "+sessionStorage.getItem("a_lname") ,link: '../../manage/profile'},
+      { avatar:"http://localhost:34001/img/users/veh-u-default.jpg" || process.env.API_URL+"/img/users/veh-u-default.jpg", text: sessionStorage.getItem("a_name")+" "+sessionStorage.getItem("a_lname") ,link: '../../manage/profile'},
 
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'}, 
