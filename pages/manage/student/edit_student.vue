@@ -414,13 +414,13 @@
 
             img:[],
             load_status:"",
-            link_img:"http://localhost:34001/img/users/",
+            link_img:"http://localhost:34001/img/users/" || process.env.API_URL+"/img/users/",
             img_id:"",
 
             machine:"",
-            link_img_mc:"http://localhost:34001/img/machine/",
+            link_img_mc:"http://localhost:34001/img/machine/" || process.env.API_URL+"/img/machine/",
             accessories:"",
-            link_img_ac:"http://localhost:34001/img/accessories/",
+            link_img_ac:"http://localhost:34001/img/accessories/" || process.env.API_URL+"/img/accessories/",
             
             ms_mc:"",
             ms_ac:"",

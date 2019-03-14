@@ -112,7 +112,6 @@
   export default {
     
     data: () => ({
-      link_img:"http://localhost:34001/img/accessories/",
       username:sessionStorage.getItem("username"),
       status:sessionStorage.getItem("status"),
       txt_search:"",
