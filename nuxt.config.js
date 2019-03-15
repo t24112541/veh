@@ -1,7 +1,7 @@
 const modules = [
   // '@nuxtjs/proxy',
 ]
-sessionStorage.setItem("API_URL",process.env.API_URL)
+
 if (process.env.NODE_ENV === 'production') {
   modules.push('@nuxtjs/pwa')
 }
@@ -101,4 +101,6 @@ module.exports = {
     '/files': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:9090' :  process.env.API_URL,
     ws: true,
   },
+  
 }
+sessionStorage.setItem("API_URL",process.env.API_URL)
