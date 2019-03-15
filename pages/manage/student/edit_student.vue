@@ -415,13 +415,13 @@ const config = require('./../../../config.js')
 
             img:[],
             load_status:"",
-            link_img:"http://localhost:9090/img/users/",
+            link_img:"/files/img/users/",
             img_id:"",
 
             machine:"",
-            link_img_mc:"/img/machine/"  ,
+            link_img_mc:"/files/img/machine/"  ,
             accessories:"",
-            link_img_ac:"/img/accessories/" ,
+            link_img_ac:"/files/img/accessories/" ,
             
             ms_mc:"",
             ms_ac:"",

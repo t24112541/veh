@@ -189,7 +189,7 @@
             },
             img:[],
             load_status:0,
-            link_img:"http://localhost:34001/img/teachers/",
+            link_img:"http://localhost:9090/img/teachers/",
             itm:[],
             img_id:"",
 

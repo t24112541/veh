@@ -277,7 +277,7 @@
         data(){
           return{
             status:sessionStorage.getItem("status"),
-            link_img:"http://localhost:34001/img/missing/",
+            link_img:"http://localhost:9090/img/missing/",
 
             ms_id:"",
             ms_date:"",
