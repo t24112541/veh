@@ -121,7 +121,7 @@
       drawer: null,
       items: [
       { heading: 'ผู้ใช้งาน' },
-      { avatar:"/files/img/users/veh-u-default.jpg"  ,link: '../../manage/profile'},
+      { avatar:"/files/img/users/veh-u-default.jpg" ,text:sessionStorage.getItem("a_name")+' '+ sessionStorage.getItem("a_lname")  ,link: '../../manage/profile'},
 
       { divider: true },
       { icon: 'fas fa-home', text: 'หน้าแรก' ,link: '../../manage/home'}, 
