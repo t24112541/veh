@@ -311,7 +311,7 @@
               }
             })
             if(res.data.ok==true){this.load_status=0,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
-            else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.load_status=0}
           },
           upload_img(e){
             const image = e.target.files[0];
@@ -343,7 +343,7 @@
             if (!std_birthday) return null
 
             const [month, day, year] = std_birthday.split('/')
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+            return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`
           }
         },
         computed: {

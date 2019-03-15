@@ -142,7 +142,7 @@
       num_noti:'10',
       dialog: false,
       drawer: null,
-      img_img:"http://localhost:34001/img/teachers/",
+      img_img:"/files/img/teachers/",
       items: [
       { heading: 'ออนไลน์' },
       

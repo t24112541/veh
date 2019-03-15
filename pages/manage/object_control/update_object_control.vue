@@ -235,7 +235,7 @@
         data(){
           return{
             status:sessionStorage.getItem("status"),
-            link_img:"http://localhost:9090/img/object_control/",
+            link_img:"/files/img/object_control/",
 
             oc_id:"",
             oc_date:"",

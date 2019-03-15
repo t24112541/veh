@@ -313,13 +313,13 @@
 
             img:[],
             load_status:"",
-            link_img:"http://localhost:9090/img/users/",
+            link_img:"/files/img/users/",
             img_id:"",
 
             machine:"",
-            link_img_mc:"http://localhost:9090/img/machine/",
+            link_img_mc:"/files/img/machine/",
             accessories:"",
-            link_img_ac:"http://localhost:9090/img/accessories/",
+            link_img_ac:"/files/img/accessories/",
 
             ctrl_status:"",
           }

@@ -164,7 +164,7 @@
       num_noti:'10',
       dialog: false,
       drawer: null,
-      img_img:"http://localhost:34001/img/users/",
+      img_img:"/files/img/users/",
       items: [
       { heading: 'ออนไลน์' },
       

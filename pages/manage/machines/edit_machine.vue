@@ -410,7 +410,7 @@
               img_side:"",
               img_rear:"",
 
-              link_img:"http://localhost:9090/img/machine/",
+              link_img:"/files/img/machine/",
               img_font_id:"",
               img_side_id:"",
               img_rear_id:"",

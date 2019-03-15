@@ -112,7 +112,7 @@
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field 
-                  :disabled="true"
+                  :disabled="!isEditing"
                   :rules="[rules.required, rules.counter]"
                   maxlength="10"
                   counter
@@ -125,7 +125,7 @@
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field 
-                  :disabled="true"
+                  :disabled="!isEditing"
                   :rules="[rules.required, rules.counter]"
                   maxlength="10"
                   counter
@@ -136,7 +136,7 @@
                 ></v-text-field>
               </v-layout>
             </v-flex>
-            <span style="color:red">*การแก้ไข รหัสประจำตัวครู / บุคลากร หรือ เบอร์โทรศัพท์ จะมีผลต่อ username password โดยตรงโปรดแจ้งการเปลี่ยนแปลงให้เจ้าของบัญชีทราบ เพื่อทำความเข้าใจ</span>
+            <!-- <span style="color:red">*การแก้ไข รหัสประจำตัวครู / บุคลากร หรือ เบอร์โทรศัพท์ จะมีผลต่อ username password โดยตรงโปรดแจ้งการเปลี่ยนแปลงให้เจ้าของบัญชีทราบ เพื่อทำความเข้าใจ</span> -->
             
           </v-layout>
         </v-container>
@@ -189,7 +189,7 @@
             },
             img:[],
             load_status:0,
-            link_img:"http://localhost:9090/img/teachers/",
+            link_img:"/files/img/teachers/",
             itm:[],
             img_id:"",
 
@@ -231,11 +231,11 @@
               this.t_tel=res.data.datas[0].t_tel
               this.t_username=res.data.datas[0].t_username
               this.t_password=res.data.datas[0].t_password
-              this.d_code=res.data.datas[0].d_code
+              this.d_code=res.data.datas[0].t_dep
               this.img=this.link_img+res.data.image[0].img_img
               this.itm=res.data.datas
               this.img_id=res.data.image[0].img_id
-              console.log(res.data.datas)
+              console.log(this.d_code)
             
             },
             async teacher_update(t_id){
@@ -244,8 +244,8 @@
                 formData.append('img-'+this.img_id,this.$refs.img.files[0])
 
                 formData.append('t_code',this.t_code)
+                formData.append('t_dep',this.d_code)
                 formData.append('t_name',this.t_name)
-                formData.append('t_dep',this.t_dep)
                 formData.append('t_tel',this.t_tel)
                 formData.append('u_id',sessionStorage.getItem("username"))
                 formData.append('t_username',this.t_username)

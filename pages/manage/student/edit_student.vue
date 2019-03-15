@@ -155,11 +155,11 @@
                     lazy
                     full-width
                     width="290px"
-                    :disabled="!isEditing"
+                    :disabled="true"
                   >
 
                 <v-text-field
-                  :disabled="!isEditing"
+                  :disabled="true"
                   slot="activator"
                   v-model="dateFormatted"
                   label="วัน/เดือน/ปีเกิด"
@@ -466,7 +466,7 @@ const config = require('./../../../config.js')
             if (!std_birthday) return null
 
             const [month, day, year] = std_birthday.split('/')
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+            return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year}`
           },
             conf_del(){this.conf_del=true},
             async std_del(std_id){

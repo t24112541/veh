@@ -238,7 +238,7 @@
 
         data () {
             return {
-              link_img:"http://localhost:9090/img/accessories/",
+              link_img:"/files/img/accessories/",
               ms:null,
 
               ac_description:"",
