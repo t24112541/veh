@@ -378,7 +378,7 @@
 </template>
 
 <script>
-// const config = require('./../../../nuxt.config.js')
+const config = require('./../../../config.js')
     export default {
         layout: 'manage',
 
@@ -434,7 +434,7 @@
         async created(){
           this.sh_std()
           this.load_ctrl_status()
-          console.log(sessionStorage.getItem("API_URL"))
+          console.log(config)
           
         },
         watch:{

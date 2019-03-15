@@ -4,7 +4,6 @@ const modules = [
 
 if (process.env.NODE_ENV === 'production') {
   modules.push('@nuxtjs/pwa')
-  sessionStorage.setItem("API_URL",process.env.API_URL)
 }
 
 module.exports = {
