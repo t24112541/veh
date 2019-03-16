@@ -4,7 +4,7 @@
       <v-alert
         v-model="danger"
         dismissible
-        :type=type_api
+        :type="type_api"
       >
         {{alt_txt}}
       </v-alert>
@@ -33,44 +33,22 @@
               </v-stepper-header>
           
               <v-stepper-items>
-                <!-- <v-stepper-content step="1">
-                 <v-card
-                    class="mb-5"
-                    color="grey lighten-1"
-                    height="200px"
-                  ></v-card> -->
+                <v-stepper-content step="1">
+                  <v-flex text-xs-center xs12 style="color:#81c784"><i class="fas fa-check-circle fa-2x" ></i></v-flex>
+                  <v-flex text-xs-center xs12 style="color:#81c784">รอรับเรื่อง</v-flex>
                   
-                  <!-- <v-btn
-                    color="primary"
-                    @click="ms_step = 2"
-                    style="width:100%"
-                  >
-                    <i class="fas fa-check-circle fa-2x"></i>&nbsp;
-                    <v-spacer></v-spacer> รับเรื่อง<v-spacer></v-spacer>
-                  </v-btn> -->
-                  
-                <!-- </v-stepper-content> --> 
+                </v-stepper-content>
           
-                <!-- <v-stepper-content step="2"> -->
-                  <!-- <v-card
-                    class="mb-5"
-                    color="grey lighten-1"
-                    height="200px"
-                  ></v-card> -->
+                <v-stepper-content step="2">
+                  <v-flex text-xs-center xs12 style="color:#81c784"><i class="fas fa-check-circle fa-2x" ></i></v-flex>
+                  <v-flex text-xs-center xs12 style="color:#81c784">รับเรื่องแล้ว</v-flex>
+                </v-stepper-content>
           
-                  <!-- <v-btn
-                    color="primary"
-                    @click="ms_step = 3"
-                    style="width:100%"
-                  >
-                    <i class="fas fa-search fa-2x"></i>&nbsp;
-                    <v-spacer></v-spacer> พบแล้ว<v-spacer></v-spacer>
-                  </v-btn> -->
-                <!-- </v-stepper-content> -->
-          
-                <v-stepper-content step="3">        
+                <v-stepper-content step="3">
+
                  <v-flex text-xs-center xs12 style="color:#81c784"><i class="fas fa-check-circle fa-2x" ></i></v-flex>
                  <v-flex text-xs-center xs12 style="color:#81c784">พบแล้ว</v-flex>
+                
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
@@ -112,7 +90,6 @@
                       <strong>วันที่แจ้งหาย</strong>
                     </v-flex>
                     <v-flex>
-                      <!-- <strong>{{ms_date}}</strong> -->
                       <div class="caption">{{ms_date}}</div>
                     </v-flex>
                   </v-layout>
@@ -120,7 +97,31 @@
               </v-timeline>
 
             </v-flex>
-           
+            <v-flex xs12>
+              <v-textarea
+                        :rules="[rules.required]"
+                        solo
+                        rows='10'
+                        label="สถานที่ที่พบเห็นล่าสุด"
+                        v-model="ms_detail"
+                        disabled="true"
+                        prepend-icon="fas fa-id-card-alt fa-2x"
+                        placeholder="สถานที่ที่พบเห็นล่าสุด"
+              ></v-textarea>
+            </v-flex> 
+            <v-flex xs12>
+              <v-card height="100%" class="grey lighten-4 paddign" > 
+                <center><img :src="this.img_ms" width="50%"></center>
+                <v-card-actions style="font-size:100%">
+                  <span><i class="fas fa-image fa-2x"></i></span>
+                  <v-spacer></v-spacer>
+                  <span>รูปสถานที่ที่พบเห็นล่าสุด</span>
+                </v-card-actions>
+              </v-card>
+
+            
+            </v-flex> 
+            
           </v-layout>
         </v-container>
         <v-card-actions>
@@ -128,6 +129,32 @@
           <v-spacer></v-spacer>
           <!-- <v-btn flat color="green lighten-2"  @click="missing_update()"><i class="fas fa-save fa-2x"></i></v-btn> -->
         </v-card-actions>
+        <v-flex xs12>
+              <v-card-title class="cyan darken-1">
+              <span class="subheading white--text">การทำงาน</span>
+              </v-card-title>
+              <v-list v-for="itm in pk_comment" :key="itm.co_comment">
+                <v-list-tile >
+                  <v-list-tile-action>
+                    <v-icon>chat</v-icon>
+                  </v-list-tile-action>
+      
+                  <v-list-tile-content>
+                    <v-list-tile-sub-title>{{itm.co_date}}</v-list-tile-sub-title>
+                    <v-list-tile-title>{{itm.co_comment}}</v-list-tile-title>
+                    
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+      
+                    <!-- <v-icon>chat</v-icon> -->
+                  </v-list-tile-action>
+                </v-list-tile>
+      
+                <v-divider inset></v-divider>
+      
+                
+              </v-list>
+            </v-flex> 
     </v-card>
 </template>
 
@@ -136,6 +163,9 @@
         layout: 'student',
         data(){
           return{
+            status:sessionStorage.getItem("status"),
+            link_img:"/files/img/missing/",
+
             ms_id:"",
             ms_date:"",
             ms_status:"",
@@ -157,39 +187,47 @@
                   required: value => !!value || 'ห้ามว่าง.',
                   // counter: value => value.length <= 10 || 'เต็ม 10 ตัวอักษร',
             },
+            img_ms:"",
+            ms_detail:"",
+
+            dialog_co:false,
+            load_status:"",
+            img_co:"",
+            pk_comment:"", 
           }
         },
         async created(){
           this.sh_missing()
+          this.sh_comment()
         },
         watch:{
           ms_step(newValue){
             if(newValue=="1"){this.ms_status="ขั้นที่ 1 รอรับเรื่อง"}
             else if(newValue=="2"){this.ms_status="ขั้นที่ 2 รับเรื่องแล้ว"}
             else if(newValue=="3"){this.ms_status="ขั้นที่ 3 พบเเล้ว"}
-            console.log(this.ms_status)
+            // console.log(this.ms_status)
           },
           ms_status(newValue){
             if(newValue=="ขั้นที่ 1 รอรับเรื่อง"){this.ms_step="1"}
             else if(newValue=="ขั้นที่ 2 รับเรื่องแล้ว"){this.ms_step="2"}
             else if(newValue=="ขั้นที่ 3 พบเเล้ว"){this.ms_step="3"}
-            console.log(this.ms_step)
+            // console.log(this.ms_step)
           },
           ms_table(newValue){
             if(newValue=="pk_machine"){this.ms_link_mis="../machines/edit_machine?ms=true&&mc_id="}
             else if(newValue=="pk_accessories"){this.ms_link_mis="../accessories/edit_accessories?ms=true&&ac_id="}
-            console.log(this.ms_step)
+            // console.log(this.ms_step)
           }
         },
         methods:{
           ms_link_mis_btn(u_id){
-            console.log("ms_link_mis_btn")
+            // console.log("ms_link_mis_btn")
             this.$router.push({path:this.ms_link_mis+u_id}) 
           },
           step_plus(){
-            console.log("step")
+            // console.log("step")
             if(this.ms_step!=3){this.ms_step++}
-            console.log(this.ms_step)
+            // console.log(this.ms_step)
           },
           conf_del(){this.conf_del=true},
           async missing_del(){//console.log("missing_del")
@@ -215,7 +253,9 @@
             this.u_ms_date=res.data.datas[0].u_ms_date
             this.u_id=res.data.datas[0].u_id
             this.ms_table=res.data.datas[0].ms_table
-            // console.log(res.data.datas[0].ms_date)
+            this.img_ms=this.link_img+res.data.datas[0].img_img
+            this.ms_detail=res.data.datas[0].ms_detail
+            // console.log(res.data)
           },
           async missing_update(ms_id){
             //console.log("ms_id"+ms_id)
@@ -224,7 +264,7 @@
               ms_status:this.ms_status,
               u_id:sessionStorage.getItem("username")
             })
-            console.log(res.data)
+            // console.log(res.data)
               if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt
                 this.isEditing=!this.isEditing
                 this.$router.push({name: 'student-missing'})
@@ -233,7 +273,40 @@
           },
           missing(){
             this.$router.push({name: 'student-missing'})
-          }
+          },
+          upload_img(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{              
+              this.img_co=e.target.result;
+              // console.log(this.img_co)
+            };
+          },
+          async comment(){
+            let oc_fail=await this.$http.post("/comment/add_comment",{
+              co_co_u_id:sessionStorage.getItem("id"),
+              co_co_u_table:this.status,
+              co_u_id:this.ms_id,
+              co_u_table:"pk_missing",
+              co_comment:this.co_comment,
+            }
+            ,{
+              onUploadProgress: uploadEvent => {
+                this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+              }
+            })
+            this.sh_comment()
+            this.dialog_co=false
+          },
+          async sh_comment(){
+            let co=await this.$http.post("/comment/list_comment_where_topic",{
+              co_u_id:this.$route.query.ms_id,
+              co_u_table:"pk_missing",
+            })
+            // console.log(co.data)
+            this.pk_comment=co.data.datas
+          },
         }
     }
 </script>

@@ -235,7 +235,7 @@
               this.img=this.link_img+res.data.image[0].img_img
               this.itm=res.data.datas
               this.img_id=res.data.image[0].img_id
-              console.log(this.d_code)
+              // console.log(this.d_code)
             
             },
             async teacher_update(t_id){

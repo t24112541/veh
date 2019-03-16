@@ -433,9 +433,7 @@ const config = require('./../../../config.js')
         },
         async created(){
           this.sh_std()
-          this.load_ctrl_status()
-          console.log(config)
-          
+          this.load_ctrl_status()         
         },
         watch:{
           std_prename(newValue){

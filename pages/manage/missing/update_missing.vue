@@ -204,6 +204,7 @@
               <v-textarea
                         :rules="[rules.required]"
                         solo
+                        disabled="true"
                         rows='10'
                         label="สถานที่ที่พบเห็นล่าสุด"
                         v-model="ms_detail"

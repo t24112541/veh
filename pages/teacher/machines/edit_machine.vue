@@ -494,8 +494,8 @@ var dateFormat = require('dateformat');
             let res=await this.$http.post("/ctrl_edit_data/")
             this.ctrl_status=res.data.datas[0]
           },
-          async sh_std(std_code){console.log("sh_std")
-          console.log(this.mc_u_table)
+          async sh_std(std_code){//console.log("sh_std")
+          //console.log(this.mc_u_table)
             if(this.mc_u_table=="pk_teacher"){
               let res=await this.$http.get('/teacher/sh_teacher/'+std_code)
               this.$router.push({path: '../../teacher/teacher/edit_teacher?t_id='+res.data.datas[0].t_id})
@@ -523,7 +523,7 @@ var dateFormat = require('dateformat');
           },
           async sh_machine(){
             let res=await this.$http.get('/machine/sh_machine/'+this.$route.query.mc_id)
-            console.log(res.data.datas)
+            //console.log(res.data.datas)
             this.mc_id=this.$route.query.mc_id
             this.mc_code=res.data.datas[0].mc_code
             this.mc_brand=res.data.datas[0].mc_brand
@@ -555,10 +555,10 @@ var dateFormat = require('dateformat');
           },
           async sh_object_control(){
             let res=await this.$http.get('/object_control/item_object_control')
-            console.log(res.data.datas)
+            //console.log(res.data.datas)
             this.items_oc_detail=res.data.datas
           },
-          async machine_update(mc_id){console.log("1")
+          async machine_update(mc_id){//console.log("1")
             const formData = new FormData()
               formData.append('mc_id',this.mc_id)
               formData.append('mc_code',this.mc_code)
@@ -633,7 +633,7 @@ var dateFormat = require('dateformat');
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_ms=e.target.result;
-              console.log(this.img_ms);
+              //console.log(this.img_ms);
             };
           },
           upload_img_font(e){
@@ -642,7 +642,7 @@ var dateFormat = require('dateformat');
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_font=e.target.result;
-              console.log(this.img_font);
+              //console.log(this.img_font);
             };
           },
           upload_img_side(e){
@@ -651,8 +651,8 @@ var dateFormat = require('dateformat');
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_side=e.target.result;
-              // console.log("this.img_side");
-              console.log(this.img_side);
+              // //console.log("this.img_side");
+              //console.log(this.img_side);
             };
           },
           upload_img_rear(e){
@@ -661,7 +661,7 @@ var dateFormat = require('dateformat');
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_rear=e.target.result;
-              console.log(this.img_rear);
+              //console.log(this.img_rear);
             };
           },
           upload_img_oc(e){
@@ -670,7 +670,7 @@ var dateFormat = require('dateformat');
             reader.readAsDataURL(image);
             reader.onload = e =>{              
               this.img_oc=e.target.result;
-              console.log(this.img_oc);
+              //console.log(this.img_oc);
             };
           },
         }

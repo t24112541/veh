@@ -214,6 +214,7 @@
             <v-flex xs12>
               <v-textarea
                         :rules="[rules.required]"
+                        disabled="true"
                         solo
                         rows='10'
                         label="สถานที่ที่พบเห็นล่าสุด"
@@ -306,7 +307,7 @@
             dialog_co:false,
             load_status:"",
             img_co:"",
-            pk_comment:"",
+            pk_comment:"", 
           }
         },
         async created(){

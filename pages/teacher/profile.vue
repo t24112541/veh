@@ -19,7 +19,29 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-           
+            <v-flex xs4></v-flex>
+            <v-flex xs4 class="text-xs-center" 
+                @click="$refs.img.click()" 
+                style="cursor: pointer;"
+              >
+                <input 
+                  type="file" 
+                  style="display:none;" 
+                  accept="image/*" 
+                  multiple  
+                  @change="upload_img($event)" 
+                  ref="img"
+                >
+                <v-card height="100%" class="grey lighten-4 paddign" > 
+                  <img :src="this.img" width="100%">
+                  <v-card-actions style="font-size:100%">
+                    <span><i class="fas fa-image fa-2x"></i></span>
+                    <v-spacer></v-spacer>
+                    <span>รูปภาพ</span>
+                  </v-card-actions>
+                </v-card>
+              </v-flex>
+              <v-flex xs4></v-flex>
             <v-flex xs12 >
               <v-layout align-center>
                 <v-text-field 
@@ -90,6 +112,12 @@
             rules: {
               required: value => !!value || 'ห้ามว่าง.',
             },
+
+            img:[],
+            load_status:"",
+            link_img:"/files/img/teachers/",
+            img_id:"",
+            load_status:0,
           }
         },
         async created(){
@@ -101,18 +129,37 @@
               // console.log(res.data)
               this.t_name=res.data.datas[0].t_name
               this.t_tel=res.data.datas[0].t_tel
+
+              this.img=this.link_img+res.data.image[0].img_img
+              this.img_id=res.data.image[0].img_id
            
             },
             async profile_update(){
               this.loading=true
-              let res=await this.$http.post("/teacher/profile_update",{
-        				t_name:this.t_name,
-                t_tel:this.t_tel,
-                id:this.id,
+              const formData = new FormData()
+                formData.append('img-'+this.img_id,this.$refs.img.files[0])
+
+                formData.append('t_name',this.t_name)
+                formData.append('t_tel',this.t_tel)
+                formData.append('id',this.id)
+
+              let res=await this.$http.post("/teacher/profile_update",formData,{
+                  onUploadProgress: uploadEvent => {
+                    this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
+                  }
               })
               this.loading=false
               if(res.data.ok==true){this.sh_profile(),this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             	else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            },
+            upload_img(e){
+              const image = e.target.files[0];
+              const reader = new FileReader();
+              reader.readAsDataURL(image);
+              reader.onload = e =>{              
+                this.img=e.target.result;
+                // console.log(this.img_side);
+              };
             },
          
         }
