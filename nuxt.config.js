@@ -97,8 +97,8 @@ module.exports = {
 
   ],
   proxy: {
-    '/api': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:9090' :  process.env.API_URL,
-    '/files': process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:9090' :  process.env.API_URL,
+    '/api': process.env.API_URL || 'http://127.0.0.1:9090'   ,
+    '/files': process.env.API_URL || 'http://127.0.0.1:9090'  ,
     ws: true,
   },
 
