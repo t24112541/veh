@@ -222,6 +222,8 @@
                   cv_set:cv_set,
                   a_id:this.id,
                 })
+                if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            	  else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
               }
               else if(cv_set=="password"){
                 let res=await this.$http.post("/admin/security_update",{
@@ -229,12 +231,13 @@
                   cv_set:cv_set,
                   a_id:this.id,
                 })
+                if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+            	  else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
               }
               this.loading=false
               this.conf=true
-              console.log(res.data)
-              if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
-            	else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
+    
+              
             
             },
             logout(){
