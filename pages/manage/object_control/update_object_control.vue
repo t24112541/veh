@@ -277,11 +277,11 @@
         async created(){
           this.sh_object_control()
           this.sh_comment()
-          this.$notify({
-            group: 'foo',
-            title: 'Important message',
-            text: 'Hello user! This is a notification!'
-          })
+          // this.$notify({
+          //   group: 'foo',
+          //   title: 'Important message',
+          //   text: 'Hello user! This is a notification!'
+          // })
         },
         watch:{
           ms_step(newValue){
