@@ -22,7 +22,7 @@
       </v-toolbar>
   
       <v-tabs-items v-model="tabs" class="white elevation-1">
-        <v-tab-item @keypress.enter="security_update('username')"
+        <v-tab-item 
           :value="'cv-1'"
           :key="'cv-1'"
         >
@@ -75,7 +75,7 @@
           </v-layout>
           </v-container>
         </v-tab-item>
-        <v-tab-item @keypress.enter="security_update('password')"
+        <v-tab-item 
           :value="'cv-2'"
           :key="'cv-2'"
         >
@@ -220,7 +220,7 @@
                 let res=await this.$http.post("/student/security_update",{
                   std_username:this.std_username,
                   cv_set:cv_set,
-                  t_id:this.id,
+                  std_id:this.id,
                 })
                 if(res.data.ok==true){this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
             	  else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
