@@ -299,7 +299,7 @@
             std_tel2:"",
 
             type_api:"",
-            danger:false,
+            danger:false, 
             alt_txt:"",
             conf_del:false,
             isEditing:null,
