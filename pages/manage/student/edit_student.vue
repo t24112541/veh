@@ -305,7 +305,7 @@
               <span class="subheading white--text">ผิดระเบียบ</span>
               </v-card-title>
                 <v-layout row wrap>
-                <v-flex xs6 md3 lg2 v-for="mc in oc_mc" v-if="mc.oc_status!='ผ่านการตรวจสอบ'" :key="mc.oc_id" style="padding:10px;cursor: pointer;"
+                <v-flex xs6 md3 lg2 v-for="mc in oc_mc"  :key="mc.oc_id" style="padding:10px;cursor: pointer;"
                   @click="list_object_control(mc.oc_id)"
                 >
                 <v-card>
@@ -322,7 +322,7 @@
                   </v-card-actions> -->
                 </v-card>
                 </v-flex>
-                 <v-flex xs6 md3 lg2 v-for="ac in oc_ac" v-if="ac.oc_status!='ผ่านการตรวจสอบ'" :key="ac.oc_id" style="padding:10px;cursor: pointer;"
+                 <v-flex xs6 md3 lg2 v-for="ac in oc_ac"  :key="ac.oc_id" style="padding:10px;cursor: pointer;"
                   @click="list_object_control(ac.oc_id)"
                 >
                 <v-card>
