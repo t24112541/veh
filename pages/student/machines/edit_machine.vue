@@ -345,9 +345,9 @@ var dateFormat = require('dateformat');
           itm_oc_name_more(){
             if(this.itm_oc_name_more==true){this.dis_oc=true}else{this.dis_oc=false}
           },
-          mc_expire_date_watch(newValue){
-            if(newValue==true){this.mc_confirm_mt("false")}
-          },
+          // mc_expire_date_watch(newValue){
+          //   if(newValue==true){this.mc_confirm_mt("false")}
+          // },
         },
         computed: {
 
