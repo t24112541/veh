@@ -192,16 +192,17 @@
             if(this.ac_description!='' && this.ac_u_id!=''&& this.ac_name!='' ){
               if(this.$refs.img_font.files[0]!='' || this.$refs.img_side.files[0]!='' || this.$refs.img_rear.files[0]!=''){
                 const formData = new FormData()
-                formData.append('img_font',this.$refs.img_font.files[0])
-                formData.append('img_side',this.$refs.img_side.files[0])
-                formData.append('img_rear',this.$refs.img_rear.files[0])
-
+                
                 formData.append('ac_description',this.ac_description)
                 formData.append('ac_u_id',this.ac_u_id)
                 formData.append('ac_name',this.ac_name)
                 formData.append('ac_u_table',this.ac_u_table)
                 formData.append('u_table',"pk_accessories")
-                formData.append('u_id',sessionStorage.getItem("username"))
+                formData.append('u_id',sessionStorage.getItem("username")) 
+
+                formData.append('img_font',this.$refs.img_font.files[0])
+                formData.append('img_side',this.$refs.img_side.files[0])
+                formData.append('img_rear',this.$refs.img_rear.files[0])
 
                 let res=await this.$http.post("accessories/accessories_add",formData,{
                   onUploadProgress: uploadEvent => {

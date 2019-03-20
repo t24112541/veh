@@ -138,22 +138,22 @@
         { icon: 'fas fa-motorcycle', text: 'ยานพาหนะ' ,link: '../../manage/machines'},
         { icon: 'fas fa-wrench', text: 'อุปกรณ์เสริม' ,link: '../../manage/accessories'},
         
-        { divider: true },
-        { heading: 'การทำงาน' },
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'fas fa-book',
-          text: 'บันทึกการทำงาน',
-          model: false,
-          children: [
-            { icon:'fas fa-user-graduate' ,text: 'นักเรียน / นักศึกษา' ,link: '/manage/student_log/student_log'},
-            { icon:'fas fa-chalkboard-teacher' ,text: 'ครู / บุคลากร' ,link: '/manage/teacher_log/teacher_log'},
-            { icon:'fas fa-place-of-worship' ,text: 'แผนกวิชา' ,link: '/manage/department_log/log_department'},
-            { icon:'fas fa-users', text: 'กลุ่มการเรียน' ,link: '/manage/group_log/group_log'},
-            { icon:'fas fa-motorcycle' ,text: 'ยานพาหนะ' ,link: '/manage/machine_log/machine_log'},
-            { icon:'fas fa-wrench' ,text: 'อุปกรณ์เสริม' ,link: '/manage/accessories_log/accessories_log'},
-          ]
-        },
+        // { divider: true },
+        // { heading: 'การทำงาน' },
+        // {
+        //   icon: 'keyboard_arrow_up',
+        //   'icon-alt': 'fas fa-book',
+        //   text: 'บันทึกการทำงาน',
+        //   model: false,
+        //   children: [
+        //     { icon:'fas fa-user-graduate' ,text: 'นักเรียน / นักศึกษา' ,link: '/manage/student_log/student_log'},
+        //     { icon:'fas fa-chalkboard-teacher' ,text: 'ครู / บุคลากร' ,link: '/manage/teacher_log/teacher_log'},
+        //     { icon:'fas fa-place-of-worship' ,text: 'แผนกวิชา' ,link: '/manage/department_log/log_department'},
+        //     { icon:'fas fa-users', text: 'กลุ่มการเรียน' ,link: '/manage/group_log/group_log'},
+        //     { icon:'fas fa-motorcycle' ,text: 'ยานพาหนะ' ,link: '/manage/machine_log/machine_log'},
+        //     { icon:'fas fa-wrench' ,text: 'อุปกรณ์เสริม' ,link: '/manage/accessories_log/accessories_log'},
+        //   ]
+        // },
         { divider: true },
         { 
          icon: 'keyboard_arrow_up',
