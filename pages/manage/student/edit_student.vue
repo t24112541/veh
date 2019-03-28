@@ -378,7 +378,6 @@
 </template>
 
 <script>
-const config = require('./../../../config.js')
     export default {
         layout: 'manage',
 
@@ -542,6 +541,7 @@ const config = require('./../../../config.js')
               this.img_id=res.data.img[0].img_id
               this.img=this.link_img+res.data.img[0].img_img 
 
+              // console.log(res.data)
             },
             async std_update(std_id){
               const formData = new FormData()
