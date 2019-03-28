@@ -17,7 +17,7 @@
 
             <v-card-actions class="grey darken-3 justify-center">
                 <v-spacer></v-spacer>
-                &copy;2018-<strong>CV</strong>
+                Information Technology
             </v-card-actions>
             </v-card>
         </v-footer>

@@ -15,10 +15,10 @@
               </v-alert>
               <v-card-text>
                 <center><img :src="require('@/static/image/new_logo.png')" class="icon_login"></center>
-                <v-toolbar-title style="text-align:center"><h3>เข้าสู่ระบบ</h3></v-toolbar-title>
+                <v-toolbar-title style="text-align:center"><h3>CTC Vehicle<br>เข้าสู่ระบบ</h3></v-toolbar-title>
                 <v-form  >
-                  <v-text-field :rules="[rules.required]" v-model="username" prepend-icon="person" name="username" label="ชื่อผู้ใช้" type="text"></v-text-field>
-                  <v-text-field :rules="[rules.required]" v-model="password" prepend-icon="lock" name="password" label="รหัสผ่าน" id="password" type="password"></v-text-field>
+                  <v-text-field :rules="[rules.required]" v-model="username" prepend-icon="person" name="username" label="ชื่อผู้ใช้ ,รหัสนักเรียน/นักศึกษา,รหัสประจำตัวครู" type="text"></v-text-field>
+                  <v-text-field :rules="[rules.required]" v-model="password" prepend-icon="lock" name="password" label="รหัสผ่าน,รหัสประจำตัวประชาชน,รหัส mis" id="password" type="password"></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
