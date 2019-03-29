@@ -41,8 +41,9 @@
          <v-flex xs12 v-if="this.ctrl_status.ctrl_status!='1'" class="cv_title_2">
           การแก้ไขข้อมูลถูกปิดอยู่ <!-- กรุณาติดต่อผู้ดูแลระบบหากต้องการแก้ไขข้อมูลเป็นการด่วน -->
         </v-flex>
-        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
+        <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'  ">
           <v-btn 
+            v-if="this.mc_confirm=='false'"
             color="green lighten-2"
             flat
             @click="isEditing = !isEditing"
@@ -53,7 +54,7 @@
         </v-flex>
         <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-dialog v-model="conf_del" persistent max-width="290">
-            <v-btn  slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
+            <v-btn v-if="this.mc_confirm=='false'"  slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
             <v-card>
               <v-card-title class="headline">ยืนยันการลบข้อมูล</v-card-title>
               <v-card-text>ต้องการลบข้อมูล {{mc_code}}<br> ใช่หรือไม่?</v-card-text>

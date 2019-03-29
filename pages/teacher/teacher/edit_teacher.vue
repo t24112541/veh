@@ -125,7 +125,7 @@
 </template>
 <script>
     export default {
-        layout: 'manage',
+        layout: 'teacher',
         data () {
           return {
             t_id:'',
@@ -193,7 +193,7 @@
               this.t_username=res.data.datas[0].t_username
               this.t_password=res.data.datas[0].t_password
               this.d_code=res.data.datas[0].d_code
-              this.img=this.link_img+res.data.datas[0].img_img
+              this.img=this.link_img+res.data.image[0].img_img
               this.itm=res.data.datas
               this.img_id=res.data.datas[0].img_id
               // console.log(res.data.datas)

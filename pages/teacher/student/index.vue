@@ -1,6 +1,16 @@
 <template>
   <div><v-card>
-    <div class="cv_header padding-top-mn" >ข้อมูลนักเรียน / นักศึกษา</div>
+    <div class="cv_header padding-top-mn" >ข้อมูลนักเรียน / นักศึกษา
+      <v-btn
+        color="green lighten-2"
+        dark
+        small
+        fab
+        @click="student_add()"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
+    </div>
     <div class="cv_header padding-top-mn" @keypress.enter="cv_sh()"> 
       <v-text-field
               
@@ -9,20 +19,9 @@
               v-model="txt_search"
             ></v-text-field>
     </div>
-    <!-- <div class="cv_header xs12">
-      <v-btn
-        color="green lighten-2"
-        dark
-        small
-        absolute
-        top
-        right
-        fab
-        @click="student_add()"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
-    </div> -->
+    <div class="cv_header xs12">
+      
+    </div>
     <v-spacer></v-spacer>
     <v-spacer></v-spacer>
   <v-data-table
@@ -136,7 +135,7 @@
         this.$router.push({path: this.part_url+std_id})
       },
       student_add(){
-        this.$router.push({path:"../teacher/student/add_student"})
+        this.$router.push({path:"../../teacher/student/add_student?g_code="+this.$route.query.g_code})
       }
     }
   }

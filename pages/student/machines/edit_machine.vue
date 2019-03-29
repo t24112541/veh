@@ -43,6 +43,7 @@
         </v-flex>
         <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-btn 
+            v-if="this.mc_confirm=='false'"
             color="green lighten-2"
             flat
             @click="isEditing = !isEditing"

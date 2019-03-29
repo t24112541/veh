@@ -62,7 +62,7 @@
 
 <script>
   export default {
-    layout: 'manage',
+    layout: 'teacher',
     data () {
       return {
         txt_search:"",

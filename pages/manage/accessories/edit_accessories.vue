@@ -520,7 +520,7 @@
                 this.load_status=Math.round(uploadEvent.loaded / uploadEvent.total*100)
               }
             })
-             if(res.data.ok==true){this.load_status=0,this.dialog_ms=false,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_machine()}
+             if(res.data.ok==true){this.load_status=0,this.dialog_ms=false,this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt,this.sh_accessories()}
              else{this.danger=true,this.alt_txt=res.data.txt,this.type_api=res.data.alt}
           },
           async sh_object_control(){

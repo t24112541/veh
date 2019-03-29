@@ -46,6 +46,7 @@
             color="green lighten-2"
             flat
             @click="isEditing = !isEditing"
+            v-if="this.mc_confirm=='false'" 
           >
             <i v-if="isEditing" class="fas fa-times fa-2x"></i>
             <i v-else class="fas fa-edit fa-2x "></i>
@@ -53,7 +54,7 @@
         </v-flex>
         <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
           <v-dialog v-model="conf_del" persistent max-width="290">
-            <v-btn  slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
+            <v-btn v-if="this.mc_confirm=='false'" slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
             <v-card>
               <v-card-title class="headline">ยืนยันการลบข้อมูล</v-card-title>
               <v-card-text>ต้องการลบข้อมูล {{mc_code}}<br> ใช่หรือไม่?</v-card-text>
@@ -523,7 +524,7 @@ var dateFormat = require('dateformat');
           },
           async sh_machine(){
             let res=await this.$http.get('/machine/sh_machine/'+this.$route.query.mc_id)
-            //console.log(res.data.datas)
+            // console.log(res.data.datas)
             this.mc_id=this.$route.query.mc_id
             this.mc_code=res.data.datas[0].mc_code
             this.mc_brand=res.data.datas[0].mc_brand
@@ -555,7 +556,7 @@ var dateFormat = require('dateformat');
           },
           async sh_object_control(){
             let res=await this.$http.get('/object_control/item_object_control')
-            //console.log(res.data.datas)
+            // console.log(res.data.datas)
             this.items_oc_detail=res.data.datas
           },
           async machine_update(mc_id){//console.log("1")

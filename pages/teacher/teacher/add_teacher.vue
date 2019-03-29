@@ -127,7 +127,7 @@
 
 <script>
     export default {
-        layout: 'manage',
+        layout: 'teacher',
         data () {
             return {
               label_group:"กลุ่มการเรียนที่",
