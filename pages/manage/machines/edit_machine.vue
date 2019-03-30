@@ -53,8 +53,8 @@
           </v-btn>
         </v-flex>
         <v-flex xs2 v-if="this.ctrl_status.ctrl_status=='1'">
-          <v-dialog v-model="conf_del" persistent max-width="290">
-            <v-btn v-if="this.mc_confirm=='false'"  slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
+          <v-dialog v-if="this.mc_confirm=='false'" v-model="conf_del" persistent max-width="290">
+            <v-btn   slot="activator" flat color="red lighten-2"><i class="fas fa-trash-alt fa-2x"></i></v-btn>
             <v-card>
               <v-card-title class="headline">ยืนยันการลบข้อมูล</v-card-title>
               <v-card-text>ต้องการลบข้อมูล {{mc_code}}<br> ใช่หรือไม่?</v-card-text>
@@ -551,8 +551,11 @@
             let day=old_date[2].split(" ")
             let test_years=parseInt(old_date[0])
             const years=parseInt(old_date[0])+1
-   
-            this.mc_expire_date=day[0]+"/"+old_date[1]+"/"+years+" "+day[1]
+
+            if(this.mc_confirm=='true'){
+              this.mc_expire_date=day[0]+"/"+old_date[1]+"/"+years+" "+day[1]
+            }else{this.mc_expire_date="-"}
+            
             this.mc_confirm_date=day[0]+"/"+old_date[1]+"/"+test_years+" "+day[1]
             // console.log(this.mc_expire_date)
           },
