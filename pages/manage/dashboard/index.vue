@@ -227,11 +227,11 @@
             </v-card>
           </v-flex>
           <v-flex xs12><v-divider class="my-2"></v-divider></v-flex>
-          <v-flex xs12 sm12 md12 style="padding-top:20px">
+          <!-- <v-flex xs12 sm12 md12 style="padding-top:20px">
             <v-card class="mt-3 mx-auto">
               <canvas id="ms_and_oc_chart" width="100%" height="50%" ></canvas>
             </v-card>
-          </v-flex>
+          </v-flex> -->
       </v-layout>
     </v-container>
   </v-app>
